@@ -1,0 +1,56 @@
+.\" Manpage for pqchecker.
+.\" Contact abdelhamid@meddeb.net to correct errors or typos.
+.TH man 3 "12 Feb 2014" "0.1" "pqchecker.so"
+.SH NAME
+pqchecker \- an OpenLDAP plug-in for passwords quality check
+.SH SYNOPSIS
+Called by ppolicy overlay for OpenLDAP when password attribute is modified:
+  int check_password (char *pPasswd, char **ppErrStr, Entry *e)
+.LP
+Exposed for modifying passwords policy parameters  
+  bool set_params(char *params, char *fmt);
+.LP
+Exposed for reading passwords policy parameters  
+  bool get_params(char *params, char *fmt);
+.SH DESCRIPTION
+pqchecker is a plug-in for OpenLDAP directory server with ppolicy overlay. It allows to control the quality of the password before storing it in the dedicated directory attribute. If the password mets configured parameters, it is accepted. It is rejected otherwise.
+.LP 
+The controlled parameters are: 
+.LP
+- Number of required uppercase characters.
+.br 
+- Number of required lowercase characters.
+.br 
+- Number of required special characters.
+.br 
+- Number of required digits.
+.br 
+- List of forbidden characters.
+
+Also, pqchecker allows easy parameters management, by providing two functions 
+for consultation and modification.
+.SH PARAMETERS STORAGE FORMAT  
+Data format: UULLDDSS@)..
+.br
+U: Uppercase, L: Lowercase, D: Digit, S: Special, characters -> 8 first charaters
+.br
+From 9th character begins the list of ones who are forbidden
+.LP
+.B Default:
+1 Uppercase, 1 Lowercase, 1 digit, 1 Special and no forbidden characters
+.br
+Lines beginning with # and blank lines are 
+.B ignored
+.br
+All lines after one that contains the parameters (not beginning with #) are 
+.B ignored
+.SH SEE ALSO
+slapd(8), slapd.conf(5), slapo-ppolicy(5)
+.br
+OpenLDAP Administrator's Guide (http://www.OpenLDAP.org/doc/admin/)
+.SH BUGS
+https://sourcesup.renater.fr/forum/forum.php?forum_id=3501
+.br
+abdelhamid@meddeb.net
+.SH AUTHOR
+Abdelhamid MEDDEB (abdelhamid@meddeb.net)

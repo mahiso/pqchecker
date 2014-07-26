@@ -1,0 +1,60 @@
+----------------------------------
+pqchecker.so bibliothèque paratgée
+1.0.0
+----------------------------------
+
+pqchecker un plug-in pour le serveur d'annuaire OpenLDAP muni 
+de l'overlay ppolicy. Il permet de contrôler la qualité du 
+mot de passe avant son stockage dans l'attribut dédié de l'annuaire.
+Si le mot de passe est conforme aux paramètres configurés il est 
+accepté. Il est rejeté dans le cas contraire.
+
+Les paramètres contrôlés sont: 
+. Nombre de caractères majuscules obligatoires.
+. Nombre de caractères minuscules obligatoires.
+. Nombre de caractères spéciaux obligatoires.
+. Nombre de chiffres obligatoires.
+. Liste de caractères non permis.
+
+Aussi, pqchecker permet de gérer facilement ces paramètres.
+Pour cela il fournit deux fonctions, pour la consultation et
+la modification:
+
+ bool set_params(char *params, char *fmt);
+ bool get_params(char *params, char *fmt);
+
+-------------
+Où le trouver
+-------------
+http://www.meddeb.net/download
+https://sourcesup.renater.fr/frs/?group_id=1347
+
+-----------------
+Exigences système
+-----------------
+Système d'exploitation compatibel POSIX (n'importe quelle version 
+moderne de BSD, Linux ou Unix)
+OpenLDAP avec le module ppolicy activé doit être installé.
+
+-----------------------
+Construire l'executable
+-----------------------
+Voir le fichier INSTALL.fr
+
+---------
+Copyright
+---------
+(c) 2014, Abdelhamid MEDDEB (abdelhamid@meddeb.net)
+Distribué sous licence GNU GPL v3+
+Voir le fichier LICENCE pour plus de détail.
+
+--------
+Site web
+--------
+http://www.meddeb.fr/pqchecker
+
+-----------------------
+Rapporter les problèmes
+-----------------------
+abdelhamid@meddeb.net
+ihttps://sourcesup.renater.fr/forum/forum.php?forum_id=3501

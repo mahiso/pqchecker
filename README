@@ -1,0 +1,57 @@
+---------------------------
+pqchecker.so shared library 
+1.0.0 
+---------------------------
+
+pqchecker is a plug-in for OpenLDAP directory server with ppolicy overlay.
+It allows to control the quality of the password before storing it in the 
+dedicated directory attribute. If the password mets configured parameters, 
+it is accepted. It is rejected otherwise.
+
+The controlled parameters are: 
+. Number of required uppercase characters.
+. Number of required lowercase characters.
+. Number of required special characters.
+. Number of required digits.
+. List of forbidden characters.
+
+Also, pqchecker allows easy parameters management, by providing two functions 
+for consultation and modification:
+
+ bool set_params(char *params, char *fmt);
+ bool get_params(char *params, char *fmt);
+
+-------------
+Where to find 
+-------------
+http://www.meddeb.net/download
+https://sourcesup.renater.fr/frs/?group_id=1347
+
+-------------------
+System requirements
+-------------------
+POSIX-compliant operating system (any modern version of BSD, Linux or Unix should work)
+OpenLDAP with ppolicy overlay must be installed on the system.
+
+--------------------
+Building the release
+--------------------
+Please refer to installation guide in the 'INSTALL' file.
+
+---------
+Copyright
+---------
+(c) 2014, Abdelhamid MEDDEB (abdelhamid@meddeb.net)
+pqchecker is distributed under GNU GPL v3+.
+Please refer to 'LICENSE' file for more informations.
+
+--------
+Web site
+--------
+http://www.meddeb.net/pqchecker
+
+-----------
+Bug reports
+-----------
+abdelhamid@meddeb.net
+https://sourcesup.renater.fr/forum/forum.php?forum_id=3501
