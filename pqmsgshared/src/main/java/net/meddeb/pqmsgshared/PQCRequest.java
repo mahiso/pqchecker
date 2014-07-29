@@ -5,6 +5,8 @@ public enum PQCRequest {
 	WRITE("PQ-REQ-Write"), 
 	TEST("PQ-REQ-Test");
 	
+	private final String name;
+	
 	public static PQCRequest fromName(String sn){
 		if (sn.equalsIgnoreCase(PQCRequest.READ.toString())){
 			return READ;
@@ -15,7 +17,10 @@ public enum PQCRequest {
 		} else return null;
 	}
 	
-	private final String name;
+	public static String[] getStrArray(){
+		String[] rslt = {PQCRequest.READ.toString(), PQCRequest.WRITE.toString(), PQCRequest.TEST.toString()};
+		return rslt;
+	}
 	
 	private PQCRequest(String str){
 		name = str;

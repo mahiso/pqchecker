@@ -23,6 +23,13 @@ of your choice,
 
 You obtain a root directory for OpenLDAP server source files /tmp/openldap-2.4.30/
 
+You can also install the source package of OpenLDAP server if exists. On the Debian 
+system you can do it by executes: 
+
+  apt-get source install openldap (without sudo)
+  
+Then sources code are installed in your home directory.  
+
 2/ Prepare required header files
 --------------------------------
 The required header files portable.h and slap.h are not included, initially, 
@@ -42,14 +49,14 @@ Unpack pqchecker archive,
 
 Then execute
  
-  ./configure LDAPSRC=/tmp/openldap-2.4.30 JAVAHOME=/opt/java libdir=/usr/lib/ldap --localstatedir=/etc/ldap
+  ./configure LDAPSRC=/tmp/openldap-2.4.30 JAVAHOME=/opt/java libdir=/usr/lib/ldap PARAMDIR=/etc/ldap/pqchecker
 
-  LDAPSRC:        OpenLDAP server source files root directory.
-  JAVAHOME:       Java JDK root location.
-  libdir:         location of pqchecker.so installation, must be the module load directory setting 
-                  of OpenLDAP server /usr/lib/ldap is used for debian-compliants systems.
-  localstatedir:  location of pqchecker data storage, this location must be writable by system user 
-                  who execute OpenLDAP server.   
+  LDAPSRC:   OpenLDAP server source files root directory.
+  JAVAHOME:  Java JDK root location.
+  libdir:    location of pqchecker.so installation, must be the module load directory setting 
+             of OpenLDAP server /usr/lib/ldap is used for debian-compliants systems.
+  PARAMDIR:  location of pqchecker data storage, this location must be writable by system user 
+             who execute OpenLDAP server and, if pqMessenger used, system user who execute it.   
 
   Other parameters may be used, ./configure --help for complete list for those parameters.
   

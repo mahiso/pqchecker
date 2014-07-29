@@ -1,6 +1,6 @@
 /*--------------------------------------------------------------------
-ppInspect, shared library plug-in for OpenLDAP server / ppolicy overlay
-Control of password quality.
+pqChecker, shared library plug-in for OpenLDAP server / ppolicy overlay
+Checking of password quality.
 Copyright (C) 2014, Abdelhamid MEDDEB (abdelhamid@meddeb.net)  
 
 This program is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ check_password(char *pPasswd, char **ppErrStr, Entry *e);
 int 
 check_password(char *pPasswd, char **ppErrStr, Entry *e)
 {
-  openlog("ppInspect", LOG_PID, LOG_LOCAL4);
+  openlog("pqchecker", LOG_PID, LOG_LOCAL4);
   syslog(LOG_INFO, "Check password quality for %s", e->e_name.bv_val);
   int rslt = LDAP_OPERATIONS_ERROR;
   char strParams[PARAMS_DATA_MAXLEN+1]; 

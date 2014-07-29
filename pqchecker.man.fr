@@ -1,0 +1,57 @@
+.\" Manpage for pqchecker.
+.\" Contact abdelhamid@meddeb.net to correct errors or typos.
+.TH man 3 "12 Feb 2014" "1.0" "pqchecker.so"
+.SH NOM
+pqchecker \- Un plug-in pour OpenLDAP, vérifie la qualité des mots de passe.
+.SH SYNOPSIS
+Appelée par le module ppolicy du serveur OpenLDAP quand un mot de passe est modifié:
+  int check_password (char *pPasswd, char **ppErrStr, Entry *e)
+.LP
+Fourni pour la modification des paramètres de vérification de la qualité des mots de passe:
+  bool set_params(char *params, char *fmt);
+.LP
+Fourni pour la lecture des paramètres de vérification de la qualité des mots de passe:
+  bool get_params(char *params, char *fmt);
+.SH DESCRIPTION
+pqchecker est un plug-in pour le serveur d'annuaire OpenLDAP muni du module ppolicy. Il permet de vérifier la qualité des mots de passe modifiés avant qu'ils ne soient stockés dans l'attribut destiné à cet effet. Si le mot de passe est conforme aux paramètres de la qualité, il est accepté. Sinon il est rejeté.
+.LP 
+Les paramètres vérifiés sont: 
+.LP
+- Nombre de caractères majuscules requis.
+.br 
+- Nombre de caractères miniscules requis.
+.br 
+- Nombre de caractères spéciaux requis.
+.br 
+- Nombre de chiffres requis.
+.br 
+- Liste des caractères interdits.
+
+Par ailleurs, pqchecker permet 
+.B la gestions des paramètres de la qualité des mots de passe par programmation.
+A cet effet, il fournit deux fonctions pour leur consultation ou modificationi. 
+.SH FORMAT DE STOCKAGE DES PARAMETRES  
+Format des données: UULLDDSS@)..
+.br
+U: Majuscules, L: Miniscules, D: Chiffres, S: Caractères spéciaux -> 8 premiers caratères.
+.br
+A partir du 9eme caractère commence la liste des acarctères interdits.
+.LP
+.B Valeur par défaut:
+1 Majuscule, 1 Miniscule, 1 chiffre, 1 caractère spécial et aucun caractère interdit.
+.br
+Les lignes qui commencent par # et les lignes vides sont 
+.B ignorées
+.br
+Toutes les lignes qui suivent la première qui contient un paramétrage valide (ne commence pas par #) sont 
+.B ignorées
+.SH VOIR AUSSI
+slapd(8), slapd.conf(5), slapo-ppolicy(5)
+.br
+OpenLDAP Administrator's Guide (http://www.OpenLDAP.org/doc/admin/)
+.SH BUGS
+https://sourcesup.renater.fr/forum/forum.php?forum_id=3501
+.br
+abdelhamid@meddeb.net
+.SH AUTEUR
+Abdelhamid MEDDEB (abdelhamid@meddeb.net)

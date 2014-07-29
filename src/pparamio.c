@@ -1,6 +1,6 @@
 /*--------------------------------------------------------------------
-ppInspect, shared library plug-in for OpenLDAP server / ppolicy overlay
-Control of password quality.
+pqChecker, shared library plug-in for OpenLDAP server / ppolicy overlay
+Checking of password quality.
 Copyright (C) 2014, Abdelhamid MEDDEB (abdelhamid@meddeb.net)  
 
 This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 bool set_params(const char *params, const char *fmt)
 {
-  openlog("ppInspect", LOG_PID, LOG_LOCAL4);
+  openlog("pqchecker", LOG_PID, LOG_LOCAL4);
   syslog(LOG_ERR, "set_params call.");
   if (!params || !fmt) 
   {
@@ -117,7 +117,7 @@ bool set_params(const char *params, const char *fmt)
 
 bool get_params(char *params, const char *fmt)
 {
-  openlog("ppInspect", LOG_PID, LOG_LOCAL4);
+  openlog("pqchecker", LOG_PID, LOG_LOCAL4);
   if (!params || !fmt) 
   {
     syslog(LOG_ERR, "No parameters container or format string supplied found.");

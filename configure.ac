@@ -2,6 +2,7 @@ AC_INIT([pqchecker], [1.0.0], [abdelhamid@meddeb.net])
 AC_CONFIG_HEADERS([config.h])
 AC_ARG_VAR([LDAPSRC],AS_HELP_STRING([path to openldap server source files root location]))
 AC_ARG_VAR([JAVAHOME],AS_HELP_STRING([path to jdk root location]))
+AC_ARG_VAR([PARAMDIR],AS_HELP_STRING([path to password quality parameters file location]))
 AM_PROG_AR
 LT_INIT
 AC_CONFIG_MACRO_DIR([m4])
@@ -22,7 +23,7 @@ AC_CHECK_HEADER([slap.h],
                 [AC_MSG_ERROR([Something is wrong with header files !!])],
                 [#include <portable.h>
                 ])
-
+AC_DEFINE_UNQUOTED([PARAMS_DATA_FILE],["$PARAMDIR/pqparams.dat"],["Parameters data file location"])
 AC_CONFIG_FILES([
 Makefile
 src/Makefile

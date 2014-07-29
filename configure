@@ -709,6 +709,7 @@ CFLAGS
 CC
 ac_ct_AR
 AR
+PARAMDIR
 JAVAHOME
 LDAPSRC
 target_alias
@@ -767,6 +768,7 @@ host_alias
 target_alias
 LDAPSRC
 JAVAHOME
+PARAMDIR
 CC
 CFLAGS
 LDFLAGS
@@ -1415,6 +1417,7 @@ Optional Packages:
 Some influential environment variables:
   LDAPSRC     path to openldap server source files root location
   JAVAHOME    path to jdk root location
+  PARAMDIR    path to password quality parameters file location
   CC          C compiler command
   CFLAGS      C compiler flags
   LDFLAGS     linker flags, e.g. -L<lib dir> if you have libraries in a
@@ -2117,6 +2120,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 ac_config_headers="$ac_config_headers config.h"
+
 
 
 
@@ -12278,6 +12282,10 @@ else
 fi
 
 
+
+cat >>confdefs.h <<_ACEOF
+#define PARAMS_DATA_FILE "$PARAMDIR/pqparams.dat"
+_ACEOF
 
 ac_config_files="$ac_config_files Makefile src/Makefile"
 

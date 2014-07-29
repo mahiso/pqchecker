@@ -14,6 +14,8 @@ hs_err_pid*
 target/
 docapi/
 docapi-fr/
+.deps/
+.libs/
 #eclipse project files
 .classpath
 .project
@@ -26,15 +28,9 @@ Makefile
 *.la
 *.lo
 *.so
-*.log
-*.class
-.deps/
-.libs/
-.project
-.classpath
-.settings/
-target/
+*.gz
 autom4te.cache/
+*~
 config.h
 config.status
 libtool

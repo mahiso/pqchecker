@@ -7,7 +7,7 @@ Pour construire et installer pqchecker:
 
 1/ Récupérer les fichiers source du serveur OpenLDAP
 ----------------------------------------------------
-La compilation de ppInstall nécessite la présence des fichiers source
+La compilation de pqchecker nécessite la présence des fichiers source
 du serveur OpenLDAP.
 Vous pouvez les télécharger à partir de:
 http://www.openldap.org/software/download 
@@ -22,8 +22,15 @@ Décompresser l'archive téléchargée dans un endroit de votre choix,
   cd /tmp
   tar xzvf ~/download/openldap-2.4.30.tgz
 
-Vous abtenez, ainsi, la racine du chemin vers les fichiers source du serveur OpneLDAP:
+Vous abtenez, ainsi, la racine du chemin vers les fichiers source du serveur OpenLDAP:
 /tmp/openldap-2.4.30/
+
+Vous pouvez également installer le paquet des sources du serveur OpenLDAP s'il existe.
+Sur un système DEbian vous pouvez faire cela en executant:
+
+  apt-get source install openldap (sans sudo)
+
+Les sources seront alors installées dans votre répertoire personnel.  
 
 2/ Préparer les fichiers d'en-tête nécessaires à la compilation de pqchecker
 ----------------------------------------------------------------------------
@@ -44,15 +51,16 @@ Décompresser l'archive de pqchecker,
 
 Ensuite executer
  
-  ./configure LDAPSRC=/tmp/openldap-2.4.30 JAVAHOME=/opt/java libdir=/usr/lib/ldap --localstatedir=/etc/ldap
+  ./configure LDAPSRC=/tmp/openldap-2.4.30 JAVAHOME=/opt/java libdir=/usr/lib/ldap PARAMDIR=/etc/ldap/pqchecker
 
-  LDAPSRC:        Racine du chemin des fichiers source OpenLDAP.
-  JAVAHOME:       Racine de l'emplacement d'installation de Java JDK.
-  libdir:         Emplacement d'installation de pqchecker.so, doit correspondre au chemin de 
-                  chargement des modules du serveur OpenLDAP. Ce chemin est /usr/lib/ldap pour le 
-                  système Debian et assimilés.
-  localstatedir:  Emplacement de stockage des données pour pqchecker. Cet emplacement doit être
-                  accessible en écriture à l'utilisateur système qui execute le serveur OpenLDAP.
+  LDAPSRC:    Racine du chemin des fichiers source OpenLDAP.
+  JAVAHOME:   Racine de l'emplacement d'installation de Java JDK.
+  libdir:     Emplacement d'installation de pqchecker.so, doit correspondre au chemin de 
+              chargement des modules du serveur OpenLDAP. Ce chemin est /usr/lib/ldap pour le 
+              système Debian et assimilés.
+  PARAMDIR:   Emplacement de stockage des données pour pqchecker. Cet emplacement doit être
+              accessible en écriture à l'utilisateur système qui execute le serveur OpenLDAP,
+              ainsi que celui qui execute pqMessenger s'il est utilisé.
 
   D'autres paramètres sont disponibles, ./configure --help pour voir la liste complète.
 
