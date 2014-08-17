@@ -864,7 +864,8 @@ install-dvi: install-dvi-recursive
 install-dvi-am:
 
 install-exec-am:
-
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
 install-html: install-html-recursive
 
 install-html-am:
@@ -905,10 +906,12 @@ ps-am:
 
 uninstall-am: uninstall-dist_docDATA uninstall-man \
 	uninstall-nobase_dist_vardatDATA
-
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
 uninstall-man: uninstall-man3
 
-.MAKE: $(am__recursive_targets) all install-am install-strip
+.MAKE: $(am__recursive_targets) all install-am install-exec-am \
+	install-strip uninstall-am
 
 .PHONY: $(am__recursive_targets) CTAGS GTAGS TAGS all all-am \
 	am--refresh check check-am clean clean-cscope clean-generic \
@@ -919,16 +922,19 @@ uninstall-man: uninstall-man3
 	distdir distuninstallcheck dvi dvi-am html html-am info \
 	info-am install install-am install-data install-data-am \
 	install-dist_docDATA install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-man3 \
+	install-exec-am install-exec-hook install-html install-html-am \
+	install-info install-info-am install-man install-man3 \
 	install-nobase_dist_vardatDATA install-pdf install-pdf-am \
 	install-ps install-ps-am install-strip installcheck \
 	installcheck-am installdirs installdirs-am maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-generic \
 	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
-	uninstall-am uninstall-dist_docDATA uninstall-man \
-	uninstall-man3 uninstall-nobase_dist_vardatDATA
+	uninstall-am uninstall-dist_docDATA uninstall-hook \
+	uninstall-man uninstall-man3 uninstall-nobase_dist_vardatDATA
 
+install-exec-hook: ; mkdir -p $(mandir)/fr/man3 ; \
+          cp -p pqchecker.man.fr $(mandir)/fr/man3/pqchecker.3 
+uninstall-hook: ; rm -f $(mandir)/fr/man3/pqchecker.3 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
