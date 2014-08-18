@@ -1,0 +1,77 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-08-18 22:56+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: pqchecker.c:41
+#, c-format
+msgid "Checking password quality for %s"
+msgstr "Vérification de la qualité de mot de passe pour %s"
+
+#: pqchecker.c:54
+msgid "The password does not pass quality check."
+msgstr "Le mot de passe ne passe pas le contrôle de qualité."
+
+#: pqchecker.c:55
+msgid "Password rejected."
+msgstr "Mot de passe rejeté."
+
+#: pqchecker.c:58
+msgid "Password accepted."
+msgstr "Mot de passe accepté."
+
+#: pqcheck.c:129
+#, c-format
+msgid "The parameter %s does not operable"
+msgstr "Le paramètre %s n'est pas utilisable."
+
+#: pqcheck.c:162
+#, c-format
+msgid "The format %s does not operable"
+msgstr "Le format %s n'est pas utilisable."
+
+#: pparamio.c:38
+msgid "Parameters data or format string not found."
+msgstr "Données de paramètre ou chaine de format introuvables."
+
+#: pparamio.c:73
+#, c-format
+msgid "Can't open parameters file storage: %s, %s"
+msgstr "Impossible d'ouvrir le fichier de stockage des paramètres: %s, %s"
+
+#: pparamio.c:122
+msgid "Parameters container or format string not found."
+msgstr "Conteneur de paramètres ou chaine de format introuvables."
+
+#: pparamio.c:158
+msgid "Can't read parameters from file."
+msgstr "Impossible de lire les paramètres depuis le fichier."
+
+#: pparamio.c:159
+#, c-format
+msgid "The format string [%s] supplied isn't operable."
+msgstr "La chaine de format [%s] fournie n'est pas utilisable."
+
+#: pparamio.c:175
+#, c-format
+msgid "Cannot open parameters file storage: %s, %s"
+msgstr "Impossible d'ouvrir le fichier de stockage des paramètres: %s, %s"
+
+#: pparamio.c:208
+#, c-format
+msgid "No data found in parameters file storage: %s"
+msgstr "Aucune donnée trouvée dans le fichier de stockage des paramètres: %s"

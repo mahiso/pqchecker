@@ -115,7 +115,7 @@ pp_params_t getParams(char *params, char *fmt)
 }
 
 // check if params is operable
-bool isParamOperable(char * params)
+bool isParamOperable(const char * params)
 {
   if (!params) return false;
   int i = 0;
@@ -126,12 +126,12 @@ bool isParamOperable(char * params)
     rslt = isdigit(params[i]);
     i++;
   }
-  if (!rslt) syslog(LOG_ERR, "The parameter %s does not operable",params);
+  if (!rslt) syslog(LOG_ERR, _("The parameter %s does not operable"),params);
   return rslt;
 }
 
 // check if format is operable
-bool isFormatOperable(char * fmt)
+bool isFormatOperable(const char * fmt)
 {
   if (!fmt) return false;
   int i = 0;
@@ -159,6 +159,6 @@ bool isFormatOperable(char * fmt)
     i++;
   }
   if (rslt) rslt = (count == 61);
-  if (!rslt) syslog(LOG_ERR, "The format %s does not operable", fmt);
+  if (!rslt) syslog(LOG_ERR, _("The format %s does not operable"), fmt);
   return rslt;
 }

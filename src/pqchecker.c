@@ -21,6 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdbool.h>
 #include <portable.h>
 #include <slap.h>
+#include <libintl.h>
+#include <locale.h>
+
 #include <pparamio.h>
 #include <pqcheck.h>
 #include <pqchecker.h>
@@ -31,8 +34,11 @@ check_password(char *pPasswd, char **ppErrStr, Entry *e);
 int 
 check_password(char *pPasswd, char **ppErrStr, Entry *e)
 {
-  openlog("pqchecker", LOG_PID, LOG_LOCAL4);
-  syslog(LOG_INFO, "Check password quality for %s", e->e_name.bv_val);
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+  openlog(PACKAGE, LOG_PID, LOG_LOCAL4);
+  syslog(LOG_INFO, _("Checking password quality for %s"), e->e_name.bv_val);
   int rslt = LDAP_OPERATIONS_ERROR;
   char strParams[PARAMS_DATA_MAXLEN+1]; 
   if (readParams(strParams)) 
@@ -45,11 +51,11 @@ check_password(char *pPasswd, char **ppErrStr, Entry *e)
         (pwdStatus.specialNbr < params.specialMin) ||
         (pwdStatus.forbiddenNbr > 0))
     {
-      *ppErrStr = strdup("Password does not pass quality check.");
-      syslog(LOG_DEBUG, "Password rejected.");
+      *ppErrStr = strdup(_("The password does not pass quality check."));
+      syslog(LOG_DEBUG, _("Password rejected."));
     } else {
       rslt = LDAP_SUCCESS;
-      syslog(LOG_DEBUG, "Password accepted.");
+      syslog(LOG_DEBUG, _("Password accepted."));
     }
   } else rslt = LDAP_OPERATIONS_ERROR;
   closelog();

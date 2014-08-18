@@ -2,6 +2,7 @@ lib_LTLIBRARIES = pqchecker.la
 pqchecker_la_SOURCES = pqchecker.c pparamio.c pqcheck.c JNIGateway.c
 include_HEADERS = pqchecker.h
 pqchecker_la_LDFLAGS = -module -avoid-version -shared
+pqchecker_la_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\"
 ACLOCAL_AMFLAGS = -I m4
 install-exec-hook: ; cd $(libdir) ; \
           mv -f pqchecker.so pqchecker.so.$(VERSION) ; \
