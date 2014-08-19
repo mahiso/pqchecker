@@ -1,11 +1,8 @@
 ##### Password quality checker for OpenLDAP
 
-Allows to control the quality of passwords before storing them in the directory.
-
-If the password mets configured parameters, it is accepted. It is rejected otherwise.
-
-The controlled parameters are:
- 
+Allows to control the quality of passwords before storing them in the directory.  
+If the password mets configured parameters, it is accepted. It is rejected otherwise.  
+The controlled parameters are:  
 + Number of required uppercase characters.
 + Number of required lowercase characters.
 + Number of required special characters.
