@@ -54,7 +54,7 @@ pp_status_t
 getStatus(char *pwd, char *forbiddens);
 
 // check if params is operable
-bool isParamOperable(char * params);
+bool isParamOperable(const char * params);
 
 // check if format is operable
-bool isFormatOperable(char * fmt);
+bool isFormatOperable(const char * fmt);

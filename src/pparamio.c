@@ -18,25 +18,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define _POSIX_SOURCE 1
 
+#include <ctype.h>
+#include <string.h>
+#include <stdbool.h>
+#include <portable.h>
+#include <syslog.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdbool.h>
 #include <stdlib.h>
-#include <syslog.h>
 #include <errno.h>
+#include <libintl.h>
+#include <locale.h>
 
 #include <pqcheck.h>
 #include <pparamio.h>
 
 bool set_params(const char *params, const char *fmt)
 {
-  openlog("pqchecker", LOG_PID, LOG_LOCAL4);
-  syslog(LOG_ERR, "set_params call.");
   if (!params || !fmt) 
   {
-    syslog(LOG_ERR, "No parameters data or format string supplied found.");
+    syslog(LOG_ERR, _("Parameters data or format string not found."));
     return false;
   }
   bool rslt = false;
@@ -71,7 +72,7 @@ bool set_params(const char *params, const char *fmt)
     fp = fopen(PARAMS_DATA_FILE,"r+");
     if (fp == NULL) 
     {
-      syslog(LOG_ERR, "Can't open parameters file storage: %s, %s", PARAMS_DATA_FILE, strerror(errno));
+      syslog(LOG_ERR, _("Can't open parameters file storage: %s, %s."), PARAMS_DATA_FILE, strerror(errno));
       rslt = false;
     } else rslt = true;
     if (rslt)
@@ -117,10 +118,9 @@ bool set_params(const char *params, const char *fmt)
 
 bool get_params(char *params, const char *fmt)
 {
-  openlog("pqchecker", LOG_PID, LOG_LOCAL4);
   if (!params || !fmt) 
   {
-    syslog(LOG_ERR, "No parameters container or format string supplied found.");
+    syslog(LOG_ERR, _("Parameters container or format string not found."));
     return false;
   }
   bool rslt = false;
@@ -156,8 +156,8 @@ bool get_params(char *params, const char *fmt)
       for (i=0; i<8; i++) strParams[i] = fmtParams[i];
       strcpy(params, strParams);
       rslt = true;
-    } else syslog(LOG_DEBUG, "Can't read parameters from file.");
-  } else syslog(LOG_DEBUG, "The format string [%s] supplied isn't operable.", fmt);  
+    } else syslog(LOG_DEBUG, _("Can't read parameters from file."));
+  } else syslog(LOG_DEBUG, _("The format string [%s] supplied isn't operable."), fmt);  
   return rslt;
 }
   
@@ -173,7 +173,7 @@ bool readParams(char *rslt)
   fp = fopen(PARAMS_DATA_FILE,"r");
   if (fp == NULL) 
   {
-    syslog(LOG_ERR, "Cannot open parameters file storage: %s, %s", PARAMS_DATA_FILE, strerror(errno));
+    syslog(LOG_ERR, _("Can't open parameters storage file: %s, %s."), PARAMS_DATA_FILE, strerror(errno));
     return false;
   }
   bool trv = false;                                    
@@ -206,7 +206,7 @@ bool readParams(char *rslt)
     return true;
   } else 
   {
-    syslog(LOG_ERR, "No data found in parameters file storage: %s", PARAMS_DATA_FILE);
+    syslog(LOG_ERR, _("No data found in parameters file storage: %s."), PARAMS_DATA_FILE);
     return false;
   }
 }

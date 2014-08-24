@@ -123,8 +123,9 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 pqchecker_la_LIBADD =
-am_pqchecker_la_OBJECTS = pqchecker.lo pparamio.lo pqcheck.lo \
-	JNIGateway.lo
+am_pqchecker_la_OBJECTS = pqchecker_la-pqchecker.lo \
+	pqchecker_la-pparamio.lo pqchecker_la-pqcheck.lo \
+	pqchecker_la-JNIGateway.lo
 pqchecker_la_OBJECTS = $(am_pqchecker_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -316,6 +317,7 @@ lib_LTLIBRARIES = pqchecker.la
 pqchecker_la_SOURCES = pqchecker.c pparamio.c pqcheck.c JNIGateway.c
 include_HEADERS = pqchecker.h
 pqchecker_la_LDFLAGS = -module -avoid-version -shared
+pqchecker_la_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\"
 ACLOCAL_AMFLAGS = -I m4
 all: all-am
 
@@ -396,10 +398,10 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/JNIGateway.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pparamio.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pqcheck.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pqchecker.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pqchecker_la-JNIGateway.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pqchecker_la-pparamio.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pqchecker_la-pqcheck.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pqchecker_la-pqchecker.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -421,6 +423,34 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
+
+pqchecker_la-pqchecker.lo: pqchecker.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pqchecker_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT pqchecker_la-pqchecker.lo -MD -MP -MF $(DEPDIR)/pqchecker_la-pqchecker.Tpo -c -o pqchecker_la-pqchecker.lo `test -f 'pqchecker.c' || echo '$(srcdir)/'`pqchecker.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pqchecker_la-pqchecker.Tpo $(DEPDIR)/pqchecker_la-pqchecker.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='pqchecker.c' object='pqchecker_la-pqchecker.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pqchecker_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o pqchecker_la-pqchecker.lo `test -f 'pqchecker.c' || echo '$(srcdir)/'`pqchecker.c
+
+pqchecker_la-pparamio.lo: pparamio.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pqchecker_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT pqchecker_la-pparamio.lo -MD -MP -MF $(DEPDIR)/pqchecker_la-pparamio.Tpo -c -o pqchecker_la-pparamio.lo `test -f 'pparamio.c' || echo '$(srcdir)/'`pparamio.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pqchecker_la-pparamio.Tpo $(DEPDIR)/pqchecker_la-pparamio.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='pparamio.c' object='pqchecker_la-pparamio.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pqchecker_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o pqchecker_la-pparamio.lo `test -f 'pparamio.c' || echo '$(srcdir)/'`pparamio.c
+
+pqchecker_la-pqcheck.lo: pqcheck.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pqchecker_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT pqchecker_la-pqcheck.lo -MD -MP -MF $(DEPDIR)/pqchecker_la-pqcheck.Tpo -c -o pqchecker_la-pqcheck.lo `test -f 'pqcheck.c' || echo '$(srcdir)/'`pqcheck.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pqchecker_la-pqcheck.Tpo $(DEPDIR)/pqchecker_la-pqcheck.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='pqcheck.c' object='pqchecker_la-pqcheck.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pqchecker_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o pqchecker_la-pqcheck.lo `test -f 'pqcheck.c' || echo '$(srcdir)/'`pqcheck.c
+
+pqchecker_la-JNIGateway.lo: JNIGateway.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pqchecker_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT pqchecker_la-JNIGateway.lo -MD -MP -MF $(DEPDIR)/pqchecker_la-JNIGateway.Tpo -c -o pqchecker_la-JNIGateway.lo `test -f 'JNIGateway.c' || echo '$(srcdir)/'`JNIGateway.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pqchecker_la-JNIGateway.Tpo $(DEPDIR)/pqchecker_la-JNIGateway.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='JNIGateway.c' object='pqchecker_la-JNIGateway.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pqchecker_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o pqchecker_la-JNIGateway.lo `test -f 'JNIGateway.c' || echo '$(srcdir)/'`JNIGateway.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
