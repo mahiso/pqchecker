@@ -932,8 +932,9 @@ uninstall-man: uninstall-man3
 	uninstall-am uninstall-dist_docDATA uninstall-hook \
 	uninstall-man uninstall-man3 uninstall-nobase_dist_vardatDATA
 
-install-exec-hook: ; mkdir -p $(mandir)/fr/man3 ; cp -p pqchecker.man.fr $(mandir)/fr/man3/pqchecker.3 
-uninstall-hook: ; rm -f $(mandir)/fr/man3/pqchecker.3 
+install-exec-hook: ; mkdir -p $(mandir)/fr/man3 ; cp -p pqchecker.man.fr $(mandir)/fr/man3/pqchecker.3 ; \
+  mkdir -p $(localedir)/fr/LC_MESSAGES ; cp po/fr/pqchecker.mo $(localedir)/fr/LC_MESSAGES
+uninstall-hook: ; rm -f $(mandir)/fr/man3/pqchecker.3 ; rm -f $(localedir)/fr/LC_MESSAGES/pqchecker.mo
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -67,8 +67,12 @@ Ensuite executer
 Ensuite, construire et installer pqchecker:
 
   make
-  make install
+  sudo make install
     
 Après cette installation, la page de manuel de pqchecker peut être consultée en tapant:
 
   man pqchecker (en français si le système est configuré pour la langue française)
+
+3/ Désinstallation de pqchecker
+-------------------------------
+Executer: sudo make uninstall

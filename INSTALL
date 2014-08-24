@@ -69,3 +69,7 @@ After that, you can see the man page of pqchecker by:
  
   man pqchecker
 
+3/ Uninstall pqchecker
+----------------------
+
+Execute: sudo make uninstall
