@@ -21,8 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <ctype.h>
 #include <string.h>
 #include <stdbool.h>
+#include <portable.h>
 #include <syslog.h>
 #include <stdio.h>
+#include <libintl.h>
+#include <locale.h>
 
 #include <pqcheck.h>
 
@@ -63,17 +66,17 @@ pp_status_t getStatus(char *pwd, char *forbiddens)
   }
   return rslt;
 }
-/*----------------------------------------------
-* Return pp_params_t from char* params according
-* the fmt format
-------------------------------------------------*/
+/*-------------------------------------------------------------
+* Return pp_params_t from char* params according the fmt format
+* When params is not operable all fields is set to -1
+---------------------------------------------------------------*/
 pp_params_t getParams(char *params, char *fmt)
 {
   pp_params_t rslt;
-  rslt.upperMin = 0;
-  rslt.lowerMin = 0;
-  rslt.digitMin = 0;
-  rslt.specialMin = 0;
+  rslt.upperMin = -1;
+  rslt.lowerMin = -1;
+  rslt.digitMin = -1;
+  rslt.specialMin = -1;
   rslt.forbiddens[0] = '\0';
   if (isParamOperable(params))
   {
@@ -101,16 +104,22 @@ pp_params_t getParams(char *params, char *fmt)
           break;  
       }
     }
-    // set forbidden characters
-    i = 8;
-    int paramsLen = strlen(params) - 1;
-    while (i < PARAMS_DATA_MAXLEN)
-    {
-      if (i < paramsLen) rslt.forbiddens[i - 8] = params[i];
-      else rslt.forbiddens[i-8] = '\0';
-      i++;
+    if ((rslt.upperMin > -1) &&
+        (rslt.lowerMin > -1) &&
+        (rslt.digitMin > -1) &&
+        (rslt.specialMin > -1))
+    {  
+      // set forbidden characters
+      i = 8;
+      int paramsLen = strlen(params) - 1;
+      while (i < PARAMS_DATA_MAXLEN)
+      {
+        if (i < paramsLen) rslt.forbiddens[i - 8] = params[i];
+        else rslt.forbiddens[i-8] = '\0';
+        i++;
+      }
     }
-  }
+  }   
   return rslt;
 }
 
@@ -126,7 +135,7 @@ bool isParamOperable(const char * params)
     rslt = isdigit(params[i]);
     i++;
   }
-  if (!rslt) syslog(LOG_ERR, _("The parameter %s does not operable"),params);
+  if (!rslt) syslog(LOG_ERR, _("The parameter [%s] does not operable"),params);
   return rslt;
 }
 
@@ -159,6 +168,6 @@ bool isFormatOperable(const char * fmt)
     i++;
   }
   if (rslt) rslt = (count == 61);
-  if (!rslt) syslog(LOG_ERR, _("The format %s does not operable"), fmt);
+  if (!rslt) syslog(LOG_ERR,_("The format [%s] does not operable"), fmt);
   return rslt;
 }

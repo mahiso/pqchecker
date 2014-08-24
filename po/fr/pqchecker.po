@@ -1,5 +1,5 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2014 THE pqchecker'S COPYRIGHT HOLDER
+# pqChecker.
+# Copyright (C) 2014 pqchecker's COPYRIGHT HOLDER
 # This file is distributed under the same license as the pqchecker package.
 # Abdelhamid MEDDEB <abdelhamid@meddeb.net>, 2014.
 #
@@ -11,7 +11,7 @@ msgstr ""
 "POT-Creation-Date: 2014-08-24 10:51+0200\n"
 "PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Abdelhamid MEDDEB <abdelhamid@meddeb.net>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language-Team: French language <abdelhamid@meddeb.net>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -20,12 +20,12 @@ msgstr ""
 #: pqchecker.c:41
 #, c-format
 msgid "Checking password quality for %s"
-msgstr ""
+msgstr "Vérification de la qualité de mot de passe pour %s"
 
 #: pqchecker.c:46
 #, c-format
 msgid "The quality parameters used: %s"
-msgstr ""
+msgstr "Paramètres de qualité utilisés: %s"
 
 #: pqchecker.c:58
 msgid "The password does not pass quality check"
