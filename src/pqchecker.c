@@ -38,12 +38,12 @@ check_password(char *pPasswd, char **ppErrStr, Entry *e)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
   openlog(PACKAGE, LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL4);
-  syslog(LOG_INFO, _("Checking password quality for %s"), e->e_name.bv_val);
+  syslog(LOG_INFO, _("Checking password quality for %s."), e->e_name.bv_val);
   int rslt = LDAP_OPERATIONS_ERROR;
   char strParams[PARAMS_DATA_MAXLEN+1]; 
   if (readParams(strParams)) 
   {
-    syslog(LOG_DEBUG, _("The quality parameters used: %s"),strParams);
+    syslog(LOG_DEBUG, _("The quality parameters used: %s."),strParams);
     pp_params_t params = getParams(strParams, PARAMS_STORAGE_FORMAT);
     if ((params.upperMin > -1) && (params.lowerMin > -1) &&
         (params.digitMin > -1) && (params.specialMin > -1))
@@ -55,22 +55,22 @@ check_password(char *pPasswd, char **ppErrStr, Entry *e)
           (pwdStatus.specialNbr < params.specialMin) ||
           (pwdStatus.forbiddenNbr > 0))
       {
-        *ppErrStr = strdup(_("The password does not pass quality check"));
-        syslog(LOG_INFO, _("Password rejected"));
+        *ppErrStr = strdup(_("The password does not pass quality check."));
+        syslog(LOG_INFO, _("Password rejected."));
       } else {
         rslt = LDAP_SUCCESS;
-        syslog(LOG_INFO, _("Password accepted"));
+        syslog(LOG_INFO, _("Password accepted."));
       }
     } else {
-      *ppErrStr = strdup(_("Unable to verify the quality of the password. Problem in parameters"));
+      *ppErrStr = strdup(_("Unable to verify the quality of the password. Problem in parameters."));
       rslt = LDAP_OPERATIONS_ERROR;
-      syslog(LOG_DEBUG, _("The passwords quality parameter is not operable"));
+      syslog(LOG_DEBUG, _("The passwords quality parameter is not operable."));
     }
 
   } else {
-    *ppErrStr = strdup(_("Unable to verify the quality of the password. Problem in parameters"));
+    *ppErrStr = strdup(_("Unable to verify the quality of the password. Problem in parameters."));
     rslt = LDAP_OPERATIONS_ERROR;
-    syslog(LOG_DEBUG, _("The passwords quality parameter is not found"));
+    syslog(LOG_DEBUG, _("The passwords quality parameter is not found."));
   }
   closelog();
 	return (rslt);

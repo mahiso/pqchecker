@@ -72,7 +72,7 @@ bool set_params(const char *params, const char *fmt)
     fp = fopen(PARAMS_DATA_FILE,"r+");
     if (fp == NULL) 
     {
-      syslog(LOG_ERR, _("Can't open parameters file storage: %s, %s"), PARAMS_DATA_FILE, strerror(errno));
+      syslog(LOG_ERR, _("Can't open parameters file storage: %s, %s."), PARAMS_DATA_FILE, strerror(errno));
       rslt = false;
     } else rslt = true;
     if (rslt)
@@ -173,7 +173,7 @@ bool readParams(char *rslt)
   fp = fopen(PARAMS_DATA_FILE,"r");
   if (fp == NULL) 
   {
-    syslog(LOG_ERR, _("Can't open parameters storage file: %s, %s"), PARAMS_DATA_FILE, strerror(errno));
+    syslog(LOG_ERR, _("Can't open parameters storage file: %s, %s."), PARAMS_DATA_FILE, strerror(errno));
     return false;
   }
   bool trv = false;                                    
@@ -206,7 +206,7 @@ bool readParams(char *rslt)
     return true;
   } else 
   {
-    syslog(LOG_ERR, _("No data found in parameters file storage: %s"), PARAMS_DATA_FILE);
+    syslog(LOG_ERR, _("No data found in parameters file storage: %s."), PARAMS_DATA_FILE);
     return false;
   }
 }

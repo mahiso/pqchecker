@@ -135,7 +135,7 @@ bool isParamOperable(const char * params)
     rslt = isdigit(params[i]);
     i++;
   }
-  if (!rslt) syslog(LOG_ERR, _("The parameter [%s] does not operable"),params);
+  if (!rslt) syslog(LOG_ERR, _("The parameter [%s] does not operable."),params);
   return rslt;
 }
 
@@ -168,6 +168,6 @@ bool isFormatOperable(const char * fmt)
     i++;
   }
   if (rslt) rslt = (count == 61);
-  if (!rslt) syslog(LOG_ERR,_("The format [%s] does not operable"), fmt);
+  if (!rslt) syslog(LOG_ERR,_("The format [%s] does not operable."), fmt);
   return rslt;
 }
