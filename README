@@ -1,6 +1,6 @@
 ---------------------------
 pqchecker.so shared library 
-1.0.0 
+1.1.0 
 ---------------------------
 
 pqchecker is a plug-in for OpenLDAP directory server with ppolicy overlay.
@@ -25,7 +25,6 @@ for consultation and modification:
 Where to find 
 -------------
 http://www.meddeb.net/download
-https://sourcesup.renater.fr/frs/?group_id=1347
 
 -------------------
 System requirements
@@ -54,4 +53,3 @@ http://www.meddeb.net/pqchecker
 Bug reports
 -----------
 abdelhamid@meddeb.net
-https://sourcesup.renater.fr/forum/forum.php?forum_id=3501

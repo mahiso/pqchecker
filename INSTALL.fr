@@ -1,6 +1,6 @@
 --------------------------------------------
 pqchecker.so bibliothèque dynamique partagée
-1.0.0
+1.1.0
 --------------------------------------------
 
 Pour construire et installer pqchecker:
@@ -46,8 +46,8 @@ qui est fourni dans l'archive.
 Décompresser l'archive de pqchecker,
 
   cd /tmp
-  tar xzvf ~/download/pqchecker-1.0.0.tar.gz
-  cd pqchecker-1.0.0/
+  tar xzvf ~/download/pqchecker-1.1.0.tar.gz
+  cd pqchecker-1.1.0/
 
 Ensuite executer
  
@@ -69,3 +69,6 @@ Ensuite, construire et installer pqchecker:
   make
   make install
     
+Après cette installation, la page de manuel de pqchecker peut être consultée en tapant:
+
+  man pqchecker (en français si le système est configuré pour la langue française)

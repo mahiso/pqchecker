@@ -1,6 +1,6 @@
 .\" Manpage for pqchecker.
 .\" Contact abdelhamid@meddeb.net to correct errors or typos.
-.TH man 3 "12 Feb 2014" "1.0" "pqchecker.so"
+.TH man 3 "24 Août 2014" "1.1" "pqchecker.so"
 .SH NOM
 pqchecker \- Un plug-in pour OpenLDAP, vérifie la qualité des mots de passe.
 .SH SYNOPSIS
@@ -50,8 +50,6 @@ slapd(8), slapd.conf(5), slapo-ppolicy(5)
 .br
 OpenLDAP Administrator's Guide (http://www.OpenLDAP.org/doc/admin/)
 .SH BUGS
-https://sourcesup.renater.fr/forum/forum.php?forum_id=3501
-.br
 abdelhamid@meddeb.net
 .SH AUTEUR
 Abdelhamid MEDDEB (abdelhamid@meddeb.net)

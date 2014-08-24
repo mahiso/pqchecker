@@ -1,6 +1,6 @@
 ---------------------------
 pqchecker.so shared library 
-1.0.0
+1.1.0
 ---------------------------
 
 To build and install pqchecker:
@@ -44,8 +44,8 @@ script who's provided  in archive of source files.
 Unpack pqchecker archive,
 
   cd /tmp
-  tar xzvf ~/download/pqchecker-1.0.0.tar.gz
-  cd pqchecker-1.0.0/
+  tar xzvf ~/download/pqchecker-1.1.0.tar.gz
+  cd pqchecker-1.1.0/
 
 Then execute
  
@@ -64,4 +64,8 @@ Then build pqchecker and install it:
 
   make
   sudo make install  
+  
+After that, you can see the man page of pqchecker by:
+ 
+  man pqchecker
 
