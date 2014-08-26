@@ -1,0 +1,16 @@
+#
+# -- Files location -------------
+PQMESSENGER_HOME=/opt/pqmessenger
+NATIVE_LIB_HOME=/usr/lib/ldap
+CONFIG_HOME=/etc/ldap/pqchecker
+LOG_HOME=/var/log/pqmessenger
+RUN_HOME=/var/run
+JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
+PQMESSENGER_USER=openldap
+
+# jsvc 
+JSVC=/usr/bin/jsvc
+# Messaging server used id in config file
+MSGSERVER_ID=PQMsgServer
+# Connection retry time in milliseconds to uses when connection fail or lost
+CNX_RETRY_TIME=3
