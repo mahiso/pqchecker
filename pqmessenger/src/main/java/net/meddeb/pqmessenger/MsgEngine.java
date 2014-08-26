@@ -8,13 +8,12 @@ import net.meddeb.japptools.Serverconf;
 import org.apache.log4j.Logger;
 
 public class MsgEngine {
-	private final static String VERSION = "1.0.0";
+	private final static String VERSION = "1.1.0";
 	private final static String DEFAULT_MSGSERVER_ID = "PQMsgServer";
 	private final static String CONFFILE_ARG_KEY = "--config-file";
 	private final static String MSGSERVER_ARG_KEY = "--msg-server-id";
-	private final static String TIME_RETRY_ARG_KEY = "--time-retry";
+	private final static String CNX_RETRY_TIME_ARG_KEY = "--connection-retry-time";
 	private final static String DEFAULT_CONFFILENAME = "config.xml";
-	private final static String DEFAULT_LOGFILENAME = "log4j.xml";
 	private final static int DEFAULT_TIME_RETRY = 900; //15mn
 	private Messenger messenger = null;
 	private Logger logger = null;
@@ -33,11 +32,14 @@ public class MsgEngine {
 	
 	/**
 	 * Arguments supported:
-	 * 1/ --config-file: 	its value can be path to configurations files (log and conf) or full qualified configuration 
-	 * 										file name. Default configuration file name is "config.xml". Log configuration file name must 
-	 * 										be log4j.xml
-	 * 2/ --msg-server-id:jms messaging server id used in configuration file. default value: "PQMsgServer"
-	 * 										both configuration files must be in the same directory.
+	 * 1/ --config-file						:	Can be path to configuration files (log and conf) or full qualified 
+	 * 															configuration file name. Default configuration file name is 
+	 * 															"config.xml". Log configuration file name must be log4j.xml
+	 * 															both configuration files must be in the same directory.
+	 * 2/ --msg-server-id					: jms messaging server id used in configuration file. 
+	 * 															default value: "PQMsgServer"
+	 * 3/ --connection-retry-time	: time, in secend, to retry when connection to msg server fail.
+	 * 
 	 * @param args list of arguments and its values
 	 * @return full qualified configuration file name
 	 */
@@ -63,7 +65,7 @@ public class MsgEngine {
 				if (configPath.lastIndexOf(sep) != (configPath.length()-1)){
 					configPath = configPath + sep;
 				}
-				rslt = configPath + DEFAULT_CONFFILENAME;
+				rslt = configPath;// + DEFAULT_CONFFILENAME;
 			}
 		}
 		if (rslt.isEmpty()) rslt = DEFAULT_CONFFILENAME;
@@ -89,7 +91,7 @@ public class MsgEngine {
 		String strInt = "";
 		if (args.length > 1){
 			for (int i=0; i<args.length; i++){
-				if ((args[i].equalsIgnoreCase(TIME_RETRY_ARG_KEY)) && (i<(args.length-1))){
+				if ((args[i].equalsIgnoreCase(CNX_RETRY_TIME_ARG_KEY)) && (i<(args.length-1))){
 					strInt = args[i+1];
 					if (strInt.isEmpty()){
 						timeRetry = DEFAULT_TIME_RETRY;
@@ -153,6 +155,31 @@ public class MsgEngine {
 		if (timeRetry < 1){
 			return 1000;
 		} else return timeRetry * 1000;
+	}
+	/**
+	 * Return human readable retry time
+	 * @return String, readable time
+	 */
+	public String getStrTimeretry() {
+		int t = getTimeRetry() / 1000;
+		String rslt = "";
+		if (t < 60) {
+			rslt = Integer.toString(t) + " s";
+		} else if (t < 3600) {
+			int s = t % 60;
+			t = t / 60;
+			rslt = Integer.toString(t) + " mn";
+			if (s > 0) rslt = rslt + ", " + Integer.toString(s) + " s";
+		} else {
+			int s = t % 3600;
+			t = t / 3600;
+			s = s % 60;
+			int m = s / 60;
+			rslt = Integer.toString(t) + " h";
+			if (m > 0) rslt = rslt + ", " + Integer.toString(m) + " mn";
+			if (s > 0) rslt = rslt + ", " + Integer.toString(s) + " s";
+		}
+		return rslt;
 	}
 
 }

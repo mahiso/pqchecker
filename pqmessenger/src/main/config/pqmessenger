@@ -1,40 +1,38 @@
 #!/bin/bash
 # pqMessenger starting script
 
-USER="pqmessenger"
-CONFIGFILE="/etc/ldap"
-JAVA_HOME="/usr/lib/jvm/default-java"
-#JAVA_HOME="/opt/java"
-PPMESSENGER_HOME="/opt/pqmessenger"
-LOG_HOME="/var/log/pqmessenger"
-RUN_HOME="/var/run"
-PPMESSENGER_STARTUP="net.meddeb.pqmessenger.MsgDaemon"
+. /lib/lsb/init-functions
+
+if [ -r /etc/default/pqmessenger ]; then
+	. /etc/default/pqmessenger
+fi
+
+PQMESSENGER_STARTUP="net.meddeb.pqmessenger.MsgDaemon"
 PIDFILE="$RUN_HOME/pqmessenger.pid"
 OUTFILE="$LOG_HOME/pqmessenger.out"
-JSVC=/usr/bin/jsvc
-PPMESSENGER_ARGS="--config-file $CONFIGFILE --msg-server-id pqParams --time-retry 1800"
-CLASSPATH="$PPMESSENGER_HOME/ppmessenger"
+CONFIGFILE="$CONFIG_HOME"
+#CLASSPATH="$PQMESSENGER_HOME/pqmessenger-1.0.0-SNAPSHOT.jar:$PQMESSENGER_HOME/pqmessenger"
+CLASSPATH="$PQMESSENGER_HOME/*.jar"
+PQMESSENGER_ARGS="--config-file $CONFIGFILE --msg-server-id $MSGSERVER_ID --connection-retry-time $CNX_RETRY_TIME"
+JSVC_ARGS="-java-home $JAVA_HOME -user $PQMESSENGER_USER -pidfile $PIDFILE -outfile $OUTFILE -errfile &1 -cp $CLASSPATH"
+JAVA_ARGS="-Djava.library.path=$NATIVE_LIB_HOME"
 RETVAL=0
 
-# pid function, return ppmessenger pid
-ppmessengerPid() {
+# pid function, return pqMessenger pid
+pqmessengerPid() {
   PID=$( ps -ef | grep $USER | grep -v grep | grep -v root | awk '{print $2}' )
   echo $PID
 }
 # start function
 do_start(){
-  DAEMONPID=$( ppmessengerPid )
+  DAEMONPID=$( pqmessengerPid )
   if [ "$DAEMONPID" == "" ]; then
-    echo -n "Starting ppMessenger... "
-    "$JSVC" \
-    -java-home "$JAVA_HOME" \
-    -user "$USER" \
-    -pidfile "$PIDFILE" \
-    -outfile "$OUTFILE" \
-    -errfile "&1" \
-    -cp "$CLASSPATH" \
-    "$PPMESSENGER_STARTUP" \
-    $PPMESSENGER_ARGS
+    echo -n "Starting pqMessenger... "
+    $JSVC \
+    $JSVC_ARGS \
+    $JAVA_ARGS \
+    $PQMESSENGER_STARTUP \
+    $PQMESSENGER_ARGS
     RETVAL=$?
     if test $RETVAL -eq 0; then
       echo -e "Ok"
@@ -49,19 +47,14 @@ do_start(){
 
 # stop function
 do_stop(){
-  echo -n "Stopping ppMessenger... "
-      "$JSVC" \
-      -java-home "$JAVA_HOME" \
-      -user "$PPMESSENGER_USER" \
-      -pidfile "$PIDFILE" \
-      -outfile "$OUTFILE" \
-      -errfile "&1" \
-      -classpath "$CLASSPATH" \
-      "-stop" \
-      "$PPMESSENGER_STARTUP"
+  echo -n "Stopping pqMessenger... "
+      $JSVC \
+      $JSVC_ARGS \
+      -stop \
+      $PQMESSENGER_STARTUP
   RETVAL=$?
   if test $RETVAL -eq 0; then
-    echo "OK."
+    echo "Ok."
    else
     echo "Error."
   fi    

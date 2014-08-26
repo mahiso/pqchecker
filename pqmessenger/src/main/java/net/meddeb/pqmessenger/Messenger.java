@@ -88,7 +88,7 @@ public class Messenger {
 					msg = (TextMessage) message;
 					String msgType = msg.getStringProperty(MsgProperties.TYPE.toString());
 					if ((msgType == null) || msgType.isEmpty()){
-						logger.warn("Message corrupted, No message type defined.");
+						logger.warn("Message not operable, No message type defined.");
 						return;
 					}
 					logger.info("Message received: [" + msgType + "] " + msg.getText());

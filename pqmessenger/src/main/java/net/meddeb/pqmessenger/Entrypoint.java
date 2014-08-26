@@ -37,15 +37,15 @@ public class Entrypoint {
 	    		msgEngine.stopConnection();
 					connected = false;
 	    	}
-        logger.info("------------------------");
-        logger.info("ppMessenger shutdown.");
-        logger.info("------------------------");
+        logger.info("------------------");
+        logger.info("pqMessenger stops.");
+        logger.info("------------------");
 	    }
 		}));
 		logger =  Logger.getLogger(Entrypoint.class);
     logger.info("");
     logger.info("-------------------");
-    logger.info("ppMessenger starts.");
+    logger.info("pqMessenger starts.");
     logger.info("-------------------");
 		try{
 			while (true){
@@ -53,10 +53,11 @@ public class Entrypoint {
 				msgEngine.startConnection();
 				if (msgEngine.isConnectionStarted()){
 					connected = true;
-				} else logger.info("Connection failed, wait for 15s to retry..");
+				} else logger.info("Connection failed, wait for " + msgEngine.getStrTimeretry() + 
+						                " to retry..");
 				while ((true)&&(msgEngine.isConnectionStarted())){
 					try{
-						Thread.sleep(2000);
+						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						logger.error("e: " + e.getMessage());
 					}

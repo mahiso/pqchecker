@@ -42,10 +42,10 @@ public class MsgDaemon implements Daemon {
   				msgEngine.startConnection();
   				if (msgEngine.isConnectionStarted()){
   					connected = true;
-  				} else logger.info("Connection failed, wait before retry..");
+  				} else logger.info("Connection failed, wait " + msgEngine.getStrTimeretry() + " before retry..");
   				while ((true)&&(msgEngine.isConnectionStarted())){
   					try{
-  						Thread.sleep(500);
+  						Thread.sleep(1000);
   					} catch (InterruptedException e) {
   						logger.error("e: " + e.getMessage());
   					}
@@ -79,9 +79,9 @@ public class MsgDaemon implements Daemon {
     		msgEngine.stopConnection();
 				connected = false;
     	}
-      logger.info("------------------------");
-      logger.info("pqMessenger shutdown.");
-      logger.info("------------------------");
+      logger.info("------------------");
+      logger.info("pqMessenger stops.");
+      logger.info("------------------");
     }catch(InterruptedException e){
       System.err.println(e.getMessage());
       throw e;
