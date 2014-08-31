@@ -1,3 +1,6 @@
+# pqMessenger starting shell script parameters
+# location /etc/default/pqmessenger
+# (c) 2014 Abdelhamid MEDDEB <abdelhamid@meddeb.net>
 #
 # -- Files location -------------
 PQMESSENGER_HOME=/opt/pqmessenger
@@ -5,12 +8,14 @@ NATIVE_LIB_HOME=/usr/lib/ldap
 CONFIG_HOME=/etc/ldap/pqchecker
 LOG_HOME=/var/log/pqmessenger
 RUN_HOME=/var/run
-JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
+JAVA_HOME=/usr/lib/jvm/default-jre
 PQMESSENGER_USER=openldap
 
 # jsvc 
 JSVC=/usr/bin/jsvc
-# Messaging server used id in config file
+# Messaging server id used in config file 
+# /etc/ldap/pqchecker/config.xml by default
 MSGSERVER_ID=PQMsgServer
-# Connection retry time in milliseconds to uses when connection fail or lost
-CNX_RETRY_TIME=3
+# Connection to messaging server retry time in seconds 
+# to use when connection is failed or lost. 1800s = 30mn by default
+CNX_RETRY_TIME=1800

@@ -7,7 +7,7 @@
 		</layout>
 	</appender>
 	<appender name="pqmessengerlog" class="org.apache.log4j.rolling.RollingFileAppender">
-    <param name="File" value="pqmessenger.log" />
+    <param name="File" value="/var/log/pqmessenger/pqmessenger.log" />
     <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
     	<param name="FileNamePattern" value="pqmessenger-%d{yyyyMMdd}.gz" />
     </rollingPolicy>
