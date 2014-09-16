@@ -44,7 +44,6 @@ public class MsgEngine {
 	 * @return full qualified configuration file name
 	 */
 	private String getConfigFilename(String[] args){
-		String rslt = "";
 		String configPath = "";
 		if (args.length > 1){
 			for (int i=0; i<args.length; i++){
@@ -54,22 +53,7 @@ public class MsgEngine {
 				}
 			}
 		}
-		if (!configPath.isEmpty()){
-			File f = new File(configPath);
-			String sep = System.getProperty("file.separator");
-			if ((f.exists()) && (f.isFile())){
-				rslt = configPath.substring(configPath.lastIndexOf(sep)+1,configPath.length());
-				configPath = configPath.substring(0,configPath.lastIndexOf(sep)+1);
-			} else
-			if ((f.exists()) && (f.isDirectory())){
-				if (configPath.lastIndexOf(sep) != (configPath.length()-1)){
-					configPath = configPath + sep;
-				}
-				rslt = configPath;// + DEFAULT_CONFFILENAME;
-			}
-		}
-		if (rslt.isEmpty()) rslt = DEFAULT_CONFFILENAME;
-		return rslt;
+		return configPath;
 	}
 	
 	private String getConfigServerID(String[] args){
@@ -110,6 +94,7 @@ public class MsgEngine {
 		boolean confInitialized = false;		
 		JApptoolsPin toolsPin = JApptoolsPin.getInstance();
 		String configFilename = getConfigFilename(args);
+		System.out.println("Daemon - config file: " + configFilename);
 		initTimeRetry(args);
 		if (!configFilename.isEmpty()) confInitialized = toolsPin.initConfig(configFilename);
 		if (!confInitialized) {
