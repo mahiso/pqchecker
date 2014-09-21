@@ -1,6 +1,23 @@
 package net.meddeb.pqmessenger;
+/*--------------------------------------------------------------------
+pqMessenger, passwords quality settings messenger for pqChecker
+Messaging middleware between pqChecker OpenLDAP plugin and messaging 
+service on TomEE+ applicaion server
+Copyright (C) 2014, Abdelhamid MEDDEB (abdelhamid@meddeb.net)  
 
-import java.io.File;
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+---------------------------------------------------------------------*/
+
 
 import net.meddeb.japptools.JApptoolsPin;
 import net.meddeb.japptools.Serverconf;
@@ -13,7 +30,6 @@ public class MsgEngine {
 	private final static String CONFFILE_ARG_KEY = "--config-file";
 	private final static String MSGSERVER_ARG_KEY = "--msg-server-id";
 	private final static String CNX_RETRY_TIME_ARG_KEY = "--connection-retry-time";
-	private final static String DEFAULT_CONFFILENAME = "config.xml";
 	private final static int DEFAULT_TIME_RETRY = 900; //15mn
 	private Messenger messenger = null;
 	private Logger logger = null;

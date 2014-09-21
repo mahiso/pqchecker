@@ -1,7 +1,7 @@
 package net.meddeb.pqmessenger;
 /*--------------------------------------------------------------------
-ppMessenger, password policy messenger for ppInspect component
-Messaging middleware between ppInspect OpenLDAP plugin and messaging 
+pqMessenger, passwords quality settings messenger for pqChecker
+Messaging middleware between pqChecker OpenLDAP plugin and messaging 
 service on TomEE+ applicaion server
 Copyright (C) 2014, Abdelhamid MEDDEB (abdelhamid@meddeb.net)  
 
