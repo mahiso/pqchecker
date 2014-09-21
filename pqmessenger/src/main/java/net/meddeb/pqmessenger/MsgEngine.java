@@ -23,9 +23,9 @@ public class MsgEngine {
 	private void printWelcomeMessage(){
 		System.out.println("");
 		System.out.println("---------------------------------------------------------------------");
-		System.out.println("pqMessenger, Password quality messenger for pqchecker - Version " + VERSION);
+		System.out.println(Msg.getOut("pqmsgTitle") + VERSION);
 		System.out.println("Copyright (C) 2014, Abdelhamid MEDDEB (abdelhamid@meddeb.net)");
-    System.out.println("This program is free software and comes with ABSOLUTELY NO WARRANTY.");
+    System.out.println(Msg.getOut("freeNoWarranty"));
 		System.out.println("---------------------------------------------------------------------");
 		System.out.println("");
 	}
@@ -94,7 +94,6 @@ public class MsgEngine {
 		boolean confInitialized = false;		
 		JApptoolsPin toolsPin = JApptoolsPin.getInstance();
 		String configFilename = getConfigFilename(args);
-		System.out.println("Daemon - config file: " + configFilename);
 		initTimeRetry(args);
 		if (!configFilename.isEmpty()) confInitialized = toolsPin.initConfig(configFilename);
 		if (!confInitialized) {
@@ -102,18 +101,18 @@ public class MsgEngine {
 		}
 		if (toolsPin.initLog()) {
 			logger =  Logger.getLogger(this.getClass());
-		} else System.out.println("Cannot configure logging system.");
+		} else System.out.println(Msg.getOut("cantConfLog"));
 		if (confInitialized) {
 			String serverID = getConfigServerID(args);
 			Serverconf msgServerConf = toolsPin.getServerconf(serverID);
 			if (msgServerConf == null) {
-				if (logger != null) logger.warn("Configuration for messaging server not found, uses default settings.");
+				if (logger != null) logger.warn(Msg.getLog("confnotFound"));
 				messenger = new Messenger();
 			} else	messenger = new Messenger(msgServerConf);
 			
 		} else {
 			messenger = new Messenger();
-			System.out.println("No configuration file found, uses default settings.");
+			System.out.println(Msg.getOut("confFilenotfound"));
 		}
 	}
 	
@@ -121,14 +120,14 @@ public class MsgEngine {
 		if (!messenger.isConnectionInitialized()) messenger.initConnection();
 		if ((messenger.isConnectionInitialized()) && (!messenger.isConnected())) {
 			messenger.startConnection();
-			if ((logger != null)&&(messenger.isConnected())) logger.info("-- c o n n e c t e d ---<o>---");
+			if ((logger != null)&&(messenger.isConnected())) logger.info(Msg.getLog("pqMsgdcnx"));
 		}
 	}
 	
 	public void stopConnection(){
 		if (messenger.isConnected()) {
 			messenger.stopConnection();
-			if ((logger != null)&&(!messenger.isConnected()))	logger.info("-- d i s c o n n e c t e d ---[ o ]---");
+			if ((logger != null)&&(!messenger.isConnected()))	logger.info(Msg.getLog("pqMsgdcnx"));
 		}
 	}
 	

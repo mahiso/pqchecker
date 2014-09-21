@@ -1,5 +1,7 @@
 package net.meddeb.pqmessenger;
 
+import java.text.MessageFormat;
+
 import org.apache.commons.daemon.Daemon;
 import org.apache.commons.daemon.DaemonContext;
 import org.apache.commons.daemon.DaemonInitException;
@@ -35,14 +37,18 @@ public class MsgDaemon implements Daemon {
       public void run() {            
         logger.info("");
         logger.info("-------------------");
-        logger.info("pqMessenger starts.");
+        logger.info(Msg.getLog("pqMsgStart"));
         logger.info("-------------------");
         while(!stopped){
-  				logger.info("Try connection to messaging server...");
+  				logger.info(Msg.getLog("pqMsgTrycnx"));
   				msgEngine.startConnection();
   				if (msgEngine.isConnectionStarted()){
   					connected = true;
-  				} else logger.info("Connection failed, wait " + msgEngine.getStrTimeretry() + " before retry..");
+  				} else {
+  					String msg = Msg.getLog("pqMsgCnxFail");
+  					msg = MessageFormat.format(msg, msgEngine.getStrTimeretry());
+  					logger.info(msg);
+  				}
   				while ((true)&&(msgEngine.isConnectionStarted())){
   					try{
   						Thread.sleep(1000);
@@ -51,7 +57,7 @@ public class MsgDaemon implements Daemon {
   					}
   				}
   				if (connected){
-  					logger.info("-- d i s c o n n e c t e d ---[ o ]---");
+  					logger.info(Msg.getLog("pqMsgdcnx"));
   					connected = false;
   				}
   				try {
@@ -80,7 +86,7 @@ public class MsgDaemon implements Daemon {
 				connected = false;
     	}
       logger.info("------------------");
-      logger.info("pqMessenger stops.");
+      logger.info(Msg.getLog("pqMsgStop"));
       logger.info("------------------");
     }catch(InterruptedException e){
       System.err.println(e.getMessage());
