@@ -38,11 +38,11 @@ public class MsgEngine {
 	
 	private void printWelcomeMessage(){
 		System.out.println("");
-		System.out.println("---------------------------------------------------------------------");
+		System.out.println(Msg.getOut("sepLine"));
 		System.out.println(Msg.getOut("pqmsgTitle") + VERSION);
 		System.out.println("Copyright (C) 2014, Abdelhamid MEDDEB (abdelhamid@meddeb.net)");
     System.out.println(Msg.getOut("freeNoWarranty"));
-		System.out.println("---------------------------------------------------------------------");
+		System.out.println(Msg.getOut("sepLine"));
 		System.out.println("");
 	}
 	
