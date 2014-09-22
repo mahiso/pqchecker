@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ---------------------------------------------------------------------*/
 
+import java.text.MessageFormat;
+
 import org.apache.log4j.Logger;
 
 
@@ -38,23 +40,26 @@ public class Entrypoint {
 					connected = false;
 	    	}
         logger.info("------------------");
-        logger.info("pqMessenger stops.");
+        logger.info(Msg.getLog("pqMsgStart"));
         logger.info("------------------");
 	    }
 		}));
 		logger =  Logger.getLogger(Entrypoint.class);
     logger.info("");
     logger.info("-------------------");
-    logger.info("pqMessenger starts.");
+    logger.info(Msg.getLog("pqMsgStart"));
     logger.info("-------------------");
 		try{
 			while (true){
-				logger.info("Try connection to messaging server...");
+				logger.info(Msg.getLog("pqMsgTrycnx"));
 				msgEngine.startConnection();
 				if (msgEngine.isConnectionStarted()){
 					connected = true;
-				} else logger.info("Connection failed, wait for " + msgEngine.getStrTimeretry() + 
-						                " to retry..");
+				} else {
+					String msg = Msg.getLog("pqMsgCnxFail");
+					msg = MessageFormat.format(msg, msgEngine.getStrTimeretry());
+					logger.info(msg);
+				}
 				while ((true)&&(msgEngine.isConnectionStarted())){
 					try{
 						Thread.sleep(1000);
@@ -63,15 +68,15 @@ public class Entrypoint {
 					}
 				}
 				if (connected){
-					logger.info("-- d i s c o n n e c t e d ---[ o ]---");
+					logger.info(Msg.getLog("pqMsgdcnx"));
 					connected = false;
 				}
 				Thread.sleep(msgEngine.getTimeRetry());
 			}
 		} catch (Exception e){
-			logger.error("JMS error: " + e.getMessage());
+			logger.error(Msg.getLog("sysError") + e.getMessage());
 		} finally {
-			logger.info("Stops the listening.");
+			logger.info(Msg.getLog("stopListen"));
 		}
 	}
 

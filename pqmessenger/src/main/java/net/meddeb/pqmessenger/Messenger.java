@@ -81,17 +81,17 @@ public class Messenger {
 	
 	private class ParamsListener implements MessageListener{
 		public void onMessage(Message message) {
-			logger.debug("Receives a message.");
+			logger.debug(Msg.getLog("receivMsg"));
 			TextMessage msg = null;
 			try {
 				if (message instanceof TextMessage) {
 					msg = (TextMessage) message;
 					String msgType = msg.getStringProperty(MsgProperties.TYPE.toString());
 					if ((msgType == null) || msgType.isEmpty()){
-						logger.warn("Message not operable, No message type defined.");
+						logger.warn(Msg.getLog("msgNonUsable"));
 						return;
 					}
-					logger.info("Message received: [" + msgType + "] " + msg.getText());
+					logger.info(Msg.getLog("receivMsg") + msgType + "] " + msg.getText());
 					JNIGateway gateway = new JNIGateway();
 					String params = "";
 					switch (PQCRequest.fromName(msgType)){
@@ -112,12 +112,12 @@ public class Messenger {
 							break;
 					}
 				} else {
-					logger.warn("The message type is not supported: " + message.getClass().getName());
+					logger.warn(Msg.getLog("typeNotsupp") + message.getClass().getName());
 				}
 			} catch (JMSException e) {
-				logger.error("JMS Error: " + e.toString());
+				logger.error(Msg.getLog("msgError") + e.toString());
 			} catch (Exception e) {
-				logger.error("Error: " + e.toString());
+				logger.error(Msg.getLog("sysError") + e.toString());
 			}
 		}
 	}
@@ -155,29 +155,29 @@ public class Messenger {
 	@SuppressWarnings("finally")
 	public boolean initConnection(){
 		connectionInitialized = false;
-		logger.debug("Initializing connection..");
+		logger.debug(Msg.getLog("initCnx"));
 		try {
 			jndiContext = new InitialContext(props);
 			connectionFactory = (ConnectionFactory)jndiContext.lookup("java:udmbConnectionFactory");
-			logger.debug("ConnectionFactory initialized.");
+			logger.debug(Msg.getLog("factoryInit"));
 			connection = connectionFactory.createConnection();
-			logger.debug("connection created: " + connection.getClientID());
+			logger.debug(Msg.getLog("cnxCreate") + connection.getClientID());
 			connection.setExceptionListener(new ExceptionListener() {
 				@Override
 				public void onException(JMSException e) {
 					connected = false;
 					connectionInitialized = false;
-					logger.error("Connection lost.");
+					logger.error(Msg.getLog("cnxLost"));
 				}
 			});
 			topic = (Topic)jndiContext.lookup(topicName);
-			logger.debug("Topic found: " + topic.getTopicName());
+			logger.debug(Msg.getLog("topicFound") + topic.getTopicName());
 			connectionInitialized = (connection != null) && (topic != null);
-			if (connectionInitialized) logger.debug("Connection successfully initialized: " + jndiContext.getNameInNamespace());
+			if (connectionInitialized) logger.debug("cnxSuccess" + jndiContext.getNameInNamespace());
 		} catch (NamingException e) {
-			logger.error("Unable to initialize connection.");
+			logger.error(Msg.getLog("cnxUnable"));
 		} catch (JMSException e) {
-			logger.error("Unable to initialize connection.");
+			logger.error(Msg.getLog("cnxUnable"));
 		} finally{
 			return connectionInitialized;
 		}
@@ -185,7 +185,7 @@ public class Messenger {
 	
 	@SuppressWarnings("finally")
 	public boolean startConnection(){
-		logger.debug("Starting connection..");
+		logger.debug(Msg.getLog("cnxStart"));
 		connected = false;
 		if (!connectionInitialized) return connected;
 		String selectCondition = "(" + 
@@ -193,16 +193,16 @@ public class Messenger {
 				MsgProperties.TYPE.toString() + " = '" + PQCRequest.WRITE.toString() + "' OR " +
 				MsgProperties.TYPE.toString() + " = '" + PQCRequest.TEST.toString() + "') AND " +
 				"(" + MsgProperties.SENDERID.toString() + " <> '" + senderID + "')";
-		logger.debug("Listen selector: " + selectCondition);
+		logger.debug(Msg.getLog("listenSel") + selectCondition);
 		try {
 			connection.start();
 			session = connection.createSession(false,Session.AUTO_ACKNOWLEDGE);
 			consumer = session.createConsumer(topic, selectCondition);
 			consumer.setMessageListener(new ParamsListener());
 			connected = true;
-			logger.debug("Connection successfully started.");
+			logger.debug(Msg.getLog("cnxStartSucc"));
 		} catch (JMSException e) {
-			logger.error("Error when starts connection: " + e.getMessage());
+			logger.error(Msg.getLog("cnxStartErr") + e.getMessage());
 		} finally {
 			return connected;
 		}
@@ -212,7 +212,7 @@ public class Messenger {
 	public void stopConnection(){
 		try{
 			if ((connected) && (connection != null)) {
-				logger.debug("Stopping connection..");
+				logger.debug(Msg.getLog("cnxStop"));
 				connection.stop();
 				if (session != null) {
 					session.close();
@@ -222,22 +222,22 @@ public class Messenger {
 				connected = false;
 			}
 		} catch (JMSException e) {
-			logger.error("Error when stops connection: " + e.getMessage());
+			logger.error("cnxStopErr" + e.getMessage());
 		}
 	}
 
 	public void doSend(String message, String msgType){
 		if ((connection == null) || (!connectionInitialized) || (session == null)) return;
-		logger.debug("Sending a message.");
+		logger.debug(Msg.getLog("msgSend"));
 		try{
 			MessageProducer producer = session.createProducer(topic);
 			TextMessage msg  = session.createTextMessage();
 			msg.setStringProperty(MsgProperties.TYPE.toString(), msgType);
 			msg.setStringProperty(MsgProperties.SENDERID.toString(), senderID);
 			msg.setText(message);
-			logger.info("Sends message: [" + msgType + "] " + msg.getText());
+			logger.info(Msg.getLog("sendMsg") + msgType + "] " + msg.getText());
 			producer.send(msg);
-			logger.debug("Message sent.");
+			logger.debug(Msg.getLog("msgSent"));
 		} catch (JMSException e){
 			logger.error(e.getMessage());
 		}
