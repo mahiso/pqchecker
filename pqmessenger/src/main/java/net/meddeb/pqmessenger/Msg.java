@@ -18,9 +18,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ---------------------------------------------------------------------*/
 
+import java.io.UnsupportedEncodingException;
 import java.util.ResourceBundle;
 
+import org.apache.log4j.Logger;
+
 class Msg {
+	private static Logger logger =  Logger.getLogger(Msg.class);
 	private static final String LOG_PROPNAME = "pqmsglogmsg";
 	private static final String OUT_PROPNAME = "pqmsgoutmsg";
 	private static ResourceBundle logMessages = null;
@@ -33,11 +37,26 @@ class Msg {
 		if (outMessages == null) outMessages = ResourceBundle.getBundle(OUT_PROPNAME);
 		return outMessages;
 	}
+	
+	@SuppressWarnings("finally")
+	private static String formatEncoding(String msg){
+		String rslt = "";
+		try {
+			rslt = new String(msg.getBytes("ISO-8859-1"), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage());
+		} finally {
+			return rslt;
+		}
+	}
+	
 	public static String getLog(String key){
-		return getLogMessages().getString(key);
+		String msg = getLogMessages().getString(key);
+		return formatEncoding(msg);
 	}
 	public static String getOut(String key){
-		return getOutMessages().getString(key);
+		String msg = getOutMessages().getString(key);
+		return formatEncoding(msg);
 	}
 	private Msg(){
 	}

@@ -41,7 +41,7 @@ public class MsgEngine {
 		System.out.println(Msg.getOut("sepLine"));
 		System.out.println(Msg.getOut("pqmsgTitle") + VERSION);
 		System.out.println("Copyright (C) 2014, Abdelhamid MEDDEB (abdelhamid@meddeb.net)");
-    System.out.println(Msg.getOut("freeNoWarranty"));
+		System.out.println(Msg.getOut("freeNoWarranty"));
 		System.out.println(Msg.getOut("sepLine"));
 		System.out.println("");
 	}
