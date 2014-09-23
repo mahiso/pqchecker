@@ -19,6 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ---------------------------------------------------------------------*/
 
 
+import java.lang.reflect.Field;
+import java.util.Hashtable;
+
 import net.meddeb.japptools.JApptoolsPin;
 import net.meddeb.japptools.Serverconf;
 
@@ -30,10 +33,12 @@ public class MsgEngine {
 	private final static String CONFFILE_ARG_KEY = "--config-file";
 	private final static String MSGSERVER_ARG_KEY = "--msg-server-id";
 	private final static String CNX_RETRY_TIME_ARG_KEY = "--connection-retry-time";
-	private final static int DEFAULT_TIME_RETRY = 900; //15mn
+	private final static int DEFAULT_TIME_RETRY = 1800; //30mn
+	private final static String PARAM_NATIVELIBPATH = "nativelibpath";
+	private final static String PARAM_CNXRETRYTIME = "cnxretrytime";
 	private Messenger messenger = null;
 	private Logger logger = null;
-	
+	// Time to retry connection in seconds
 	private int timeRetry = -1; 
 	
 	private void printWelcomeMessage(){
@@ -48,7 +53,7 @@ public class MsgEngine {
 	
 	/**
 	 * Arguments supported:
-	 * 1/ --config-file						:	Can be path to configuration files (log and conf) or full qualified 
+	 * 1/ --config-file						:	May be path to configuration files (log and conf) or full qualified 
 	 * 															configuration file name. Default configuration file name is 
 	 * 															"config.xml". Log configuration file name must be log4j.xml
 	 * 															both configuration files must be in the same directory.
@@ -104,10 +109,25 @@ public class MsgEngine {
 		}
 		if (timeRetry <= 0) timeRetry = DEFAULT_TIME_RETRY;
 	}
+	
+	private void setNativelibraryPath(String strPath){
+		System.setProperty("java.library.path", strPath);
+		Field fieldSysPath;
+		try {
+			fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
+			fieldSysPath.setAccessible(true);
+			fieldSysPath.set(null, null);
+		} catch (Exception e) {
+			if (logger != null) {
+				logger.error(e.getMessage());
+			} else e.printStackTrace();
+		}
+	}
 
 	public MsgEngine(String[] args) {
 		printWelcomeMessage();
 		boolean confInitialized = false;		
+		Hashtable<String, String> paramList = null;
 		JApptoolsPin toolsPin = JApptoolsPin.getInstance();
 		String configFilename = getConfigFilename(args);
 		initTimeRetry(args);
@@ -125,7 +145,15 @@ public class MsgEngine {
 				if (logger != null) logger.warn(Msg.getLog("confnotFound"));
 				messenger = new Messenger();
 			} else	messenger = new Messenger(msgServerConf);
-			
+			paramList = toolsPin.getParams();
+			if (paramList == null) {
+				if (logger != null) logger.warn(Msg.getLog("paramnotFound"));
+			} else {	
+				String param = paramList.get(PARAM_NATIVELIBPATH);
+				if (!param.isEmpty()) setNativelibraryPath(param);
+				param = paramList.get(PARAM_CNXRETRYTIME);
+				if (!param.isEmpty()) timeRetry = Integer.parseInt(param);
+			}
 		} else {
 			messenger = new Messenger();
 			System.out.println(Msg.getOut("confFilenotfound"));
@@ -136,7 +164,7 @@ public class MsgEngine {
 		if (!messenger.isConnectionInitialized()) messenger.initConnection();
 		if ((messenger.isConnectionInitialized()) && (!messenger.isConnected())) {
 			messenger.startConnection();
-			if ((logger != null)&&(messenger.isConnected())) logger.info(Msg.getLog("pqMsgdcnx"));
+			if ((logger != null)&&(messenger.isConnected())) logger.info(Msg.getLog("pqMsgcnx"));
 		}
 	}
 	
@@ -150,10 +178,13 @@ public class MsgEngine {
 	public boolean isConnectionStarted(){
 		return messenger.isConnected();
 	}
-
+	/**
+	 * Connection retry time in milliseconds
+	 * @return time to retry cnx 
+	 */
 	public int getTimeRetry() {
 		if (timeRetry < 1){
-			return 1000;
+			return DEFAULT_TIME_RETRY * 1000;
 		} else return timeRetry * 1000;
 	}
 	/**
