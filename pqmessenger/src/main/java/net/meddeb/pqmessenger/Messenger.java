@@ -40,8 +40,7 @@ import javax.naming.NamingException;
 import net.meddeb.japptools.Serverconf;
 import net.meddeb.pqmsgshared.MsgProperties;
 import net.meddeb.pqmsgshared.MsgStatus;
-import net.meddeb.pqmsgshared.PQCRequest;
-import net.meddeb.pqmsgshared.PQCResponse;
+import net.meddeb.pqmsgshared.PQChannel;
 import net.meddeb.pqmsgshared.PQParams;
 
 import org.apache.log4j.Logger;
@@ -94,21 +93,21 @@ public class Messenger {
 					logger.info(Msg.getLog("receivMsg") + msgType + "] " + msg.getText());
 					JNIGateway gateway = new JNIGateway();
 					String params = "";
-					switch (PQCRequest.fromName(msgType)){
-						case TEST:
-							doSend(MsgStatus.SUCCESS.toString(), PQCResponse.TEST.toString());
+					switch (PQChannel.fromName(msgType)){
+						case TEST_REQUEST:
+							doSend(MsgStatus.SUCCESS.toString(), PQChannel.TEST_RESPONSE.toString());
 							break;
-						case WRITE:
+						case WRITE_REQUEST:
 							params = msg.getText();
 							if (gateway.setParams(params.trim(), PQParams.FORMAT)){
-								doSend(MsgStatus.SUCCESS.toString(), PQCResponse.WRITE.toString());
-							} else doSend(MsgStatus.FAIL.toString(), PQCResponse.WRITE.toString());
+								doSend(MsgStatus.SUCCESS.toString(), PQChannel.WRITE_RESPONSE.toString());
+							} else doSend(MsgStatus.FAIL.toString(), PQChannel.WRITE_RESPONSE.toString());
 							break;
-						case READ:
+						case READ_REQUEST:
 							params = gateway.getParams(PQParams.FORMAT);
 							if (params == null){
-								doSend(MsgStatus.FAIL.toString(), PQCResponse.READ.toString());
-							} else doSend(params.trim(), PQCResponse.READ.toString());
+								doSend(MsgStatus.FAIL.toString(), PQChannel.READ_RESPONSE.toString());
+							} else doSend(params.trim(), PQChannel.READ_RESPONSE.toString());
 							break;
 					}
 				} else {
@@ -189,9 +188,9 @@ public class Messenger {
 		connected = false;
 		if (!connectionInitialized) return connected;
 		String selectCondition = "(" + 
-				MsgProperties.TYPE.toString() + " = '" + PQCRequest.READ.toString() + "' OR " + 
-				MsgProperties.TYPE.toString() + " = '" + PQCRequest.WRITE.toString() + "' OR " +
-				MsgProperties.TYPE.toString() + " = '" + PQCRequest.TEST.toString() + "') AND " +
+				MsgProperties.TYPE.toString() + " = '" + PQChannel.READ_REQUEST.toString() + "' OR " + 
+				MsgProperties.TYPE.toString() + " = '" + PQChannel.WRITE_REQUEST.toString() + "' OR " +
+				MsgProperties.TYPE.toString() + " = '" + PQChannel.TEST_REQUEST.toString() + "') AND " +
 				"(" + MsgProperties.SENDERID.toString() + " <> '" + senderID + "')";
 		logger.debug(Msg.getLog("listenSel") + selectCondition);
 		try {

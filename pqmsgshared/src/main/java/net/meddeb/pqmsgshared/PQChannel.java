@@ -16,29 +16,40 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ---------------------------------------------------------------------*/
 
-public enum PQCRequest {
-	READ("PQ-REQ-Read"), 
-	WRITE("PQ-REQ-Write"), 
-	TEST("PQ-REQ-Test");
+public enum PQChannel {
+	READ_REQUEST("PQ-REQ-Read"), 
+	WRITE_REQUEST("PQ-REQ-Write"), 
+	TEST_REQUEST("PQ-REQ-Test"),
+	READ_RESPONSE("PQ-RES-Read"), 
+	WRITE_RESPONSE("PQ-RES-Write"), 
+	TEST_RESPONSE("PQ-RES-Test");
 	
 	private final String name;
 	
-	public static PQCRequest fromName(String sn){
-		if (sn.equalsIgnoreCase(PQCRequest.READ.toString())){
-			return READ;
-		} else if (sn.equalsIgnoreCase(PQCRequest.WRITE.toString())){
-			return WRITE;
-		} else if (sn.equalsIgnoreCase(PQCRequest.TEST.toString())){
-			return TEST;
+	public static PQChannel fromName(String sn){
+		if (sn.equalsIgnoreCase(PQChannel.READ_REQUEST.toString())){
+			return READ_REQUEST;
+		} else if (sn.equalsIgnoreCase(PQChannel.WRITE_REQUEST.toString())){
+			return WRITE_REQUEST;
+		} else if (sn.equalsIgnoreCase(PQChannel.TEST_REQUEST.toString())){
+			return TEST_REQUEST;
+		} else if (sn.equalsIgnoreCase(PQChannel.READ_RESPONSE.toString())){
+			return READ_RESPONSE;
+		} else if (sn.equalsIgnoreCase(PQChannel.WRITE_RESPONSE.toString())){
+			return WRITE_RESPONSE;
+		} else if (sn.equalsIgnoreCase(PQChannel.TEST_RESPONSE.toString())){
+			return TEST_RESPONSE;
 		} else return null;
 	}
 	
 	public static String[] getStrArray(){
-		String[] rslt = {PQCRequest.READ.toString(), PQCRequest.WRITE.toString(), PQCRequest.TEST.toString()};
+		String[] rslt = {PQChannel.READ_REQUEST.toString(), PQChannel.WRITE_REQUEST.toString(), 
+										 PQChannel.TEST_REQUEST.toString(), PQChannel.READ_RESPONSE.toString(),
+										 PQChannel.WRITE_RESPONSE.toString(), PQChannel.TEST_RESPONSE.toString()};
 		return rslt;
 	}
 	
-	private PQCRequest(String str){
+	private PQChannel(String str){
 		name = str;
 	}
 	
