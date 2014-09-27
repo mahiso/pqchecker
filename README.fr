@@ -1,6 +1,6 @@
 ----------------------------------
 pqchecker.so bibliothèque paratgée
-1.1.0
+1.2.0
 ----------------------------------
 
 pqchecker un plug-in pour le serveur d'annuaire OpenLDAP muni 
@@ -26,7 +26,8 @@ la modification:
 -------------
 Où le trouver
 -------------
-http://www.meddeb.net/download
+Binaires: http://www.meddeb.net/download
+Sources: https://github.com/ameddeb/pqchecker.git
 
 -----------------
 Exigences système
@@ -56,3 +57,4 @@ http://www.meddeb.fr/pqchecker
 Rapporter les problèmes
 -----------------------
 abdelhamid@meddeb.net
+https://github.com/ameddeb/pqchecker/issues

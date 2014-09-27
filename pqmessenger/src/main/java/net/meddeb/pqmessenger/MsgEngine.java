@@ -28,7 +28,7 @@ import net.meddeb.japptools.Serverconf;
 import org.apache.log4j.Logger;
 
 public class MsgEngine {
-	private final static String VERSION = "1.1.0";
+	private final static String VERSION = "1.2.0";
 	private final static String DEFAULT_MSGSERVER_ID = "PQMsgServer";
 	private final static String CONFFILE_ARG_KEY = "--config-file";
 	private final static String MSGSERVER_ARG_KEY = "--msg-server-id";

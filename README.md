@@ -20,4 +20,4 @@ Native shared library for POSIX compliant system. Checks modified passwords, bef
 Java daemon. Used to provide information about the passwords quality parameters: reading and modifying.
 
 
-For more details visit (http://www.meddeb.net/pqchecker).
+For more details visit http://www.meddeb.net/pqchecker
