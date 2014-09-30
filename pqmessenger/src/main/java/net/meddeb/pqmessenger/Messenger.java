@@ -109,6 +109,8 @@ public class Messenger {
 								doSend(MsgStatus.FAIL.toString(), PQChannel.READ_RESPONSE.toString());
 							} else doSend(params.trim(), PQChannel.READ_RESPONSE.toString());
 							break;
+						default: //when response message, do nothing
+							break;	
 					}
 				} else {
 					logger.warn(Msg.getLog("typeNotsupp") + message.getClass().getName());
