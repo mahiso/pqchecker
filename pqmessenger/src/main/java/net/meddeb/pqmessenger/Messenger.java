@@ -41,7 +41,7 @@ import net.meddeb.japptools.Serverconf;
 import net.meddeb.pqmsgshared.MsgProperties;
 import net.meddeb.pqmsgshared.MsgStatus;
 import net.meddeb.pqmsgshared.PQChannel;
-import net.meddeb.pqmsgshared.PQParams;
+import net.meddeb.pqmsgshared.PQParamsDto;
 
 import org.apache.log4j.Logger;
 
@@ -99,12 +99,12 @@ public class Messenger {
 							break;
 						case WRITE_REQUEST:
 							params = msg.getText();
-							if (gateway.setParams(params.trim(), PQParams.FORMAT)){
+							if (gateway.setParams(params.trim(), PQParamsDto.FORMAT)){
 								doSend(MsgStatus.SUCCESS.toString(), PQChannel.WRITE_RESPONSE.toString());
 							} else doSend(MsgStatus.FAIL.toString(), PQChannel.WRITE_RESPONSE.toString());
 							break;
 						case READ_REQUEST:
-							params = gateway.getParams(PQParams.FORMAT);
+							params = gateway.getParams(PQParamsDto.FORMAT);
 							if (params == null){
 								doSend(MsgStatus.FAIL.toString(), PQChannel.READ_RESPONSE.toString());
 							} else doSend(params.trim(), PQChannel.READ_RESPONSE.toString());

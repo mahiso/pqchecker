@@ -1,4 +1,6 @@
 package net.meddeb.pqmsgshared;
+
+import java.io.Serializable;
 /*--------------------------------------------------------------------
 pqMsgshared, Shared resources manager for pqMessenger and JMS provider
 Copyright (C) 2014, Abdelhamid MEDDEB (abdelhamid@meddeb.net)  
@@ -16,8 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ---------------------------------------------------------------------*/
 
-public class PQParams {
-	
+public class PQParamsDto implements Serializable  {
+	private static final long serialVersionUID = 5896234623724191454L;
 	public static final String FORMAT = "ULDS";
 	private String strParams = "";
 	private int upper = 0;
@@ -69,9 +71,12 @@ public class PQParams {
 		if (strParams.length() > 8) forbidden = strParams.substring(8, strParams.length() -1);
 	}
 
-	public PQParams(String strParams) {
+	public PQParamsDto(String strParams) {
 		this.strParams = strParams;
 		strParamsToValues();
+	}
+
+	public PQParamsDto() {
 	}
 
 	public String getStrParams() {
@@ -86,14 +91,27 @@ public class PQParams {
 	public int getUpper() {
 		return upper;
 	}
+	
+	public String getUpperStr() {
+		return Integer.toString(upper);
+	}
 
 	public void setUpper(int upper) {
 		this.upper = upper;
 		valuesToStrParams();
 	}
 
+	public void setUpper(String strUpper) {
+		this.upper = Integer.parseInt(strUpper);
+		valuesToStrParams();
+	}
+
 	public int getLower() {
 		return lower;
+	}
+	
+	public String getLowerStr(){
+		return Integer.toString(lower);
 	}
 
 	public void setLower(int lower) {
@@ -101,8 +119,17 @@ public class PQParams {
 		valuesToStrParams();
 	}
 
+	public void setLower(String strLower) {
+		this.lower = Integer.parseInt(strLower);
+		valuesToStrParams();
+	}
+
 	public int getDigit() {
 		return digit;
+	}
+	
+	public String getDigitStr(){
+		return Integer.toString(digit);
 	}
 
 	public void setDigit(int digit) {
@@ -110,13 +137,25 @@ public class PQParams {
 		valuesToStrParams();
 	}
 
+	public void setDigit(String strDigit) {
+		this.digit = Integer.parseInt(strDigit);
+	}
+
 	public int getSpecial() {
 		return special;
+	}
+	
+	public String getSpecialStr(){
+		return Integer.toString(special);
 	}
 
 	public void setSpecial(int special) {
 		this.special = special;
 		valuesToStrParams();
+	}
+	
+	public void setSpecial(String strSpecial) {
+		this.special = Integer.parseInt(strSpecial);
 	}
 
 	public String getForbidden() {
