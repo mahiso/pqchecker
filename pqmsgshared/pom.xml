@@ -26,6 +26,19 @@
         <artifactId>maven-jar-plugin</artifactId>
       </plugin>
     </plugins>  
+      <resources>          
+        <resource>
+          <directory>src/main/resources</directory>
+          <filtering>false</filtering>
+        </resource>
+        <resource>
+          <directory>src/main/java</directory>
+          <includes>
+            <include>**/*.java</include>
+          </includes>
+          <filtering>false</filtering>
+        </resource>
+      </resources>          
     <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
