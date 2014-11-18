@@ -37,11 +37,11 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import net.meddeb.bee.common.MsgProperties;
 import net.meddeb.japptools.Serverconf;
-import net.meddeb.pqmsgshared.MsgProperties;
-import net.meddeb.pqmsgshared.MsgStatus;
-import net.meddeb.pqmsgshared.PQChannel;
-import net.meddeb.pqmsgshared.PQParamsDto;
+import net.meddeb.udir.common.PQChannelMessages;
+import net.meddeb.udir.common.PQParamsDto;
+import net.meddeb.udir.common.SendStatus;
 
 import org.apache.log4j.Logger;
 
@@ -93,21 +93,21 @@ public class Messenger {
 					logger.info(Msg.getLog("receivMsg") + msgType + "] " + msg.getText());
 					JNIGateway gateway = new JNIGateway();
 					String params = "";
-					switch (PQChannel.fromName(msgType)){
+					switch (PQChannelMessages.fromName(msgType)){
 						case TEST_REQUEST:
-							doSend(MsgStatus.SUCCESS.toString(), PQChannel.TEST_RESPONSE.toString());
+							doSend(SendStatus.SUCCESS.toString(), PQChannelMessages.TEST_RESPONSE.toString());
 							break;
 						case WRITE_REQUEST:
 							params = msg.getText();
 							if (gateway.setParams(params.trim(), PQParamsDto.FORMAT)){
-								doSend(MsgStatus.SUCCESS.toString(), PQChannel.WRITE_RESPONSE.toString());
-							} else doSend(MsgStatus.FAIL.toString(), PQChannel.WRITE_RESPONSE.toString());
+								doSend(SendStatus.SUCCESS.toString(), PQChannelMessages.WRITE_RESPONSE.toString());
+							} else doSend(SendStatus.FAIL.toString(), PQChannelMessages.WRITE_RESPONSE.toString());
 							break;
 						case READ_REQUEST:
 							params = gateway.getParams(PQParamsDto.FORMAT);
 							if (params == null){
-								doSend(MsgStatus.FAIL.toString(), PQChannel.READ_RESPONSE.toString());
-							} else doSend(params.trim(), PQChannel.READ_RESPONSE.toString());
+								doSend(SendStatus.FAIL.toString(), PQChannelMessages.READ_RESPONSE.toString());
+							} else doSend(params.trim(), PQChannelMessages.READ_RESPONSE.toString());
 							break;
 						default: //when response message, do nothing
 							break;	
@@ -190,9 +190,9 @@ public class Messenger {
 		connected = false;
 		if (!connectionInitialized) return connected;
 		String selectCondition = "(" + 
-				MsgProperties.TYPE.toString() + " = '" + PQChannel.READ_REQUEST.toString() + "' OR " + 
-				MsgProperties.TYPE.toString() + " = '" + PQChannel.WRITE_REQUEST.toString() + "' OR " +
-				MsgProperties.TYPE.toString() + " = '" + PQChannel.TEST_REQUEST.toString() + "') AND " +
+				MsgProperties.TYPE.toString() + " = '" + PQChannelMessages.READ_REQUEST.toString() + "' OR " + 
+				MsgProperties.TYPE.toString() + " = '" + PQChannelMessages.WRITE_REQUEST.toString() + "' OR " +
+				MsgProperties.TYPE.toString() + " = '" + PQChannelMessages.TEST_REQUEST.toString() + "') AND " +
 				"(" + MsgProperties.SENDERID.toString() + " <> '" + senderID + "')";
 		logger.debug(Msg.getLog("listenSel") + selectCondition);
 		try {
