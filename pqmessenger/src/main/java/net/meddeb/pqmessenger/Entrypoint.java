@@ -40,23 +40,23 @@ public class Entrypoint {
 					connected = false;
 	    	}
         logger.info("------------------");
-        logger.info(Msg.getLog("pqMsgStart"));
+        logger.info(LoggingMsg.getLog("pqMsgStart"));
         logger.info("------------------");
 	    }
 		}));
 		logger =  Logger.getLogger(Entrypoint.class);
     logger.info("");
     logger.info("-------------------");
-    logger.info(Msg.getLog("pqMsgStart"));
+    logger.info(LoggingMsg.getLog("pqMsgStart"));
     logger.info("-------------------");
 		try{
 			while (true){
-				logger.info(Msg.getLog("pqMsgTrycnx"));
+				logger.info(LoggingMsg.getLog("pqMsgTrycnx"));
 				msgEngine.startConnection();
 				if (msgEngine.isConnectionStarted()){
 					connected = true;
 				} else {
-					String msg = Msg.getLog("pqMsgCnxFail");
+					String msg = LoggingMsg.getLog("pqMsgCnxFail");
 					msg = MessageFormat.format(msg, msgEngine.getStrTimeretry());
 					logger.info(msg);
 				}
@@ -68,15 +68,15 @@ public class Entrypoint {
 					}
 				}
 				if (connected){
-					logger.info(Msg.getLog("pqMsgdcnx"));
+					logger.info(LoggingMsg.getLog("pqMsgdcnx"));
 					connected = false;
 				}
 				Thread.sleep(msgEngine.getTimeRetry());
 			}
 		} catch (Exception e){
-			logger.error(Msg.getLog("sysError") + e.getMessage());
+			logger.error(LoggingMsg.getLog("sysError") + e.getMessage());
 		} finally {
-			logger.info(Msg.getLog("stopListen"));
+			logger.info(LoggingMsg.getLog("stopListen"));
 		}
 	}
 

@@ -55,15 +55,15 @@ public class MsgDaemon implements Daemon {
       public void run() {            
         logger.info("");
         logger.info("-------------------");
-        logger.info(Msg.getLog("pqMsgStart"));
+        logger.info(LoggingMsg.getLog("pqMsgStart"));
         logger.info("-------------------");
         while(!stopped){
-  				logger.info(Msg.getLog("pqMsgTrycnx"));
+  				logger.info(LoggingMsg.getLog("pqMsgTrycnx"));
   				msgEngine.startConnection();
   				if (msgEngine.isConnectionStarted()){
   					connected = true;
   				} else {
-  					String msg = Msg.getLog("pqMsgCnxFail");
+  					String msg = LoggingMsg.getLog("pqMsgCnxFail");
   					msg = MessageFormat.format(msg, msgEngine.getStrTimeretry());
   					logger.info(msg);
   				}
@@ -75,7 +75,7 @@ public class MsgDaemon implements Daemon {
   					}
   				}
   				if (connected){
-  					logger.info(Msg.getLog("pqMsgdcnx"));
+  					logger.info(LoggingMsg.getLog("pqMsgdcnx"));
   					connected = false;
   				}
   				try {
@@ -104,7 +104,7 @@ public class MsgDaemon implements Daemon {
 				connected = false;
     	}
       logger.info("------------------");
-      logger.info(Msg.getLog("pqMsgStop"));
+      logger.info(LoggingMsg.getLog("pqMsgStop"));
       logger.info("------------------");
     }catch(InterruptedException e){
       System.err.println(e.getMessage());

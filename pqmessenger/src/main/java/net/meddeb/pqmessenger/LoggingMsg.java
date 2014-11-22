@@ -23,10 +23,10 @@ import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
 
-class Msg {
-	private static Logger logger =  Logger.getLogger(Msg.class);
-	private static final String LOG_PROPNAME = "pqmsglogmsg";
-	private static final String OUT_PROPNAME = "pqmsgoutmsg";
+class LoggingMsg {
+	private static Logger logger =  Logger.getLogger(LoggingMsg.class);
+	private static final String LOG_PROPNAME = "net.meddeb.pqmessenger.pqmsglogmsg";
+	private static final String OUT_PROPNAME = "net.meddeb.pqmessenger.pqmsgoutmsg";
 	private static ResourceBundle logMessages = null;
 	private static ResourceBundle outMessages = null;
 	private static ResourceBundle getLogMessages(){
@@ -58,6 +58,6 @@ class Msg {
 		String msg = getOutMessages().getString(key);
 		return formatEncoding(msg);
 	}
-	private Msg(){
+	private LoggingMsg(){
 	}
 }
