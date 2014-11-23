@@ -39,6 +39,7 @@ import javax.naming.NamingException;
 
 import net.meddeb.bee.common.MsgProperties;
 import net.meddeb.japptools.Serverconf;
+import net.meddeb.udir.common.ChannelID;
 import net.meddeb.udir.common.PQChannelMessages;
 import net.meddeb.udir.common.SendStatus;
 import net.meddeb.udir.common.shared.PQParamsDto;
@@ -53,7 +54,7 @@ public class Messenger {
 	private final static String DEFAULT_PASSWORD = "tomee";
 	private String senderID = "";
 	private Logger logger = Logger.getLogger(this.getClass());
-	private String topicName = "java:pwdQualityParams";
+	private String topicName = "";
 	private InitialContext jndiContext = null;
 	private Topic topic = null;
 	private ConnectionFactory connectionFactory = null;	
@@ -126,12 +127,14 @@ public class Messenger {
 	public Messenger(Serverconf serverConf) {
 		senderID = getHostname();
 		connected = false;
+		topicName = "java:" + ChannelID.PQPARAMS.toString();
 		props = new Properties();
 		String tcpUrl = "tcp://" + serverConf.getHost() + ":" + serverConf.getPort();
 		String asUrl = "http://" + serverConf.getHost() + ":8080/tomee/ejb";
 		System.setProperty("udmbConnectionFactory", 
 				"connectionfactory:org.apache.activemq.ActiveMQConnectionFactory:" + tcpUrl);
-		System.setProperty("pwdQualityParams", "topic:org.apache.activemq.command.ActiveMQTopic:pwdQualityParams");
+		System.setProperty(ChannelID.PQPARAMS.toString(), 
+											"topic:org.apache.activemq.command.ActiveMQTopic:" + ChannelID.PQPARAMS.toString());
 		props.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.RemoteInitialContextFactory");
 		props.put(Context.PROVIDER_URL, asUrl);
 		props.put(Context.SECURITY_PRINCIPAL, serverConf.getLogin()); 
@@ -141,12 +144,14 @@ public class Messenger {
 	public Messenger() {
 		senderID = getHostname();
 		connected = false;
+		topicName = "java:" + ChannelID.PQPARAMS.toString();
 		props = new Properties();
 		String tcpUrl = "tcp://" + DEFAULT_HOST + ":" + DEFAULT_PORT;
 		String asUrl = "http://" + DEFAULT_HOST + ":8080/tomee/ejb";
 		System.setProperty("udmbConnectionFactory", 
 				"connectionfactory:org.apache.activemq.ActiveMQConnectionFactory:" + tcpUrl);
-		System.setProperty("pwdQualityParams", "topic:org.apache.activemq.command.ActiveMQTopic:pwdQualityParams");
+		System.setProperty(ChannelID.PQPARAMS.toString(), 
+											"topic:org.apache.activemq.command.ActiveMQTopic:" + ChannelID.PQPARAMS.toString());
 		props.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.RemoteInitialContextFactory");
 		props.put(Context.PROVIDER_URL, asUrl);
 		props.put(Context.SECURITY_PRINCIPAL, DEFAULT_LOGIN); 
