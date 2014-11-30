@@ -20,8 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Properties;
-
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.ExceptionListener;
@@ -33,10 +31,6 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
 import net.meddeb.bee.common.MsgProperties;
 import net.meddeb.japptools.Serverconf;
 import net.meddeb.udir.common.ChannelID;
@@ -44,22 +38,22 @@ import net.meddeb.udir.common.PQChannelMessages;
 import net.meddeb.udir.common.SendStatus;
 import net.meddeb.udir.common.shared.PQParamsDto;
 
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.log4j.Logger;
 
 
 public class Messenger {
 	private final static String DEFAULT_HOST = "localhost";
 	private final static String DEFAULT_PORT = "61616";
-	private final static String DEFAULT_LOGIN = "tomee";
-	private final static String DEFAULT_PASSWORD = "tomee";
 	private String senderID = "";
 	private Logger logger = Logger.getLogger(this.getClass());
 	private String topicName = "";
-	private InitialContext jndiContext = null;
-	private Topic topic = null;
+	private String listenUrl = "";
+	private String user = "";
+	private String password = "";
 	private ConnectionFactory connectionFactory = null;	
 	private Connection connection = null;
-	private Properties props =  null;
+	private Topic topic = null;
 	private boolean connected = false;
 	private boolean connectionInitialized = false;
 	//listen fields
@@ -127,35 +121,22 @@ public class Messenger {
 	public Messenger(Serverconf serverConf) {
 		senderID = getHostname();
 		connected = false;
-		topicName = "java:" + ChannelID.PQPARAMS.toString();
-		props = new Properties();
-		String tcpUrl = "tcp://" + serverConf.getHost() + ":" + serverConf.getPort();
-		String asUrl = "http://" + serverConf.getHost() + ":8080/tomee/ejb";
-		System.setProperty("udmbConnectionFactory", 
-				"connectionfactory:org.apache.activemq.ActiveMQConnectionFactory:" + tcpUrl);
-		System.setProperty(ChannelID.PQPARAMS.toString(), 
-											"topic:org.apache.activemq.command.ActiveMQTopic:" + ChannelID.PQPARAMS.toString());
-		props.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.RemoteInitialContextFactory");
-		props.put(Context.PROVIDER_URL, asUrl);
-		props.put(Context.SECURITY_PRINCIPAL, serverConf.getLogin()); 
-		props.put(Context.SECURITY_CREDENTIALS, serverConf.getPassword()); 
+		topicName = ChannelID.PQPARAMS.toString();
+		listenUrl = "tcp://";
+		if (serverConf.getHost().isEmpty()) listenUrl = listenUrl + DEFAULT_HOST;
+		else listenUrl = listenUrl + serverConf.getHost();
+		listenUrl = listenUrl + ":";
+		if (serverConf.getPort().isEmpty()) listenUrl = listenUrl + DEFAULT_PORT;
+		else listenUrl = listenUrl + serverConf.getPort();
+		user = serverConf.getLogin();
+		password = serverConf.getPassword();
 	}
 	
 	public Messenger() {
 		senderID = getHostname();
 		connected = false;
-		topicName = "java:" + ChannelID.PQPARAMS.toString();
-		props = new Properties();
-		String tcpUrl = "tcp://" + DEFAULT_HOST + ":" + DEFAULT_PORT;
-		String asUrl = "http://" + DEFAULT_HOST + ":8080/tomee/ejb";
-		System.setProperty("udmbConnectionFactory", 
-				"connectionfactory:org.apache.activemq.ActiveMQConnectionFactory:" + tcpUrl);
-		System.setProperty(ChannelID.PQPARAMS.toString(), 
-											"topic:org.apache.activemq.command.ActiveMQTopic:" + ChannelID.PQPARAMS.toString());
-		props.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.RemoteInitialContextFactory");
-		props.put(Context.PROVIDER_URL, asUrl);
-		props.put(Context.SECURITY_PRINCIPAL, DEFAULT_LOGIN); 
-		props.put(Context.SECURITY_CREDENTIALS, DEFAULT_PASSWORD); 
+		topicName = ChannelID.PQPARAMS.toString();
+		listenUrl = "tcp://" + DEFAULT_HOST + ":" + DEFAULT_PORT;
 	}
 	
 	@SuppressWarnings("finally")
@@ -163,11 +144,12 @@ public class Messenger {
 		connectionInitialized = false;
 		logger.debug(LoggingMsg.getLog("initCnx"));
 		try {
-			jndiContext = new InitialContext(props);
-			connectionFactory = (ConnectionFactory)jndiContext.lookup("java:udmbConnectionFactory");
+			connectionFactory = new ActiveMQConnectionFactory(listenUrl);
 			logger.debug(LoggingMsg.getLog("factoryInit"));
-			connection = connectionFactory.createConnection();
-			logger.debug(LoggingMsg.getLog("cnxCreate") + connection.getClientID());
+			if ((!user.isEmpty()) && (!password.isEmpty())){
+				connection = connectionFactory.createConnection(user, password);
+			} else connection = connectionFactory.createConnection();
+			logger.debug(LoggingMsg.getLog("cnxCreate") + connection);
 			connection.setExceptionListener(new ExceptionListener() {
 				@Override
 				public void onException(JMSException e) {
@@ -176,14 +158,10 @@ public class Messenger {
 					logger.error(LoggingMsg.getLog("cnxLost"));
 				}
 			});
-			topic = (Topic)jndiContext.lookup(topicName);
-			logger.debug(LoggingMsg.getLog("topicFound") + topic.getTopicName());
-			connectionInitialized = (connection != null) && (topic != null);
-			if (connectionInitialized) logger.debug("cnxSuccess" + jndiContext.getNameInNamespace());
-		} catch (NamingException e) {
-			logger.error(LoggingMsg.getLog("cnxUnable"));
-		} catch (JMSException e) {
-			logger.error(LoggingMsg.getLog("cnxUnable"));
+			connectionInitialized = (connection != null);
+			if (connectionInitialized) logger.debug("cnxSuccess");
+		} catch (Exception e) {
+			logger.error(LoggingMsg.getLog("cnxUnable" + " - " + e.getMessage()));
 		} finally{
 			return connectionInitialized;
 		}
@@ -203,6 +181,7 @@ public class Messenger {
 		try {
 			connection.start();
 			session = connection.createSession(false,Session.AUTO_ACKNOWLEDGE);
+			topic = session.createTopic(topicName);
 			consumer = session.createConsumer(topic, selectCondition);
 			consumer.setMessageListener(new ParamsListener());
 			connected = true;
