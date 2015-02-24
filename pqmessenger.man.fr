@@ -31,6 +31,20 @@ Nom du fichier configuration (config.xml par défaut).
 .B
 CONFIGLOG_FILE: 
 Nom du fichier configuration des fichiers journaux ou Log (log4j.xml par défaut).
+.LP
+L'exécution de pqMessenger est prise en charge par Apache JSVC, donc tout paramètre de lancement de cet utilitaire peut être utilisé pour lancer pqMessenger, notamment:
+.LP
+.B
+JAVA_HOME: 
+Chemin d'installation de Java JDK.
+.LP
+.B
+PQMESSENGER_USER:
+Utilisateur système qui exécute pqMessenger
+.LP
+Consulter la documentation de JSVC pour plus de détails à ce sujet.
+.LP
+En plus de ce paramétrage au démarrage, un fichier de configuration au format XML contient d'autres paramètres. Les paramètres du serveur JMS: adresse, port, identifiants de connexion principalement.
 .SH VOIR AUSSI
 pqchecker(3), jsvc(1)
 .SH BUGS
