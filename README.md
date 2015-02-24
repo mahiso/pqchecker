@@ -17,7 +17,8 @@ Also allows reading and modifying the passwords quality parameters, programmatic
 Native shared library for POSIX compliant system. Checks modified passwords, before storing them into directory.
 
 ###### 2. Communicate with JMS compliant apps 
-Java daemon. Used to provide information about the passwords quality parameters: reading and modifying.
+Java daemon. Used to manage data of the passwords quality parameters: reading and modifying.
 
+![alt tag](http://www.meddeb.net/pqchecker/res/pqchecker-overview.png)
 
 For more details visit http://www.meddeb.net/pqchecker
