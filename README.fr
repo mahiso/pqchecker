@@ -3,10 +3,11 @@ pqchecker.so bibliothèque paratgée
 1.2.0
 ----------------------------------
 
-pqchecker un plug-in pour le serveur d'annuaire OpenLDAP muni 
-de l'overlay ppolicy. Il permet de contrôler la qualité du 
-mot de passe avant son stockage dans l'attribut dédié de l'annuaire.
-Si le mot de passe est conforme aux paramètres configurés il est 
+pqchecker est un plug-in pour le serveur d'annuaire OpenLDAP muni 
+de l'overlay ppolicy. Il permet de contrôler la qualité des 
+mots de passe avant leur stockage dans l'attribut dédié de l'annuaire.
+A la modification ou la première saisie d'un mot de passe un contrôle 
+est effectué. S'il est conforme aux paramètres configurés il est 
 accepté. Il est rejeté dans le cas contraire.
 
 Les paramètres contrôlés sont: 
@@ -26,13 +27,13 @@ la modification:
 -------------
 Où le trouver
 -------------
-Binaires: http://www.meddeb.net/download
+Binaires: http://www.meddeb.fr/telecharger
 Sources: https://github.com/ameddeb/pqchecker.git
 
 -----------------
 Exigences système
 -----------------
-Système d'exploitation compatibel POSIX (n'importe quelle version 
+Système d'exploitation compatible POSIX (n'importe quelle version 
 moderne de BSD, Linux ou Unix)
 OpenLDAP avec le module ppolicy activé doit être installé.
 

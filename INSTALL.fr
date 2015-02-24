@@ -26,11 +26,11 @@ Vous abtenez, ainsi, la racine du chemin vers les fichiers source du serveur Ope
 /tmp/openldap-2.4.30/
 
 Vous pouvez également installer le paquet des sources du serveur OpenLDAP s'il existe.
-Sur un système DEbian vous pouvez faire cela en executant:
+Sur un système Debian vous pouvez faire cela en executant:
 
-  apt-get source install openldap (sans sudo)
+  apt-get source openldap (sans sudo)
 
-Les sources seront alors installées dans votre répertoire personnel.  
+Les sources seront alors installées dans le répertoire courant.  
 
 2/ Préparer les fichiers d'en-tête nécessaires à la compilation de pqchecker
 ----------------------------------------------------------------------------
@@ -51,7 +51,7 @@ Décompresser l'archive de pqchecker,
 
 Ensuite executer
  
-  ./configure LDAPSRC=/tmp/openldap-2.4.30 JAVAHOME=/opt/java libdir=/usr/lib/ldap PARAMDIR=/etc/ldap/pqchecker
+  ./configure LDAPSRC=/tmp/openldap-2.4.30 JAVAHOME=/usr/lib/jvm/java-7-oracle libdir=/usr/lib/ldap PARAMDIR=/etc/ldap/pqchecker
 
   LDAPSRC:    Racine du chemin des fichiers source OpenLDAP.
   JAVAHOME:   Racine de l'emplacement d'installation de Java JDK.

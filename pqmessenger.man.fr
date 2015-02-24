@@ -1,0 +1,41 @@
+.\" Manpage for pqmessenger.
+.\" Contact abdelhamid@meddeb.net to correct errors or typos.
+.TH man 3 "24 Fév. 2015" "1.2" "pqMessenger"
+.SH NOM
+pqMessenger \- Un module intermédiaire de transport de messages applicatifs entre pqChecker et un serveur JMS.
+.SH SYNOPSIS
+Permet la communication dans les deux sens entre le plug-in natif pqchecker.so pour OpenLDAP et une application compatible Java JMS.
+.SH DESCRIPTION
+Le plug-in pour le serveur d'annuaire OpenLDAP "pqchecker" utilise le contenu d'un fichier texte pour stocker les paramètres de la qualité des mots de passe: 
+.B
+pqparams.dat.
+pqMessenger permet à une application compatible avec Java JMS de lire et de modifier ces paramètres.
+
+ --------------        -------------    JNI    -------------         JMS           ----------------------------
+.br
+| pqparams.dat |<---->|  pqChecker  |<------->| pqMessenger |<------------------->| Application compatible JMS |
+.br
+ --------------        -------------           -------------                       ----------------------------
+
+.SH PARAMETRAGE
+Trois paramètres essentiels sont à configurer au démarrage du module pqMessenger:
+.LP
+.B
+CONFIG_HOME: 
+Chemin pour les fichiers de configuration.
+.LP
+.B
+CONFIG_FILE: 
+Nom du fichier configuration (config.xml par défaut).
+.LP
+.B
+CONFIGLOG_FILE: 
+Nom du fichier configuration des fichiers journaux ou Log (log4j.xml par défaut).
+.SH VOIR AUSSI
+pqchecker(3), jsvc(1)
+.SH BUGS
+abdelhamid@meddeb.net
+.br
+https://github.com/ameddeb/pqchecker/issues
+.SH AUTEUR
+Abdelhamid MEDDEB (abdelhamid@meddeb.net)

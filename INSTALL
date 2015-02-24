@@ -26,9 +26,9 @@ You obtain a root directory for OpenLDAP server source files /tmp/openldap-2.4.3
 You can also install the source package of OpenLDAP server if exists. On the Debian 
 system you can do it by executes: 
 
-  apt-get source install openldap (without sudo)
+  apt-get source openldap (without sudo)
   
-Then sources code are installed in your home directory.  
+Then sources code are installed in teh current directory.  
 
 2/ Prepare required header files
 --------------------------------
@@ -49,7 +49,7 @@ Unpack pqchecker archive,
 
 Then execute
  
-  ./configure LDAPSRC=/tmp/openldap-2.4.30 JAVAHOME=/opt/java libdir=/usr/lib/ldap PARAMDIR=/etc/ldap/pqchecker
+  ./configure LDAPSRC=/tmp/openldap-2.4.30 JAVAHOME=/usr/lib/jvm/java-7-oracle PARAMDIR=/etc/ldap/pqchecker
 
   LDAPSRC:   OpenLDAP server source files root directory.
   JAVAHOME:  Java JDK root location.
