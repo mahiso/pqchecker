@@ -18,7 +18,15 @@ pqMessenger permet à une application compatible avec Java JMS de lire et de mod
  --------------        -------------           -------------                       ----------------------------
 
 .SH PARAMETRAGE
-Trois paramètres essentiels sont à configurer au démarrage du module pqMessenger:
+/etc/default/pqmessenger contient les paramètres de démarrage du module pqMessenger:
+.LP
+.B
+PQMESSENGER_HOME: 
+Chemin pour l'emplacement du fichier jar de pqmessenger (par défaut /opt/pqmessenger).
+.LP
+.B
+NATIVE_LIB_HOME: 
+Chemin pour l'emplacement du fichier pqchecker.so (par défaut /usr/lib/ldap).
 .LP
 .B
 CONFIG_HOME: 
@@ -44,7 +52,7 @@ Utilisateur système qui exécute pqMessenger
 .LP
 Consulter la documentation de JSVC pour plus de détails à ce sujet.
 .LP
-En plus de ce paramétrage au démarrage, un fichier de configuration au format XML contient d'autres paramètres. Les paramètres du serveur JMS: adresse, port, identifiants de connexion principalement.
+En plus de ce paramétrage au démarrage, un fichier de configuration au format XML contient d'autres paramètres. Principalement, les paramètres du serveur JMS: adresse, port, identifiants de connexion. Ce fichier peut contenir aussi une valeur qui surcharge et remplace celle du paramètre de démarrage NATIVE_LIB_HOME. 
 .SH VOIR AUSSI
 pqchecker(3), jsvc(1)
 .SH BUGS

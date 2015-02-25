@@ -4,9 +4,9 @@
 .SH NAME
 pqMessenger \- A messaging middleware for pqChecker plug-in and a JMS server.
 .SH SYNOPSIS
-Allows dual communication between pqchecker.so plug-in for OpenLDAP and a Java JMS compliant application.
+Allows two-way communication between pqchecker.so plug-in for OpenLDAP and a Java JMS compliant application.
 .SH DESCRIPTION
-pqChecker plug-in for OpenLDAP directory server use a texte file: 
+pqChecker plug-in for OpenLDAP directory server use a text file: 
 .B
 pqparams.dat
 to store the passwords quality parameters. pqMessenger allows to read and modify this file content by a Java JMS compliant application.
@@ -18,7 +18,15 @@ to store the passwords quality parameters. pqMessenger allows to read and modify
  --------------        -------------           -------------                       ----------------------------
 
 .SH SETTINGS
-Three essential parameters to configure the module startup:
+/etc/default/prmessenger contains the parameters to configure module startup:
+.LP
+.B
+PQMESSENGER_HOME: 
+Path to pqmessenger jar file location (default /opt/pqmessenger).
+.LP
+.B
+NATIVE_LIB_HOME: 
+Path to pqchecker.so file location (default /usr/lib/ldap).
 .LP
 .B
 CONFIG_HOME: 
@@ -44,7 +52,7 @@ System user running pqMessenger.
 .LP
 Consult jsvc documentation for details on this.
 .LP
-In addition to this setting at startup, an XML configuration file contains other parameters. Mainly, the parameters of the JMS server: address, port, login IDs.
+In addition to this setting at startup, an XML configuration file contains other parameters. Mainly, the parameters of the JMS server: address, port, login IDs. This file may also contains an override value of NATIVE_LIB_HOME.
 
 .SH SEE ALSO
 pqchecker(3), jsvc(1)
