@@ -33,10 +33,10 @@ import javax.jms.TextMessage;
 import javax.jms.Topic;
 import net.meddeb.bee.common.MsgProperties;
 import net.meddeb.japptools.Serverconf;
-import net.meddeb.udir.common.ChannelID;
-import net.meddeb.udir.common.PQChannelMessages;
-import net.meddeb.udir.common.SendStatus;
-import net.meddeb.udir.common.shared.PQParamsDto;
+import net.meddeb.md.common.ChannelID;
+import net.meddeb.md.common.PQChannelMessages;
+import net.meddeb.md.common.SendStatus;
+import net.meddeb.md.common.shared.PQParamsDto;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.log4j.Logger;

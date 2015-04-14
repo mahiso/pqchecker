@@ -152,6 +152,7 @@ public class MsgEngine {
 			setRetryTime(args, paramList);
 			setNativelibraryPath(paramList);
 			String serverID = getArgValue(args, MSGSERVER_ARG_KEY);
+			if (serverID.isEmpty()) serverID = DEFAULT_MSGSERVER_ID;
 			msgServerConf = toolsPin.getServerconf(serverID);
 			if ((msgServerConf == null)&&(logger != null)) logger.warn(LoggingMsg.getLog("confnotFound"));
 		} else {
