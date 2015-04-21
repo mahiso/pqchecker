@@ -54,7 +54,7 @@
 		<dependency>
       <groupId>net.meddeb.bee</groupId>
 			<artifactId>bee-common</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.3</version>
       <scope>compile</scope>
 		</dependency>
 	</dependencies>  
@@ -127,11 +127,6 @@
     </profile>
   </profiles>  
   <repositories>
-    <repository>
-      <id>apache-snapshot</id>
-      <name>Apache Snapshot Repository</name>
-      <url>https://repository.apache.org/content/groups/snapshots/</url>
-    </repository>
     <repository>
       <id>meddeb-net</id>
       <name>Meddeb.net Repository</name>
