@@ -1,9 +1,9 @@
 package net.meddeb.pqmessenger;
 /*--------------------------------------------------------------------
 pqMessenger, passwords quality settings messenger for pqChecker
-Messaging middleware between pqChecker OpenLDAP plugin and messaging 
-service on TomEE+ applicaion server
-Copyright (C) 2014, Abdelhamid MEDDEB (abdelhamid@meddeb.net)  
+Messaging middleware between pqChecker OpenLDAP plugin and a JMS 
+compliant application.
+Copyright (C) 2015, Abdelhamid MEDDEB (abdelhamid@meddeb.net)  
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -54,9 +54,9 @@ public class MsgDaemon implements Daemon {
       @Override
       public void run() {            
         logger.info("");
-        logger.info("-------------------");
+        logger.info("-------------------------");
         logger.info(LoggingMsg.getLog("pqMsgStart"));
-        logger.info("-------------------");
+        logger.info("-------------------------");
         while(!stopped){
   				logger.info(LoggingMsg.getLog("pqMsgTrycnx"));
   				msgEngine.startConnection();
@@ -103,9 +103,9 @@ public class MsgDaemon implements Daemon {
     		msgEngine.stopConnection();
 				connected = false;
     	}
-      logger.info("------------------");
+      logger.info("------------------------");
       logger.info(LoggingMsg.getLog("pqMsgStop"));
-      logger.info("------------------");
+      logger.info("------------------------");
     }catch(InterruptedException e){
       System.err.println(e.getMessage());
       throw e;

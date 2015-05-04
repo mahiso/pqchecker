@@ -1,9 +1,9 @@
 package net.meddeb.pqmessenger;
 /*--------------------------------------------------------------------
 pqMessenger, passwords quality settings messenger for pqChecker
-Messaging middleware between pqChecker OpenLDAP plugin and messaging 
-service on TomEE+ applicaion server
-Copyright (C) 2014, Abdelhamid MEDDEB (abdelhamid@meddeb.net)  
+Messaging middleware between pqChecker OpenLDAP plugin and a JMS 
+compliant application.
+Copyright (C) 2015, Abdelhamid MEDDEB (abdelhamid@meddeb.net)  
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
  * 5/ --connection-retry-time	: time, in seconds, to retry when connection to messaging server fail or lost.
  */
 public class MsgEngine {
-	private final static String VERSION = "1.2.0";
+	private final static String VERSION = "1.2.1";
 
 	private final static String CONFPATH_ARG_KEY = "--config-path";
 	private final static String CONFFILE_ARG_KEY = "--config-file";
@@ -61,7 +61,7 @@ public class MsgEngine {
 		System.out.println("");
 		System.out.println(LoggingMsg.getOut("sepLine"));
 		System.out.println(LoggingMsg.getOut("pqmsgTitle") + VERSION);
-		System.out.println("Copyright (C) 2014, Abdelhamid MEDDEB (abdelhamid@meddeb.net)");
+		System.out.println("Copyright (C) 2015, Abdelhamid MEDDEB (abdelhamid@meddeb.net)");
 		System.out.println(LoggingMsg.getOut("freeNoWarranty"));
 		System.out.println(LoggingMsg.getOut("sepLine"));
 		System.out.println("");

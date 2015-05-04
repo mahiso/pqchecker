@@ -1,6 +1,6 @@
 ----------------------------------
 pqchecker.so bibliothèque paratgée
-1.2.0
+1.2.1
 ----------------------------------
 
 pqchecker est un plug-in pour le serveur d'annuaire OpenLDAP muni 
@@ -45,7 +45,7 @@ Voir le fichier INSTALL.fr
 ---------
 Copyright
 ---------
-(c) 2014, Abdelhamid MEDDEB (abdelhamid@meddeb.net)
+(c) 2015, Abdelhamid MEDDEB (abdelhamid@meddeb.net)
 Distribué sous licence GNU GPL v3+
 Voir le fichier LICENCE pour plus de détail.
 

@@ -1,6 +1,6 @@
 # pqMessenger starting shell script parameters
 # location /etc/default/pqmessenger
-# (c) 2014 Abdelhamid MEDDEB <abdelhamid@meddeb.net>
+# (c) 2015 Abdelhamid MEDDEB <abdelhamid@meddeb.net>
 #
 # -- Files location -------------
 PQMESSENGER_HOME=/opt/pqmessenger

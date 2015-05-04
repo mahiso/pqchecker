@@ -1,4 +1,4 @@
-AC_INIT([pqchecker], [1.2.0], [abdelhamid@meddeb.net])
+AC_INIT([pqchecker], [1.2.1], [abdelhamid@meddeb.net])
 AC_CONFIG_HEADERS([config.h])
 AC_ARG_VAR([LDAPSRC],AS_HELP_STRING([path to openldap server source files root location]))
 AC_ARG_VAR([JAVAHOME],AS_HELP_STRING([path to jdk root location]))

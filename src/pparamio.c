@@ -196,13 +196,13 @@ bool readParams(char *rslt)
     int iRslt = 0;
     for (i=0; line[i]; i++)
     {
-      if ((line[i] != ' ') && (line[i] != '\t'))
+      if ((line[i] != ' ') && (line[i] != '\t') && (line[i] != '\n') && (line[i] != '\0'))
       {
         rslt[iRslt++] = line[i];
       }
-      rslt[iRslt] = '\0';
 
     }
+    rslt[iRslt] = '\0';
     return true;
   } else 
   {

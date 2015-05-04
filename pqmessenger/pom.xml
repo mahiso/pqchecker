@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.meddeb.pqchecker</groupId>
   <artifactId>pqmessenger</artifactId>
-  <version>1.2.0</version>
+  <version>1.2.1</version>
   <name>pqMessenger</name>
   <description>Messaging middleware for pqChecker and ActiveMQ JMS service</description>
   <url>http://www.meddeb.net/pqchecker</url>
