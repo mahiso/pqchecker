@@ -1,5 +1,5 @@
 lib_LTLIBRARIES = pqchecker.la
-pqchecker_la_SOURCES = pqchecker.c pparamio.c pqcheck.c JNIGateway.c
+pqchecker_la_SOURCES = pqchecker.c pparamio.c pqcheck.c JNIGateway.c net_meddeb_pqmessenger_JNIGateway.h pparamio.h pqcheck.h
 include_HEADERS = pqchecker.h
 pqchecker_la_LDFLAGS = -module -avoid-version -shared
 pqchecker_la_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\"
