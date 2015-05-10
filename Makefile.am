@@ -1,6 +1,8 @@
 SUBDIRS = src
+doc_DATA = README README.fr LICENSE LICENSE.fr
 dist_doc_DATA = README README.fr LICENSE LICENSE.fr
-dist_man3_MANS = pqchecker.man
+man3_MANS = pqchecker.man pqmessenger.man
+dist_man3_MANS = pqchecker.man pqchecker.man.fr pqmessenger.man pqmessenger.man.fr
 # vardatdir = $(localstatedir)
 vardatdir = $(PARAMDIR)
 nobase_dist_vardat_DATA = pqparams.dat
