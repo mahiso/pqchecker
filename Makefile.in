@@ -931,9 +931,10 @@ uninstall-man: uninstall-man3
 	uninstall-am uninstall-dist_docDATA uninstall-hook \
 	uninstall-man uninstall-man3 uninstall-nobase_dist_vardatDATA
 
-install-exec-hook: ; mkdir -p $(vardatdir) ; cp -p pqparams.dat $(vardatdir) ; mkdir -p $(docdir) ; \
-  cp -p README README.fr LICENSE LICENSE.fr $(docdir)
-uninstall-hook: ; rm -rf $(vardatdir) ; rm -rf $(docdir)
+install-exec-hook: ; mkdir -p $(vardatdir) ; cp -p pqparams.dat $(vardatdir) 
+#; mkdir -p $(docdir) ; cp -p README README.fr LICENSE LICENSE.fr $(docdir)
+uninstall-hook: ; rm -rf $(vardatdir) 
+#; rm -rf $(docdir)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
