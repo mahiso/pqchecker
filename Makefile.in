@@ -962,7 +962,10 @@ uninstall-man: uninstall-man3
 	uninstall-man3 uninstall-nobase_dist_frmanDATA \
 	uninstall-nobase_dist_vardatDATA
 
-install-exec-hook: ; mkdir -p $(vardatdir) ; mkdir -p $(frmandir) ; cp -p pqchecker.man.fr $(frmandir)/pqchecker.3
+install-exec-hook: ; mkdir -p $(vardatdir) ; mkdir -p $(frmandir) ; mv $(frmandir)/pqchecker.man.fr $(frmandir)/pqchecker.3 \
+  ; echo "---------------------- WARNING !! ------------------------------------" \
+  ; echo "You must modify $(vardatdir)/pqparams.dat owner to slapd user executor" \
+  ; echo "----------------------------------------------------------------------"
 uninstall-hook: ; rm -rf $(vardatdir) ; rm -rf $(docdir) ; rm -f $(frmandir)/pqchecker.3
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
