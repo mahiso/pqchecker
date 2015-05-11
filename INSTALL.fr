@@ -1,6 +1,6 @@
 --------------------------------------------
 pqchecker.so bibliothèque dynamique partagée
-1.2.0
+1.2.1
 --------------------------------------------
 
 Pour construire et installer pqchecker:
@@ -46,8 +46,13 @@ qui est fourni dans l'archive.
 Décompresser l'archive de pqchecker,
 
   cd /tmp
-  tar xzvf ~/download/pqchecker-1.2.0.tar.gz
-  cd pqchecker-1.2.0/
+  tar xzvf ~/download/pqchecker-1.2.1.tar.gz
+  cd pqchecker-1.2.1/
+
+. Note pour les utilisateurs de Git: Si vous avez obtenu les sources de pqchecker à partir
+  du dépôt git (https://github.com/ameddeb/pqchecker.git), vous devez impéraivement lacer
+  le script ./adjustdate.bash avant de construire le binaire pour cause de non conservation
+  des dates de moficiation système des fichiers par Git.  
 
 Ensuite executer
  

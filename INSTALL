@@ -28,7 +28,7 @@ system you can do it by executes:
 
   apt-get source openldap (without sudo)
   
-Then sources code are installed in teh current directory.  
+Then sources code are installed in the current directory.  
 
 2/ Prepare required header files
 --------------------------------
@@ -46,6 +46,10 @@ Unpack pqchecker archive,
   cd /tmp
   tar xzvf ~/download/pqchecker-1.2.0.tar.gz
   cd pqchecker-1.2.0/
+
+. Note for cloned git source repository: If you clone the git source repository
+  (https://github.com/ameddeb/pqcheker.git), you must launch ./adjustdate.bash before
+  building pqchecker library because of the non-retention of files last modify timestamp.
 
 Then execute
  
