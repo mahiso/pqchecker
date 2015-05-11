@@ -82,8 +82,9 @@ subdir = .
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps) \
 	$(srcdir)/config.h.in $(dist_man3_MANS) $(dist_doc_DATA) \
-	$(nobase_dist_vardat_DATA) INSTALL README ar-lib compile \
-	config.guess config.sub depcomp install-sh missing ltmain.sh
+	$(nobase_dist_frman_DATA) $(nobase_dist_vardat_DATA) INSTALL \
+	README ar-lib compile config.guess config.sub depcomp \
+	install-sh missing ltmain.sh
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -153,10 +154,11 @@ am__uninstall_files_from_dir = { \
   }
 man3dir = $(mandir)/man3
 am__installdirs = "$(DESTDIR)$(man3dir)" "$(DESTDIR)$(docdir)" \
-	"$(DESTDIR)$(vardatdir)"
+	"$(DESTDIR)$(frmandir)" "$(DESTDIR)$(vardatdir)"
 NROFF = nroff
 MANS = $(dist_man3_MANS)
-DATA = $(dist_doc_DATA) $(nobase_dist_vardat_DATA)
+DATA = $(dist_doc_DATA) $(nobase_dist_frman_DATA) \
+	$(nobase_dist_vardat_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 am__recursive_targets = \
@@ -350,7 +352,9 @@ SUBDIRS = src
 dist_doc_DATA = README README.fr LICENSE LICENSE.fr
 dist_man3_MANS = pqchecker.man
 vardatdir = $(PARAMDIR)
-nobase_dist_vardat_DATA = pqparams.dat pqchecker.man.fr
+frmandir = $(mandir)/fr/man3
+nobase_dist_vardat_DATA = pqparams.dat
+nobase_dist_frman_DATA = pqchecker.man.fr
 ACLOCAL_AMFLAGS = -I m4
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
@@ -476,6 +480,30 @@ uninstall-dist_docDATA:
 	@list='$(dist_doc_DATA)'; test -n "$(docdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(docdir)'; $(am__uninstall_files_from_dir)
+install-nobase_dist_frmanDATA: $(nobase_dist_frman_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(nobase_dist_frman_DATA)'; test -n "$(frmandir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(frmandir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(frmandir)" || exit 1; \
+	fi; \
+	$(am__nobase_list) | while read dir files; do \
+	  xfiles=; for file in $$files; do \
+	    if test -f "$$file"; then xfiles="$$xfiles $$file"; \
+	    else xfiles="$$xfiles $(srcdir)/$$file"; fi; done; \
+	  test -z "$$xfiles" || { \
+	    test "x$$dir" = x. || { \
+	      echo " $(MKDIR_P) '$(DESTDIR)$(frmandir)/$$dir'"; \
+	      $(MKDIR_P) "$(DESTDIR)$(frmandir)/$$dir"; }; \
+	    echo " $(INSTALL_DATA) $$xfiles '$(DESTDIR)$(frmandir)/$$dir'"; \
+	    $(INSTALL_DATA) $$xfiles "$(DESTDIR)$(frmandir)/$$dir" || exit $$?; }; \
+	done
+
+uninstall-nobase_dist_frmanDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(nobase_dist_frman_DATA)'; test -n "$(frmandir)" || list=; \
+	$(am__nobase_strip_setup); files=`$(am__nobase_strip)`; \
+	dir='$(DESTDIR)$(frmandir)'; $(am__uninstall_files_from_dir)
 install-nobase_dist_vardatDATA: $(nobase_dist_vardat_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(nobase_dist_vardat_DATA)'; test -n "$(vardatdir)" || list=; \
@@ -800,7 +828,7 @@ check: check-recursive
 all-am: Makefile $(MANS) $(DATA) config.h
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(man3dir)" "$(DESTDIR)$(docdir)" "$(DESTDIR)$(vardatdir)"; do \
+	for dir in "$(DESTDIR)$(man3dir)" "$(DESTDIR)$(docdir)" "$(DESTDIR)$(frmandir)" "$(DESTDIR)$(vardatdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -856,7 +884,7 @@ info: info-recursive
 info-am:
 
 install-data-am: install-dist_docDATA install-man \
-	install-nobase_dist_vardatDATA
+	install-nobase_dist_frmanDATA install-nobase_dist_vardatDATA
 
 install-dvi: install-dvi-recursive
 
@@ -904,6 +932,7 @@ ps: ps-recursive
 ps-am:
 
 uninstall-am: uninstall-dist_docDATA uninstall-man \
+	uninstall-nobase_dist_frmanDATA \
 	uninstall-nobase_dist_vardatDATA
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
@@ -923,18 +952,18 @@ uninstall-man: uninstall-man3
 	install-dist_docDATA install-dvi install-dvi-am install-exec \
 	install-exec-am install-exec-hook install-html install-html-am \
 	install-info install-info-am install-man install-man3 \
-	install-nobase_dist_vardatDATA install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
-	uninstall-am uninstall-dist_docDATA uninstall-hook \
-	uninstall-man uninstall-man3 uninstall-nobase_dist_vardatDATA
+	install-nobase_dist_frmanDATA install-nobase_dist_vardatDATA \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	installdirs-am maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-generic mostlyclean-libtool pdf pdf-am \
+	ps ps-am tags tags-am uninstall uninstall-am \
+	uninstall-dist_docDATA uninstall-hook uninstall-man \
+	uninstall-man3 uninstall-nobase_dist_frmanDATA \
+	uninstall-nobase_dist_vardatDATA
 
-install-exec-hook: ; mkdir -p $(vardatdir) ; cp -p pqparams.dat $(vardatdir) ; \
-  mkdir -p $(mandir)/fr/man3 ; cp -p pqchecker.man.fr $(mandir)/fr/man3/pqchecker.3
-#; mkdir -p $(docdir) ; cp -p README README.fr LICENSE LICENSE.fr $(docdir)
-uninstall-hook: ; rm -rf $(vardatdir) ; rm -rf $(docdir) ; rm -f $(mandir)/fr/man3/pqchecker.3
+install-exec-hook: ; mkdir -p $(vardatdir) ; mkdir -p $(frmandir) ; cp -p pqchecker.man.fr $(frmandir)/pqchecker.3
+uninstall-hook: ; rm -rf $(vardatdir) ; rm -rf $(docdir) ; rm -f $(frmandir)/pqchecker.3
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
