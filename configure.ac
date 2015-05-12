@@ -27,5 +27,7 @@ AC_DEFINE_UNQUOTED([PARAMS_DATA_FILE],["$PARAMDIR/pqparams.dat"],["Parameters da
 AC_CONFIG_FILES([
 Makefile
 src/Makefile
+doc/Makefile
+doc/fr/Makefile
 ])
 AC_OUTPUT
