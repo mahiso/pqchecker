@@ -354,7 +354,7 @@ dist_man3_MANS = pqchecker.man
 vardatdir = $(PARAMDIR)
 frmandir = $(mandir)/fr/man3
 nobase_dist_vardat_DATA = pqparams.dat
-nobase_dist_frman_DATA = po/fr/pqchecker.man.fr
+nobase_dist_frman_DATA = po/fr/pqchecker.man
 ACLOCAL_AMFLAGS = -I m4
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
