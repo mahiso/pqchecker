@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
  * 5/ --connection-retry-time	: time, in seconds, to retry when connection to messaging server fail or lost.
  */
 public class MsgEngine {
-	private final static String VERSION = "1.2.1";
+	private final static String VERSION = "1.2.2";
 
 	private final static String CONFPATH_ARG_KEY = "--config-path";
 	private final static String CONFFILE_ARG_KEY = "--config-file";

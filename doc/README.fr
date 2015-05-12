@@ -1,9 +1,10 @@
-----------------------------------
-pqchecker.so bibliothèque paratgée
-1.2.1
-----------------------------------
+------------------------------------------------------------------
+pqchecker.so bibliothèque dynamique partagée pour OpenLDAP/pPolicy
+Permet le contrôle de la qualité du contenu des mots de passe
+version 1.2.2
+------------------------------------------------------------------
 
-pqchecker est un plug-in pour le serveur d'annuaire OpenLDAP muni 
+pqChecker est un plug-in pour le serveur d'annuaire OpenLDAP muni 
 de l'overlay ppolicy. Il permet de contrôler la qualité des 
 mots de passe avant leur stockage dans l'attribut dédié de l'annuaire.
 A la modification ou la première saisie d'un mot de passe un contrôle 

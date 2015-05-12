@@ -1,9 +1,10 @@
----------------------------
-pqchecker.so shared library 
-1.2.1 
----------------------------
+---------------------------------------------------------
+pqchecker.so shared library  for OpneLDAP/pPolicy overlay
+Allows checks of passwords content quality
+version 1.2.2
+---------------------------------------------------------
 
-pqchecker is a plug-in for OpenLDAP directory server with ppolicy overlay.
+pqChecker is a plug-in for OpenLDAP directory server with ppolicy overlay.
 It allows to control the quality of the password before storing it in the 
 dedicated directory attribute. If the password mets configured parameters, 
 it is accepted. It is rejected otherwise.

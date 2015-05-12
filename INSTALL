@@ -1,37 +1,46 @@
 ---------------------------
-pqchecker.so shared library 
-1.2.0
+pqchecker.so shared library  for OpneLDAP/pPolicy overlay
+Allows checks of passwords content quality
+version 1.2.2
 ---------------------------
 
-To build and install pqchecker:
+To build and install pqChecker from sources code:
 
+--------------------------------
 1/ Get the OpenLDAP source files
 --------------------------------
-Building and installing pqchecker require OpenLDAP server source files.
-You can download them from: 
+
+Building and installing pqChecker require OpenLDAP server source files. You can download them from: 
+
 http://www.openldap.org/software/download 
+
 for current stable release, or
+
 http://www.openldap.org/software/download/OpenLDAP/openldap-stable
+
 for old stable version.
 
+You can also install the source package of OpenLDAP server if exists. On the Debian 
+system you can do it by executing: 
+
+  apt-get source openldap (without sudo)
+
 Download source files of server version installed on your target system or, 
-failing that, the nearest version. Then unpack the archive file in location 
-of your choice,
+failing that, the nearest version.
+
+Then unpack the archive file in a location of your choice,
 
   cd /tmp
   tar xzvf ~/download/openldap-2.4.30.tgz
 
-You obtain a root directory for OpenLDAP server source files /tmp/openldap-2.4.30/
+You obtain a root directory for OpenLDAP server source files 
 
-You can also install the source package of OpenLDAP server if exists. On the Debian 
-system you can do it by executes: 
+  /tmp/openldap-2.4.30/
 
-  apt-get source openldap (without sudo)
-  
-Then sources code are installed in the current directory.  
-
+--------------------------------
 2/ Prepare required header files
 --------------------------------
+
 The required header files portable.h and slap.h are not included, initially, 
 in downloaded OpenLDAP's source files. It must be created by executing "configure"
 script who's provided  in archive of source files.
@@ -39,21 +48,31 @@ script who's provided  in archive of source files.
   cd /tmp/openldap-2.4.30
   ./configure && make depend
 
-3/ Build and install pqchecker
-------------------------------  
+------------------------------------------------------
+3/ Recover and configure the source files of pqChecker
+------------------------------------------------------
+
 Unpack pqchecker archive,
 
   cd /tmp
-  tar xzvf ~/download/pqchecker-1.2.0.tar.gz
-  cd pqchecker-1.2.0/
+  tar xzvf ~/download/pqchecker-1.2.2.tar.gz
+  cd pqchecker-1.2.2/
 
-. Note for cloned git source repository: If you clone the git source repository
-  (https://github.com/ameddeb/pqcheker.git), you must launch ./adjustdate.bash before
-  building pqchecker library because of the non-retention of files last modify timestamp.
+      | Note Git users:
+      |----------------
+      | If you've cloned git source repository
+      | https://github.com/ameddeb/pqcheker.git
+      | You must launch 
+      | ./adjustdate.bash 
+      | before building pqchecker library because of the non-retention 
+      | of files last modify timestampby Git.
 
 Then execute
  
-  ./configure LDAPSRC=/tmp/openldap-2.4.30 JAVAHOME=/usr/lib/jvm/java-7-oracle PARAMDIR=/etc/ldap/pqchecker
+  ./configure LDAPSRC=/tmp/openldap-2.4.30 \
+              JAVAHOME=/usr/lib/jvm/java-7-oracle \
+              libdir=/usr/lib/ldap \
+              PARAMDIR=/etc/ldap/pqchecker
 
   LDAPSRC:   OpenLDAP server source files root directory.
   JAVAHOME:  Java JDK root location.
@@ -64,7 +83,9 @@ Then execute
 
   Other parameters may be used, ./configure --help for complete list for those parameters.
   
-Then build pqchecker and install it:
+------------------------------
+4/ Build and install pqchecker
+------------------------------  
 
   make
   sudo make install  
@@ -73,7 +94,10 @@ After that, you can see the man page of pqchecker by:
  
   man pqchecker
 
-3/ Uninstall pqchecker
+----------------------
+5/ Uninstall pqchecker
 ----------------------
 
-Execute: sudo make uninstall
+Execute: 
+
+  sudo make uninstall
