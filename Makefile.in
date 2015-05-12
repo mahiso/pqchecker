@@ -798,7 +798,8 @@ uninstall-am:
 	uninstall-am
 
 showwarning: ; @echo "-------------------------------------- WARNING !!  WARNING !! ---------------------------------------" \
-             ; echo " $(vardatdir) and its content owner must be modified to the user executing slapd" \
+             ; echo " To complete the installation.." \
+             ; echo " The folder $(vardatdir) and its content owner must be modified to the user executing slapd" \
              ; echo "------------------------------------------------------------------------------------------------------"
 install-exec-hook: showwarning
 
