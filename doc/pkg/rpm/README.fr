@@ -1,0 +1,54 @@
+# pqchecker, instructions d'installation du paquet RPM
+# (c) 2015, Abdelhamid MEDDEB <abdelhamid@meddeb.net>
+
+Ce paquet est destiné seulement pour un système Linux Redhat/CentOS ou compatibles.
+Testé sur un systèmes CentOS 6.5
+
+1) Installation
+---------------
+Nécessite les privilèges root:
+
+pqChecker:    sudo rpm -iv pqchecker-1.2-2.i686.rpm
+
+pqMessenger:  sudo rpm -iv pqchecker-pqmessenger-1.2-2.i686.rpm
+
+2) Configuration du démarrage de pqMessenger
+--------------------------------------------
+Dans le fichier:
+/etc/default/pqmessenger
+
+Notamment: 
+. JAVA_HOME: emplacement de Java JRE.
+. LOG_HOME: emplacement des fichiers journaux (log). Attribuer les droits nécessaires pour l'écriture.
+. CONFIG_HOME: emplacement des fichiers de configuration. Attribuer les droits nécessaires pour la lecture.
+
+3) Configuration du serveur d'application JMS
+---------------------------------------------
+Par défaut:
+Adresse IP: 127.0.0.1 (machine locale)
+Port d'écoute: 61616
+
+Peut être modifié dans le fichier /etc/openldap/pqchecker/config.xml
+
+4) Désinstallation
+------------------
+Nécessite les privilèges root:
+
+sudo rpm -r pqchecker
+sudo rpm -r pqchecker-pqmessenger
+
+5) Démarrage et arrêt de pqMessenger
+------------------------------------
+Au démarrage et à l'arrêt du système
+ou manuellement:
+
+sudo service pqmessenger start|stop
+
+6) Emplacement des binaires
+---------------------------
+pqchecker: /usr/lib/openldap/pqchecker.so.1.2.2
+pqmessenger: /opt/pqmessenger-1.2.2.jar
+
+7) Dépendance
+-------------
+Ce paquet dépend des paquets <openldap-servers> et <jsvc>

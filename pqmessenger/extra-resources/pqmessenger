@@ -1,6 +1,12 @@
+# chkconfig: 2345 55 25
+# description: pqMessenger daemon
+#
+# processname: pwmessenger
+# pidfile: /var/run/pqmessenger.pid
+#
 #!/bin/bash
 # pqMessenger starting shell script
-# (c) 2014 Abdelhamid MEDDEB <abdelhamid@meddeb.net>
+# (c) 2015 Abdelhamid MEDDEB <abdelhamid@meddeb.net>
 
 . /lib/lsb/init-functions
 
@@ -8,10 +14,9 @@ if [ -r /etc/default/pqmessenger ]; then
 	. /etc/default/pqmessenger
 fi
 
-JBIN=$(which java)
-JHOME=$(/bin/readlink -f $JBIN | /bin/sed "s:/bin/java::" | /bin/sed "s:/jre::")
-if [ ! -z $JHOME ]; then
-  JAVA_HOME=$JHOME
+if [ ! -z $JAVA_HOME ]; then
+  JBIN=$(which java)
+  JAVA_HOME=$(/bin/readlink -f $JBIN | /bin/sed "s:/bin/java::" | /bin/sed "s:/jre::")
 fi
 
 PQMESSENGER_BOOTSTRAP="net.meddeb.pqmessenger.MsgDaemon"
@@ -54,6 +59,17 @@ showGreen() {
 
 # start function
 do_start(){
+  if [ -z $JAVA_HOME ]; then
+    showRed "Error."
+    echo "Cannot find Java location."
+    exit 1
+  fi  
+  JAVAVERSION=$(java -version 2>&1 | awk '/version/{print $NF}' | sed "s:\"::" | cut -d '.' -f2)
+  if [ $JAVAVERSION -lt 7 ]; then
+    showRed "Error."
+    echo "pqMessenger require Java 1.7 or above."
+    exit 1
+  fi  
   DAEMONPID=$( pqmessengerPid )
   if [ -z $DAEMONPID ]; then
     echo -n "Starting pqMessenger... "

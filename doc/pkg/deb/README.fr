@@ -1,0 +1,56 @@
+# pqchecker, instructions d'installation du paquet Debian
+# (c) 2015, Abdelhamid MEDDEB <abdelhamid@meddeb.net>
+
+Ce paquet est destiné seulement pour un système GNU/Linux Debian ou compatibles.
+Testé sur les systèmes Debian Squeeze (6.x) et Wheezy (7.x) ainsi que Ubuntu 14.
+
+1) Installation
+---------------
+Nécessite les privilèges root:
+
+sudo dpkg -i pqchecker_1.2.2_amd64.deb (systèmes à architecture 64 bit)
+ou
+sudo dpkg -i pqchecker_1.2.2_i386.deb (systèmes à architecture 32 bit)
+
+Répondez par y (defaut) ou n, quand la procédure d'installation vous demande si vous souhaitez installer le module pqMessenger.
+pqMessenger nécessite que la JRE de Java soit installée sur le système pour fonctionner.
+
+2) Configuration du démarrage de pqMessenger
+--------------------------------------------
+Dans le fichier:
+/etc/default/pqmessenger
+
+Notamment: 
+. JAVA_HOME: emplacement de Java JRE.
+. LOG_HOME: emplacement des fichiers journaux (log). Attribuer les droits nécessaires pour l'écriture.
+. CONFIG_HOME: emplacement des fichiers de configuration. Attribuer les droits nécessaires pour la lecture.
+
+3) Configuration du serveur d'application JMS
+---------------------------------------------
+Par défaut:
+Adresse IP: 127.0.0.1 (machine locale)
+Port d'écoute: 61616
+
+Peut être modifié dans le fichier /etc/ldap/pqchecker/config.xml
+
+4) Désinstallation
+------------------
+Nécessite les privilèges root:
+
+sudo dpkg -r pqchecker
+
+5) Démarrage et arrêt de pqMessenger
+------------------------------------
+Au démarrage et à l'arrêt du système
+ou manuellement:
+
+sudo service pqmessenger start|stop
+
+6) Emplacement des binaires
+---------------------------
+pqchecker: /usr/lib/ldap/pqchecker.so
+pqmessenger: /opt/pqmessenger-1.2.2.jar
+
+7) Dépendance
+-------------
+Ce paquet dépend des paquets <slapd> et <jsvc>

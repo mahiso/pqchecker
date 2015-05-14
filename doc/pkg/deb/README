@@ -1,0 +1,56 @@
+# pqchecker debian package installation instruction
+# (c) 2015, Abdelhamid MEDDEB <abdelhamid@meddeb.net>
+
+This package is only for GNU/Linux Debian and compliants systems.
+Tested on Debian Squeeze and Wheezy versions and Ubuntu 14.
+
+1) Install
+----------
+Require root privileges:
+
+sudo dpkg -i pqchecker_1.2.2_amd64.deb (64 bits architectude system)
+or
+sudo dpkg -i pqchecker_1.2.2_i386.deb (32 bits architecture systems)
+
+Type y (default) or n, when you are asked about pqMessenger module installation.
+pqMessenger require that Java JRE is installed on your system to work.
+
+2) pqMessenger starts parameters
+--------------------------------
+In file:
+/etc/default/pqmessenger
+
+especially
+. JAVA_HOME: Java JRE location.
+. LOG_HOME: log files location. set write privileges.
+. CONFIG_HOME: settings files location. set read privileges.
+
+3) JMS application server configuration
+---------------------------------------
+Default: 
+IP address: 127.0.0.1 (local machine)
+Port: 61616
+
+May be modified in /etc/ldap/pqchecker/config.xml file
+
+4) Remove
+----------
+Require root privileges:
+
+sudo dpkg -r pqchecker
+
+5) Start and stop pqMessenger
+-----------------------------
+At system boot/shutdown
+or manually:
+
+sudo service pqmessenger start|stop
+
+6) Binary files location
+------------------------
+pqchecker: /usr/lib/ldap/pqchecker.so
+pqmessenger: /opt/pqmessenger-1.2.2.jar
+
+7) Dependence
+-------------
+This package depend on <slapd> and <jsvc> packages.
