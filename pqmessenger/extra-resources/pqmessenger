@@ -8,12 +8,18 @@ if [ -r /etc/default/pqmessenger ]; then
 	. /etc/default/pqmessenger
 fi
 
+JBIN=$(which java)
+JHOME=$(/bin/readlink -f $JBIN | /bin/sed "s:/bin/java::" | /bin/sed "s:/jre::")
+if [ ! -z $JHOME ]; then
+  JAVA_HOME=$JHOME
+fi
+
 PQMESSENGER_BOOTSTRAP="net.meddeb.pqmessenger.MsgDaemon"
 PIDFILE="$RUN_HOME/pqmessenger.pid"
 OUTFILE="$LOG_HOME/pqmessenger.out"
 CLASSPATH="$PQMESSENGER_HOME/*.jar"
 PQMESSENGER_ARGS="--config-path $CONFIG_HOME --config-file $CONFIG_FILE --config-log $CONFIGLOG_FILE --msg-server-id $MSGSERVER_ID --connection-retry-time $CONNECTION_RETRY_TIME"
-JSVC_ARGS="-java-home $JAVA_HOME -user $PQMESSENGER_USER -pidfile $PIDFILE -outfile $OUTFILE -errfile &1 -cp $CLASSPATH"
+JSVC_ARGS="-home $JAVA_HOME -user $PQMESSENGER_USER -pidfile $PIDFILE -outfile $OUTFILE -errfile &1 -cp $CLASSPATH"
 JAVA_ARGS="-Djava.library.path=$NATIVE_LIB_HOME"
 RETVAL=0
 GRNTXT='\e[0;32m'
