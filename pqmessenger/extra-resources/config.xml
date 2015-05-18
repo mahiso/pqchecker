@@ -2,17 +2,9 @@
 <Config>
 	<!-- JMS Channels Configuration example -->
 	<Server id="PQMsgServer" type="JMS">
-		<Host>
-    	127.0.0.1
-		</Host>
-    <Port>
-      61616
-    </Port>
-    <Login>
-      tomee
-    </Login>
-    <Password encrypted="false">
-      tomee
-    </Password>
+		<Host>127.0.0.1</Host>
+    <Port>61616</Port>
+    <Login>mdmanager</Login>
+    <Password encrypted="false">mdmanager</Password>
   </Server>
 </Config>

@@ -1,23 +1,37 @@
 # pqMessenger starting shell script parameters
 # location /etc/default/pqmessenger
-# (c) 2014 Abdelhamid MEDDEB <abdelhamid@meddeb.net>
+# (c) 2015 Abdelhamid MEDDEB <abdelhamid@meddeb.net>
 #
-# -- Files location -------------
+# --  pqmessenger.xxxxxx.jar file location -------------
 PQMESSENGER_HOME=/opt/pqmessenger
+# --  pqchecker.so file location -----------------------
+# Default for Debian system & compliants
 NATIVE_LIB_HOME=/usr/lib/ldap
+# Default for Redhat system & compliants
+#NATIVE_LIB_HOME=/usr/lib/openldap
+# --  Configuration files location ---------------------
+# Default for Debian system & compliants
 CONFIG_HOME=/etc/ldap/pqchecker
+# Default for Redhat system & compliants
+#CONFIG_HOME=/etc/openldap/pqchecker
+# --  log files location -------------------------------
+LOG_HOME=/var/log/pqmessenger
+# --  PID file location --------------------------------
+RUN_HOME=/var/run
+# --  Java JRE location --------------------------------
+JAVA_HOME=/usr/lib/jvm/java-7-oracle
+# --  Configuration files names ------------------------
 CONFIG_FILE=config.xml
 CONFIGLOG_FILE=log4j.xml
-LOG_HOME=/var/log/pqmessenger
-RUN_HOME=/var/run
-JAVA_HOME=/usr/lib/jvm/java-7-oracle
+# --  User who pqMessenger run as ----------------------
+# Must be same than slapd one
+# Default for Debian system & compliants
 PQMESSENGER_USER=openldap
-
-# jsvc 
+# Default for Redhat system & compliants
+#PQMESSENGER_USER=ldap
+# -- Apache JSVC utility ------------------------------- 
 JSVC=/usr/bin/jsvc
-# Messaging server id used in config file 
-# /etc/ldap/pqchecker/config.xml by default
+# -- Messaging server id used in config file -----------
 MSGSERVER_ID=PQMsgServer
-# Connection to messaging server retry time in seconds 
-# to use when connection is failed or lost. 1800s = 30mn by default
+# -- Connection to JMS server retry time in seconds ----
 CONNECTION_RETRY_TIME=1800

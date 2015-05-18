@@ -50,6 +50,7 @@ sudo service pqmessenger start|stop
 pqchecker: /usr/lib/openldap/pqchecker.so.1.2.2
 pqmessenger: /opt/pqmessenger-1.2.2.jar
 
-7) Dependence
+7) Dependency
 -------------
-This package depend on <openldap-servers> and <jsvc> packages.
+pqChecker: openldap-servers 
+pqMessenger: jakarta-commons-daemon-jsvc

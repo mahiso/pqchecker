@@ -46,9 +46,10 @@ sudo service pqmessenger start|stop
 
 6) Emplacement des binaires
 ---------------------------
-pqchecker: /usr/lib/openldap/pqchecker.so.1.2.2
-pqmessenger: /opt/pqmessenger-1.2.2.jar
+pqChecker: /usr/lib/openldap/pqchecker.so.1.2.2
+pqMessenger: /opt/pqmessenger-1.2.2.jar
 
 7) Dépendance
 -------------
-Ce paquet dépend des paquets <openldap-servers> et <jsvc>
+pqChecker: openldap-servers 
+pqMessenger: jakarta-commons-daemon-jsvc
