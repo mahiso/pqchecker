@@ -23,7 +23,7 @@ import java.lang.reflect.Field;
 import java.util.Hashtable;
 
 import net.meddeb.japptools.JApptoolsPin;
-import net.meddeb.japptools.Serverconf;
+import net.meddeb.japptools.common.JMSConfigDto;
 
 import org.apache.log4j.Logger;
 
@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
  * 5/ --connection-retry-time	: time, in seconds, to retry when connection to messaging server fail or lost.
  */
 public class MsgEngine {
-	private final static String VERSION = "1.2.2";
+	private final static String VERSION = "1.2.3-SNAPSHOT";
 
 	private final static String CONFPATH_ARG_KEY = "--config-path";
 	private final static String CONFFILE_ARG_KEY = "--config-file";
@@ -133,7 +133,7 @@ public class MsgEngine {
 		printWelcomeMessage();
 		boolean confInitialized = false;		
 		Hashtable<String, String> paramList = null;
-		Serverconf msgServerConf = null;
+		JMSConfigDto msgServerConf = null;
 		JApptoolsPin toolsPin = JApptoolsPin.getInstance();
 		String configPath = getArgValue(args, CONFPATH_ARG_KEY);
 		if (configPath.isEmpty()) configPath = DEFAULT_CONFPATH;
@@ -153,7 +153,7 @@ public class MsgEngine {
 			setNativelibraryPath(paramList);
 			String serverID = getArgValue(args, MSGSERVER_ARG_KEY);
 			if (serverID.isEmpty()) serverID = DEFAULT_MSGSERVER_ID;
-			msgServerConf = toolsPin.getServerconf(serverID);
+			msgServerConf = toolsPin.getJMSConfig(serverID);
 			if ((msgServerConf == null)&&(logger != null)) logger.warn(LoggingMsg.getLog("confnotFound"));
 		} else {
 			System.out.println(LoggingMsg.getOut("cantConfLog")); 

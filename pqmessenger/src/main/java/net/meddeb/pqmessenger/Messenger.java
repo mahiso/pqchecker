@@ -34,12 +34,12 @@ import javax.jms.TextMessage;
 import javax.jms.Topic;
 
 import net.meddeb.bee.common.MsgProperties;
-import net.meddeb.japptools.Serverconf;
+import net.meddeb.japptools.common.JMSConfigDto;
 import net.meddeb.md.common.ChannelID;
 import net.meddeb.md.common.PQChannelMsg;
 import net.meddeb.md.common.SendStatus;
 import net.meddeb.md.common.TestChannelsMsg;
-import net.meddeb.md.common.shared.PQParamsDto;
+import net.meddeb.md.common.data.PQParamsDto;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.log4j.Logger;
@@ -121,7 +121,7 @@ public class Messenger {
 		}
 	}
 	
-	public Messenger(Serverconf serverConf) {
+	public Messenger(JMSConfigDto serverConf) {
 		senderID = getHostname();
 		connected = false;
 		topicName = ChannelID.PQPARAMS.toString();
@@ -131,7 +131,7 @@ public class Messenger {
 		listenUrl = listenUrl + ":";
 		if (serverConf.getPort().isEmpty()) listenUrl = listenUrl + DEFAULT_PORT;
 		else listenUrl = listenUrl + serverConf.getPort();
-		user = serverConf.getLogin();
+		user = serverConf.getUser();
 		password = serverConf.getPassword();
 	}
 	
