@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Config>
+<!DOCTYPE JApptools:Config PUBLIC "japptools//MEDDEB//DTD JAPPTOOLS//EN" 
+"http://meddeb.net/japptools/xml/japptools.dtd">
+<JApptools:Config>
 	<!-- JMS Channels Configuration example -->
 	<Server id="PQMsgServer" type="JMS">
 		<Host>127.0.0.1</Host>
@@ -7,4 +9,4 @@
     <Login>mdmanager</Login>
     <Password encrypted="false">mdmanager</Password>
   </Server>
-</Config>
+</JApptools:Config>
