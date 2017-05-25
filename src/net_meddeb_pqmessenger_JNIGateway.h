@@ -5,8 +5,12 @@
 #ifndef _Included_net_meddeb_pqmessenger_JNIGateway
 #define _Included_net_meddeb_pqmessenger_JNIGateway
 #ifdef __cplusplus
+
 extern "C" {
 #endif
+
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved);
+JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved);
 /*
  * Class:     net_meddeb_pqmessenger_JNIGateway
  * Method:    getParams
@@ -22,6 +26,15 @@ JNIEXPORT jstring JNICALL Java_net_meddeb_pqmessenger_JNIGateway_getParams
  */
 JNIEXPORT jint JNICALL Java_net_meddeb_pqmessenger_JNIGateway_setParams
   (JNIEnv *, jobject, jstring, jstring);
+
+JNIEXPORT void JNICALL Java_net_meddeb_pqmessenger_JNIGateway_setCacheData
+  (JNIEnv *env, jobject thisObj, jboolean jcacheData);
+
+JNIEXPORT void JNICALL Java_net_meddeb_pqmessenger_Listener_doListen
+  (JNIEnv *env, jobject thisObj);
+
+JNIEXPORT void JNICALL Java_net_meddeb_pqmessenger_JNIGateway_stopListen
+  (JNIEnv *env, jobject thisObj);
 
 #ifdef __cplusplus
 }

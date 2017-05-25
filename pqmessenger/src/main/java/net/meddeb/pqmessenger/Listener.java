@@ -1,7 +1,9 @@
+package net.meddeb.pqmessenger;
 /*--------------------------------------------------------------------
-pqChecker, shared library plug-in for OpenLDAP server / ppolicy overlay
-Checking of password quality.
-Copyright (C) 2014, Abdelhamid MEDDEB (abdelhamid@meddeb.net)  
+pqMessenger, passwords quality settings messenger for pqChecker
+Messaging middleware between pqChecker OpenLDAP plugin and a JMS 
+compliant application.
+Copyright (C) 2015, Abdelhamid MEDDEB (abdelhamid@meddeb.net)  
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,13 +18,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ---------------------------------------------------------------------*/
 
-#define _POSIX_SOURCE 1
+public class Listener implements Runnable {
 
-#include <ctype.h>
-#include <stdbool.h>
+  //private MsgEngine msgEngine = null;
+  /*
+  public Listener(MsgEngine msgEngine) {
+    this.msgEngine = msgEngine;
+  }
+  */
 
-extern
-bool set_params(const char *params, const char *fmt);
+	public native boolean doListen();
 
-extern
-bool get_params(char *params, const char *fmt);
+	@Override
+	public void run() {
+		doListen();
+	}
+}
+

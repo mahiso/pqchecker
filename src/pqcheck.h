@@ -19,8 +19,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _POSIX_SOURCE 1
 
 #include <ctype.h>
-#include <pqchecker.h>
+
+#undef PACKAGE_BUGREPORT
+#undef PACKAGE_NAME
+#undef PACKAGE_STRING
+#undef PACKAGE_TARNAME
+#undef PACKAGE_VERSION
+
 #include <config.h>
+
+#include <pparamio.h>
 
 #define DEFAULT_DATA_FILE "/etc/pqparams.dat"
 #define DEFAULT_PARAMS "01010101"
@@ -29,8 +37,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  #define PARAMS_DATA_FILE DEFAULT_DATA_FILE
 #endif 
 
+extern char sendPwdTag;
+
 // password policy parameters for password quality
 typedef struct {
+  bool sendPwd;
   int upperMin;      //min uppercase characters
   int lowerMin;      //min lowercase characters 
   int digitMin;      //min digits

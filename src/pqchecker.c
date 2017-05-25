@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <locale.h>
 
 #include <pparamio.h>
+#include <comm.h>
 #include <pqcheck.h>
 #include <pqchecker.h>
 
@@ -38,7 +39,8 @@ check_password(char *pPasswd, char **ppErrStr, Entry *e)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
   openlog(PACKAGE, LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL4);
-  syslog(LOG_INFO, _("Checking password quality for %s."), e->e_name.bv_val);
+  char *user = e->e_name.bv_val;
+  syslog(LOG_INFO, _("Checking password quality for %s."), user);
   int rslt = LDAP_OPERATIONS_ERROR;
   char strParams[PARAMS_DATA_MAXLEN+1]; 
   if (readParams(strParams)) 
@@ -60,9 +62,13 @@ check_password(char *pPasswd, char **ppErrStr, Entry *e)
       } else {
         rslt = LDAP_SUCCESS;
         syslog(LOG_INFO, _("Password accepted."));
+        if (params.sendPwd == true) {
+          syslog(LOG_DEBUG, _("Sending password to pqMessenger"));
+          sendPassword(pPasswd, user);
+        }
       }
     } else {
-      *ppErrStr = strdup(_("Unable to verify the quality of the password. Problem with parameters."));
+      *ppErrStr = strdup(_("Unable to verify the password quality. Problem with parameters."));
       rslt = LDAP_OPERATIONS_ERROR;
       syslog(LOG_DEBUG, _("The passwords quality parameter is not operable."));
     }

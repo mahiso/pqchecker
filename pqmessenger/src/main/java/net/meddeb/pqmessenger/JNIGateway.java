@@ -18,16 +18,36 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ---------------------------------------------------------------------*/
 
+import org.apache.log4j.Logger;
+
 public class JNIGateway {
 	static {
 		System.loadLibrary("pqchecker");
 	}
+  private static JNIGateway instance = null;
 	
-	public JNIGateway() {
+	private JNIGateway() {
 	}
-	
+
+  private Logger logger =  Logger.getLogger(this.getClass());
+  
+  public static JNIGateway getInstance() {
+    if (instance == null) instance = new JNIGateway();
+    return instance;
+  }
+
 	public native String getParams(String fmt);
 	
 	public native boolean setParams(String params, String fmt);
+
+	public native void setCacheData(boolean cacheData);
+
+	public native void stopListen();
+
+  public void sendPwd(String user, String pwd) {
+    if (logger == null) logger =  Logger.getLogger(this.getClass());
+    logger.info("Sent from native: " + user + " - " + pwd);
+    //System.out.println("Sent from native: " + user + " - " + pwd);
+  }
 	
 }

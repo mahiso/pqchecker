@@ -89,17 +89,16 @@ public class Messenger {
 						return;
 					}
 					logger.info(LoggingMsg.getLog("receivMsg") + msgType + "] " + msg.getText());
-					JNIGateway gateway = new JNIGateway();
 					String params = "";
 					switch (PQChannelMsg.fromName(msgType)){
 						case WRITE_REQUEST:
 							params = msg.getText();
-							if (gateway.setParams(params.trim(), PQParamsDto.FORMAT)){
+							if (JNIGateway.getInstance().setParams(params.trim(), PQParamsDto.FORMAT)){
 								doSend(SendStatus.SUCCESS.toString(), PQChannelMsg.WRITE_RESPONSE.toString());
 							} else doSend(SendStatus.FAIL.toString(), PQChannelMsg.WRITE_RESPONSE.toString());
 							break;
 						case READ_REQUEST:
-							params = gateway.getParams(PQParamsDto.FORMAT);
+							params = JNIGateway.getInstance().getParams(PQParamsDto.FORMAT);
 							if (params == null){
 								doSend(SendStatus.FAIL.toString(), PQChannelMsg.READ_RESPONSE.toString());
 							} else doSend(params.trim(), PQChannelMsg.READ_RESPONSE.toString());

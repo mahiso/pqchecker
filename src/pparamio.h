@@ -21,4 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <ctype.h>
 #include <stdbool.h>
 
+#define PARAMS_DATA_MAXLEN 128
+
 bool readParams(char *rslt);

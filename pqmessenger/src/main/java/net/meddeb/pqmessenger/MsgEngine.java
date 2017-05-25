@@ -53,6 +53,7 @@ public class MsgEngine {
 	private final static String DEFAULT_MSGSERVER_ID = "PQMsgServer";
 	private final static int DEFAULT_RETRY_TIME = 1800; //30mn
 	private Messenger messenger = null;
+  private Thread listener = null;
 	private Logger logger = null;
 	// Time to retry connection in seconds
 	private int retryTime = -1; 
@@ -155,20 +156,22 @@ public class MsgEngine {
 			if (serverID.isEmpty()) serverID = DEFAULT_MSGSERVER_ID;
 			msgServerConf = toolsPin.getJMSConfig(serverID);
 			if ((msgServerConf == null)&&(logger != null)) logger.warn(LoggingMsg.getLog("confnotFound"));
+		  if (msgServerConf == null) {
+			  messenger = new Messenger();
+		  } else	messenger = new Messenger(msgServerConf);
 		} else {
 			System.out.println(LoggingMsg.getOut("cantConfLog")); 
 			System.out.println(LoggingMsg.getOut("confFilenotfound"));
 			messenger = new Messenger();
 		}
-		if (msgServerConf == null) {
-			messenger = new Messenger();
-		} else	messenger = new Messenger(msgServerConf);
+		JNIGateway.getInstance().setCacheData(true);
 	}
 	
 	public void startConnection(){
 		if (!messenger.isConnectionInitialized()) messenger.initConnection();
 		if ((messenger.isConnectionInitialized()) && (!messenger.isConnected())) {
 			messenger.startConnection();
+      if (messenger.isConnected()) JNIGateway.getInstance().setCacheData(false);
 			if ((logger != null)&&(messenger.isConnected())) logger.info(LoggingMsg.getLog("pqMsgcnx"));
 		}
 	}
@@ -176,6 +179,7 @@ public class MsgEngine {
 	public void stopConnection(){
 		if (messenger.isConnected()) {
 			messenger.stopConnection();
+      if (!messenger.isConnected()) JNIGateway.getInstance().setCacheData(true);
 			if ((logger != null)&&(!messenger.isConnected()))	logger.info(LoggingMsg.getLog("pqMsgdcnx"));
 		}
 	}
@@ -217,5 +221,15 @@ public class MsgEngine {
 		}
 		return rslt;
 	}
+
+  public boolean doListen() {
+	  listener = new Thread(new Listener());
+	  listener.start();
+	  return true;
+  }
+
+  public void stopListen() {
+    JNIGateway.getInstance().stopListen();
+  }
 
 }

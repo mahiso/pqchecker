@@ -57,6 +57,7 @@ public class MsgDaemon implements Daemon {
         logger.info("-------------------------");
         logger.info(LoggingMsg.getLog("pqMsgStart"));
         logger.info("-------------------------");
+        if (!msgEngine.doListen()) logger.error("Problème de communication de données.");
         while(!stopped){
   				logger.info(LoggingMsg.getLog("pqMsgTrycnx"));
   				msgEngine.startConnection();
@@ -78,6 +79,7 @@ public class MsgDaemon implements Daemon {
   					logger.info(LoggingMsg.getLog("pqMsgdcnx"));
   					connected = false;
   				}
+          //--wait
   				try {
 						Thread.sleep(msgEngine.getTimeRetry());
 					} catch (InterruptedException e) {
@@ -103,6 +105,7 @@ public class MsgDaemon implements Daemon {
     		msgEngine.stopConnection();
 				connected = false;
     	}
+      msgEngine.stopListen();
       logger.info("------------------------");
       logger.info(LoggingMsg.getLog("pqMsgStop"));
       logger.info("------------------------");

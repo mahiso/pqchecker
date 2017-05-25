@@ -10,8 +10,18 @@ for f in $(ls *.m4)
 do
   touch -t $TODATE $f
 done 
+for f in $(ls *.am)
+do
+  touch -t $TODATE $f
+done 
 if [ -d m4 ]; then
   for f in $(ls m4/*.m4)
+  do
+    touch -t $TODATE $f
+  done 
+fi       
+if [ -d src ]; then
+  for f in $(ls src/*.am)
   do
     touch -t $TODATE $f
   done 

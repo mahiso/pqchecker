@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <ctype.h>
 #include <string.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <portable.h>
 #include <syslog.h>
@@ -28,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <locale.h>
 
 #include <pqcheck.h>
+
+char sendPwdTag = '|';
 
 pp_status_t getStatus(char *pwd, char *forbiddens)
 {
@@ -73,6 +76,13 @@ pp_status_t getStatus(char *pwd, char *forbiddens)
 pp_params_t getParams(char *params, char *fmt)
 {
   pp_params_t rslt;
+  rslt.sendPwd = false;
+  int rootLen = 8; //without send password tag
+  if ((strlen(params) > 1) && (params[1] == sendPwdTag)) //with send password tag
+  {
+    rootLen = 10;
+    rslt.sendPwd = params[0] == '1';
+  }
   rslt.upperMin = -1;
   rslt.lowerMin = -1;
   rslt.digitMin = -1;
@@ -86,8 +96,8 @@ pp_params_t getParams(char *params, char *fmt)
     minParam[2] = '\0';
     for (i=0; i<4; i++)
     {
-      minParam[0] = params[i*2];
-      minParam[1] = params[i*2+1];
+      minParam[0] = params[i*2+(rootLen-8)];
+      minParam[1] = params[i*2+1+(rootLen-8)];
       switch (fmt[i])
       {
         case 'U':
@@ -110,12 +120,12 @@ pp_params_t getParams(char *params, char *fmt)
         (rslt.specialMin > -1))
     {  
       // set forbidden characters
-      i = 8;
-      int paramsLen = strlen(params) - 1;
+      i = rootLen;
+      int paramsLen = strlen(params);
       while (i < PARAMS_DATA_MAXLEN)
       {
-        if (i < paramsLen) rslt.forbiddens[i - 8] = params[i];
-        else rslt.forbiddens[i-8] = '\0';
+        if (i < paramsLen) rslt.forbiddens[i - rootLen] = params[i];
+        else rslt.forbiddens[i-rootLen] = '\0';
         i++;
       }
     }
@@ -128,11 +138,22 @@ bool isParamOperable(const char * params)
 {
   if (!params) return false;
   int i = 0;
+  int rootLen = 8; //without send password tag
   int paramsLen = strlen(params);
-  bool rslt = (paramsLen > 7);
-  while ((i < 8) && (rslt))
+  if ((paramsLen > 1) && (params[1] == sendPwdTag)) //with send password tag
   {
-    rslt = isdigit(params[i]);
+    rootLen = 10;
+  }
+  bool rslt = (paramsLen >= rootLen);
+  while ((i < rootLen) && (rslt == true))
+  {
+    if ((rootLen == 10) && (i == 1))
+    {
+      rslt = params[i] == sendPwdTag;
+    } else
+    {
+      rslt = isdigit(params[i]);
+    }
     i++;
   }
   if (!rslt) syslog(LOG_ERR, _("The parameter [%s] does not operable."),params);
