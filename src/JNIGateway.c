@@ -98,6 +98,7 @@ JNIEXPORT void JNICALL
 Java_net_meddeb_pqmessenger_JNIGateway_setCacheData(JNIEnv *env, jobject thisObj, jboolean jcacheData){
   cacheData = jcacheData;
   syslog(LOG_DEBUG, _("Set cache data to %d"), cacheData);
+  if (!cacheData) doBroadcastCacheData();
 }
 
 JNIEXPORT void JNICALL 

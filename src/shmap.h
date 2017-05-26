@@ -19,11 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdbool.h>
 #include <jni.h>
 
-#define SHMDEFAULTNBRECORDS 500
-#define SHMFIELDSIZE 128
+#define SHMDEFAULTNBRECORDS 10000
+#define SHMFIELDSIZE 144
 #define SHMNAME "000h01e02d04i15l21.shm"
 
-bool shmInit(const unsigned nbRecords);
-unsigned getShmSize();
+bool shmInit(const unsigned int nbRecords);
+void getShmSize(unsigned int size);
 bool shmPush(const char *data);
-bool shmPop(char *data);
+bool shmPop();
+bool shmGet(char *data);

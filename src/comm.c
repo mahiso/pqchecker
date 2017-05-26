@@ -28,9 +28,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <locale.h>
 #include <string.h>
 
+#include <shmap.h>
 #include <comm.h>
 
-static char readbuffer[MAXREAD];
+static char readbuffer[SHMFIELDSIZE];
 
 void broadcastData(const char *data) {
   syslog(LOG_DEBUG, _("Broadcast data, javaVM: %p"), javaVM);
@@ -82,7 +83,7 @@ void broadcastData(const char *data) {
 
 bool processrequest(int client_socketfd, char *readbuffer) {
   bool rslt = false;
-  int readcount = read(client_socketfd, readbuffer, MAXREAD);
+  int readcount = read(client_socketfd, readbuffer, SHMFIELDSIZE);
   if (readcount > 0) {
     syslog(LOG_DEBUG, _("Reveived message: %s"), readbuffer);
     rslt = (strcmp(readbuffer, "quit") == 0);
@@ -124,7 +125,7 @@ bool doListen() {
     if (client_socketfd < 0) {
       syslog(LOG_ERR, _("Socket listen error %d"), errno);
     } else stoplisten = processrequest(client_socketfd, readbuffer);
-    memset(&readbuffer, 0, MAXREAD);
+    memset(&readbuffer, 0, SHMFIELDSIZE);
     close(client_socketfd);
   }
   syslog(LOG_DEBUG, _("Listen stopped!!"));
@@ -163,10 +164,36 @@ bool doSend(char *data) {
   return rslt;
 }
 
+void doCacheData(char *pwd, char *user) {
+  syslog(LOG_DEBUG, _("Caching data.."));
+  char cdata[SHMFIELDSIZE];
+  unsigned int size = strlen(user);
+  memcpy(cdata, (char*)&size, sizeof(unsigned int));
+  memcpy(cdata, &user, size);
+  size = strlen(pwd);
+  memcpy(cdata, &pwd, size);
+  shmPush(cdata);
+  syslog(LOG_INFO, _("Can't broadcast, data cached locally"));
+}
+
+void doBroadcastCacheData() {
+  syslog(LOG_DEBUG, _("Broadcasting cached data.."));
+  char cdata[SHMFIELDSIZE];
+  bool sendSuccess = true;
+  while (shmGet(cdata) && sendSuccess) {
+    sendSuccess = doSend(cdata);
+    if (sendSuccess)  {
+      shmPop();
+      syslog(LOG_DEBUG, _("Broadcast data."));
+    } else syslog(LOG_DEBUG, _("Broadcast fail."));
+  }
+  syslog(LOG_INFO, _("Done"));
+}
+
 void sendPassword(char *pwd, char *user)
 {
   syslog(LOG_DEBUG, _("Sending modified password.."));
-  if (cacheData) syslog(LOG_DEBUG, _("Caching data..[cacheData]: %d"), cacheData);
+  if (cacheData) doCacheData(pwd, user); 
   else if (doSend(pwd)) syslog(LOG_DEBUG, _("Modified password successfully sent.."));
-      else syslog(LOG_DEBUG, _("Caching data.."));
+      else doCacheData(pwd, user);
 }
