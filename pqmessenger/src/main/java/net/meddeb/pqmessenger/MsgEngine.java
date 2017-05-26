@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
  * 5/ --connection-retry-time	: time, in seconds, to retry when connection to messaging server fail or lost.
  */
 public class MsgEngine {
-	private final static String VERSION = "1.2.3-SNAPSHOT";
+	private final static String VERSION = "2.0.0-SNAPSHOT";
 
 	private final static String CONFPATH_ARG_KEY = "--config-path";
 	private final static String CONFFILE_ARG_KEY = "--config-file";
@@ -164,7 +164,6 @@ public class MsgEngine {
 			System.out.println(LoggingMsg.getOut("confFilenotfound"));
 			messenger = new Messenger();
 		}
-		JNIGateway.getInstance().setCacheData(true);
 	}
 	
 	public void startConnection(){
@@ -223,6 +222,7 @@ public class MsgEngine {
 	}
 
   public boolean doListen() {
+    JNIGateway.getInstance().setCacheData(true);
 	  listener = new Thread(new Listener());
 	  listener.start();
 	  return true;

@@ -37,21 +37,21 @@ void broadcastData(const char *data) {
   syslog(LOG_DEBUG, _("Broadcast data, javaVM: %p"), javaVM);
   JNIEnv * env;
   int callstatus = (*javaVM)->GetEnv(javaVM, (void **)&env, JNI_VERSION_1_6);
+  int attachstatus = 0;
   switch (callstatus) {
     case JNI_EDETACHED:
-      syslog(LOG_INFO, _("Env detached, attaching..: %d"), callstatus);
-      int attachstatus = (*javaVM)->AttachCurrentThread(javaVM, (void **)&env, NULL);
+      attachstatus = (*javaVM)->AttachCurrentThread(javaVM, (void **)&env, NULL);
       if (attachstatus != 0) {
         syslog(LOG_INFO, _("Error: %d"), attachstatus);
         return;
-      } else syslog(LOG_INFO, _("Env OK"));
+      }
       break;
     case JNI_EVERSION:
       syslog(LOG_ERR, _("Version error: %d"), callstatus);
       return;
       break;
     case JNI_OK:
-      syslog(LOG_INFO, _("Env OK: %d"), callstatus);
+      syslog(LOG_DEBUG, _("Env OK: %d"), callstatus);
       break;
     default :
       syslog(LOG_ERR, _("Broadcast data error: %d"), callstatus);
@@ -63,21 +63,29 @@ void broadcastData(const char *data) {
    syslog(LOG_ERR, _("Cannot find class"));
    return;
   }
-  jmethodID mid = (*env)->GetMethodID(env, cls, "sendPwd", "(Ljava/lang/String;Ljava/lang/String;)V");
+  //jmethodID mid = (*env)->GetMethodID(env, cls, "sendData", "(Ljava/lang/String;Ljava/lang/String;)V");
+  jmethodID mid = (*env)->GetMethodID(env, cls, "sendData", "([B)V");
   if (mid == 0) {
    syslog(LOG_ERR, _("Cannot find method"));
    return;
   }
   jobject obj = (*env)->AllocObject(env, cls);
   if (obj != 0) {
-    syslog(LOG_DEBUG, _("object ID: %p"), obj);
+    jbyteArray byteBuffer = (*env)->NewByteArray(env, SHMFIELDSIZE);
+    jbyte byteTransfert[SHMFIELDSIZE];
+    for (int i = 0; i < SHMFIELDSIZE; i++) {
+      byteTransfert[i] = data[i];
+    }
+    (*env)->SetByteArrayRegion(env, byteBuffer, 0, SHMFIELDSIZE, byteTransfert);
+    /*
     const char *cPwdStr;
     const char *cUserStr;
     cPwdStr = data;
     cUserStr = "anonymous";
     jstring jPwdStr = (*env)->NewStringUTF(env, cPwdStr);
     jstring jUserStr = (*env)->NewStringUTF(env, cUserStr);
-    (*env)->CallVoidMethod(env, obj, mid, jPwdStr, jUserStr);
+    */
+    (*env)->CallVoidMethod(env, obj, mid, byteBuffer);
   }
 }
 
@@ -141,7 +149,8 @@ bool doSend(char *data) {
   struct sockaddr_un addr;
   bool rslt = false;
   int fd;
-  int rc = strlen(data);
+  size_t dataSentSize = 0;
+  size_t dataSize = SHMFIELDSIZE;
   if ((fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
     syslog(LOG_ERR, _("Socket error %d"), errno);
     return rslt;
@@ -153,14 +162,11 @@ bool doSend(char *data) {
     syslog(LOG_ERR, _("Connection error %d"), errno);
     return rslt;
   }
-  if (write(fd, data, rc) != rc) {
-    if (rc > 0) syslog(LOG_ERR, _("Partial data write"));
-    else {
-      syslog(LOG_ERR, _("Write error"));
-      return rslt;
-    }
-  }
-  rslt =true;
+  dataSentSize = send(fd, data, dataSize, 0);
+  if (dataSentSize > 0) {
+    if (dataSentSize < SHMFIELDSIZE) syslog(LOG_ERR, _("Partial data write"));
+    else rslt = true;
+  } else syslog(LOG_ERR, _("Write error"));
   return rslt;
 }
 

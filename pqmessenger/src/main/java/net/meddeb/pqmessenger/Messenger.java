@@ -156,6 +156,7 @@ public class Messenger {
 				@Override
 				public void onException(JMSException e) {
 					connected = false;
+					JNIGateway.getInstance().setCacheData(true);
 					connectionInitialized = false;
 					logger.error(LoggingMsg.getLog("cnxLost"));
 				}

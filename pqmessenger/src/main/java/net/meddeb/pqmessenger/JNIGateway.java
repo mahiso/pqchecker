@@ -44,9 +44,9 @@ public class JNIGateway {
 
 	public native void stopListen();
 
-  public void sendPwd(String user, String pwd) {
+  public void sendData(byte[] data) {
     if (logger == null) logger =  Logger.getLogger(this.getClass());
-    logger.info("Sent from native: " + user + " - " + pwd);
+    logger.info("Sent from native");
     //System.out.println("Sent from native: " + user + " - " + pwd);
   }
 	
