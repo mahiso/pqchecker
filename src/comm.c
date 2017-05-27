@@ -93,7 +93,6 @@ bool processrequest(int client_socketfd, char *readbuffer) {
   bool rslt = false;
   int readcount = read(client_socketfd, readbuffer, SHMFIELDSIZE);
   if (readcount > 0) {
-    syslog(LOG_DEBUG, _("Reveived message: %s"), readbuffer);
     rslt = (strcmp(readbuffer, "quit") == 0);
     if (!rslt) broadcastData(readbuffer);
   } else rslt = true;
@@ -121,7 +120,6 @@ bool doListen() {
     syslog(LOG_ERR, _("Socket listen error %d"), errno);
     return false;
   }
-  syslog(LOG_DEBUG, _("Listen started!!"));
   struct sockaddr_un client_addr;
   socklen_t client_addr_len;
   bool stoplisten = false;
@@ -136,7 +134,7 @@ bool doListen() {
     memset(&readbuffer, 0, SHMFIELDSIZE);
     close(client_socketfd);
   }
-  syslog(LOG_DEBUG, _("Listen stopped!!"));
+  syslog(LOG_DEBUG, _("Listen stopped"));
   unlink(SCKPATH);
 }
 
@@ -145,7 +143,7 @@ bool stopListen() {
   return rslt;
 }
 
-bool doSend(char *data) {
+bool doSend(const char *data) {
   struct sockaddr_un addr;
   bool rslt = false;
   int fd;
@@ -170,14 +168,30 @@ bool doSend(char *data) {
   return rslt;
 }
 
+bool sendData(const char *pwd, const char *user) {
+  syslog(LOG_DEBUG, _("Sending data.."));
+  char cdata[SHMFIELDSIZE];
+  unsigned int size = strlen(user);
+  memset(&cdata, 0, SHMFIELDSIZE);
+  memcpy(cdata, (char*)&size, sizeof(unsigned int));
+  int offset = sizeof(unsigned int);
+  memcpy(cdata + offset, user, size);
+  offset += size;
+  size = strlen(pwd);
+  memcpy(cdata + offset, pwd, size);
+  return doSend(cdata);
+}
+
 void doCacheData(char *pwd, char *user) {
   syslog(LOG_DEBUG, _("Caching data.."));
   char cdata[SHMFIELDSIZE];
   unsigned int size = strlen(user);
   memcpy(cdata, (char*)&size, sizeof(unsigned int));
-  memcpy(cdata, &user, size);
+  int offset = sizeof(unsigned int);
+  memcpy(cdata + offset, user, size);
+  offset += size;
   size = strlen(pwd);
-  memcpy(cdata, &pwd, size);
+  memcpy(cdata, pwd, size);
   shmPush(cdata);
   syslog(LOG_INFO, _("Can't broadcast, data cached locally"));
 }
@@ -198,9 +212,9 @@ void doBroadcastCacheData() {
 
 void sendPassword(char *pwd, char *user)
 {
-  syslog(LOG_DEBUG, _("Sending modified password.."));
+  syslog(LOG_DEBUG, _("Sending modified password: %s  %s"), user, pwd);
   bool cacheData = isCacheData();
   if (cacheData) doCacheData(pwd, user); 
-  else if (doSend(pwd)) syslog(LOG_DEBUG, _("Modified password successfully sent.."));
+  else if (sendData(pwd, user)) syslog(LOG_DEBUG, _("Modified password successfully sent.."));
       else doCacheData(pwd, user);
 }

@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ---------------------------------------------------------------------*/
 
+import java.io.UnsupportedEncodingException;
+
 import org.apache.log4j.Logger;
 
 public class JNIGateway {
@@ -46,7 +48,22 @@ public class JNIGateway {
 
   public void sendData(byte[] data) {
     if (logger == null) logger =  Logger.getLogger(this.getClass());
-    logger.info("Sent from native");
+    logger.info("Data received from native");
+    if (data != null && data.length > 0) {
+      int loginLength = data[0];
+      logger.info("Data length: " + data.length + " - loginLength: " + loginLength);
+      byte[] buffer = new byte[loginLength];
+      if (data.length > 1) {
+        for (int i=2; i <= loginLength+1; i++) if (i<data.length) buffer[i-2] = data[i];
+        String login = "";
+        try {
+    			login = new String(buffer, "UTF-8");
+    		} catch (UnsupportedEncodingException e) {
+    			logger.error("Conversion error: " + e.getMessage());
+    		}
+        logger.info("Sent from native: " + loginLength + " - " + login);
+      }
+    }
     //System.out.println("Sent from native: " + user + " - " + pwd);
   }
 	

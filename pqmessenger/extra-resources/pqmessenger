@@ -1,9 +1,17 @@
 #!/bin/bash
 # chkconfig: 2345 55 25
-# description: pqMessenger daemon
 #
 # processname: pwmessenger
-# pidfile: /var/run/pqmessenger.pid
+# pidfile: /var/run/pqmessenger/pqmessenger.pid
+#
+### BEGIN INIT INFO
+# Provides:          pqmessenger
+# Required-Start:    $syslog
+# Required-Stop:     $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: pqMessenger daemon
+### END INIT INFO
 #
 # pqMessenger starting shell script
 # (c) 2015 Abdelhamid MEDDEB <abdelhamid@meddeb.net>

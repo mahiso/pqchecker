@@ -25,6 +25,6 @@ extern JavaVM *javaVM;
 
 bool doListen();
 bool stopListen();
-bool doSend(char* data);
+bool doSend(const char *data);
 void sendPassword(char *pwd, char *user);
 void doBroadcastCacheData();
