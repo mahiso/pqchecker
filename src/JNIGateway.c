@@ -44,7 +44,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <comm.h>
 
 JavaVM *javaVM = NULL;
-bool cacheData = true;
 
 jint JNI_OnLoad(JavaVM *vm, void *reserved)
 {
@@ -96,7 +95,8 @@ Java_net_meddeb_pqmessenger_JNIGateway_setParams(JNIEnv *env, jobject thisObj, j
 
 JNIEXPORT void JNICALL 
 Java_net_meddeb_pqmessenger_JNIGateway_setCacheData(JNIEnv *env, jobject thisObj, jboolean jcacheData){
-  cacheData = jcacheData;
+  bool cacheData = jcacheData;
+  setCacheData(cacheData);
   syslog(LOG_DEBUG, _("Set cache data to %d"), cacheData);
   if (!cacheData) doBroadcastCacheData();
 }

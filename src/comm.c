@@ -199,6 +199,7 @@ void doBroadcastCacheData() {
 void sendPassword(char *pwd, char *user)
 {
   syslog(LOG_DEBUG, _("Sending modified password.."));
+  bool cacheData = isCacheData();
   if (cacheData) doCacheData(pwd, user); 
   else if (doSend(pwd)) syslog(LOG_DEBUG, _("Modified password successfully sent.."));
       else doCacheData(pwd, user);

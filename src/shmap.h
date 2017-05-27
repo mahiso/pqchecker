@@ -28,3 +28,5 @@ void getShmSize(unsigned int size);
 bool shmPush(const char *data);
 bool shmPop();
 bool shmGet(char *data);
+void setCacheData(bool cacheData);
+bool isCacheData();
