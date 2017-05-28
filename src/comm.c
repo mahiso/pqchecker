@@ -63,7 +63,6 @@ void broadcastData(const char *data) {
    syslog(LOG_ERR, _("Cannot find class"));
    return;
   }
-  //jmethodID mid = (*env)->GetMethodID(env, cls, "sendData", "(Ljava/lang/String;Ljava/lang/String;)V");
   jmethodID mid = (*env)->GetMethodID(env, cls, "sendData", "([B)V");
   if (mid == 0) {
    syslog(LOG_ERR, _("Cannot find method"));
@@ -77,14 +76,6 @@ void broadcastData(const char *data) {
       byteTransfert[i] = data[i];
     }
     (*env)->SetByteArrayRegion(env, byteBuffer, 0, SHMFIELDSIZE, byteTransfert);
-    /*
-    const char *cPwdStr;
-    const char *cUserStr;
-    cPwdStr = data;
-    cUserStr = "anonymous";
-    jstring jPwdStr = (*env)->NewStringUTF(env, cPwdStr);
-    jstring jUserStr = (*env)->NewStringUTF(env, cUserStr);
-    */
     (*env)->CallVoidMethod(env, obj, mid, byteBuffer);
   }
 }
@@ -212,7 +203,7 @@ void doBroadcastCacheData() {
 
 void sendPassword(char *pwd, char *user)
 {
-  syslog(LOG_DEBUG, _("Sending modified password: %s  %s"), user, pwd);
+  syslog(LOG_DEBUG, _("Sending modified password"));
   bool cacheData = isCacheData();
   if (cacheData) doCacheData(pwd, user); 
   else if (sendData(pwd, user)) syslog(LOG_DEBUG, _("Modified password successfully sent.."));

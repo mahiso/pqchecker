@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ---------------------------------------------------------------------*/
 
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 
 import org.apache.log4j.Logger;
 
@@ -49,21 +50,45 @@ public class JNIGateway {
   public void sendData(byte[] data) {
     if (logger == null) logger =  Logger.getLogger(this.getClass());
     logger.info("Data received from native");
-    if (data != null && data.length > 0) {
-      int loginLength = data[0];
-      logger.info("Data length: " + data.length + " - loginLength: " + loginLength);
-      byte[] buffer = new byte[loginLength];
-      if (data.length > 1) {
-        for (int i=2; i <= loginLength+1; i++) if (i<data.length) buffer[i-2] = data[i];
-        String login = "";
+    boolean dataCorrupted = false;
+    if (data != null && data.length > 4) {
+    	/*
+    	byte[] length = new byte[4];
+    	for (int i=0; i<4; i++) length[i] = data[i];
+    	ByteBuffer buffer = ByteBuffer.wrap(length);
+    	*/
+      int dataLength = data[0];
+      logger.info("Login length: " + dataLength);
+      byte[] login = new byte[dataLength];
+      for (int i=0; i <= dataLength; i++) {
+      	if ((i+4)<data.length) login[i] = data[i+4];
+      	else dataCorrupted = true;
+      }
+      if (!dataCorrupted) {
+        String strLogin = "";
+        String strPwd = "";
+        /*
+      	int offset = 4 + dataLength;
+      	dataLength = 0;
+      	while ((data.length>offset+dataLength) && (data[offset+dataLength] != '0')) {
+      		dataLength++;
+      	}
+        byte[] pwd = new byte[dataLength];
+        for (int i=offset; i <= (offset+dataLength); i++) {
+        	pwd[i] = data[i+offset];
+        }
+        */
         try {
-    			login = new String(buffer, "UTF-8");
+    			strLogin = new String(login, "UTF-8");
+    			//strPwd = new String(pwd, "UTF-8");
     		} catch (UnsupportedEncodingException e) {
     			logger.error("Conversion error: " + e.getMessage());
     		}
-        logger.info("Sent from native: " + loginLength + " - " + login);
+        //logger.info("Login: " + strLogin + " - Pwd: " + strPwd);
+        logger.info("Login: " + strLogin);
       }
-    }
+    } else dataCorrupted = true;
+    if (dataCorrupted) logger.info("Data corrupted");
     //System.out.println("Sent from native: " + user + " - " + pwd);
   }
 	
