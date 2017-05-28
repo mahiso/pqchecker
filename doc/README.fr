@@ -1,7 +1,7 @@
 ------------------------------------------------------------------
 pqchecker.so bibliothèque dynamique partagée pour OpenLDAP/pPolicy
 Permet le contrôle de la qualité du contenu des mots de passe
-version 1.2.2
+version 2.0.0
 ------------------------------------------------------------------
 
 pqChecker est un plug-in pour le serveur d'annuaire OpenLDAP muni 
@@ -25,10 +25,14 @@ la modification:
  bool set_params(char *params, char *fmt);
  bool get_params(char *params, char *fmt);
 
+Permet également de diffuser le mot de passe modifié en temps réel.
+Cette fonctionnalité est configurable (cf. paramètre de configuration
+dans page de manuel) et nécessite l'installation du middleware pqMessenger. 
+
 -------------
 Où le trouver
 -------------
-Binaires: http://www.meddeb.fr/telecharger
+Binaires: http://www.meddeb.net/fr/telecharger
 Sources: https://github.com/ameddeb/pqchecker.git
 
 -----------------
@@ -53,7 +57,7 @@ Voir le fichier LICENCE pour plus de détail.
 --------
 Site web
 --------
-http://www.meddeb.fr/pqchecker
+http://www.meddeb.net/fr/pqchecker
 
 -----------------------
 Rapporter les problèmes

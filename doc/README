@@ -22,6 +22,10 @@ for reading and modifying them.
  bool set_params(char *params, char *fmt);
  bool get_params(char *params, char *fmt);
 
+Also allows to broadcast the changed password in real time.
+This feature si configurable (cf. Configuration parameter in the manual page)
+and requires the installation of pqMessenger middleware.
+
 -------------
 Where to find 
 -------------

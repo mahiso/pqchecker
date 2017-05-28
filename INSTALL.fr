@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------
 pqchecker.so bibliothèque dynamique partagée pour OpenLDAP/pPolicy
 Permet le contrôle de la qualité du contenu des mots de passe
-version 1.2.2
+version 2.0.0
 -------------------------------------------------------------------------
 
 Pour construire et installer pqChecker depuis les sources:
@@ -32,11 +32,11 @@ installé sur votre système cible. A défaut, opter pour la version la plus pro
 Décompresser l'archive téléchargée dans un endroit de votre choix,
 
   cd /tmp
-  tar xzvf ~/download/openldap-2.4.30.tgz
+  tar xzvf ~/download/openldap-2.4.42.tgz
 
 Vous abtenez, ainsi, la racine du chemin vers les fichiers source du serveur OpenLDAP:
 
-  /tmp/openldap-2.4.30/
+  /tmp/openldap-2.4.42/
 
 ----------------------------------------------------------------------------
 2/ Préparer les fichiers d'en-tête nécessaires à la compilation de pqChecker
@@ -45,7 +45,7 @@ Vous abtenez, ainsi, la racine du chemin vers les fichiers source du serveur Ope
 Les fichiers d'en-tête nécessaires portable.h et slap.h ne sont pas inclus dans l'archive téléchargée. 
 Il faudra les construire en executant le script "configure" qui est fourni dans l'archive.
 
-  cd /tmp/openldap-2.4.30
+  cd /tmp/openldap-2.4.42
   ./configure && make depend
 
 -----------------------------------------------------------
@@ -55,8 +55,8 @@ Il faudra les construire en executant le script "configure" qui est fourni dans 
 Décompresser l'archive de pqchecker,
 
   cd /tmp
-  tar xzvf ~/download/pqchecker-1.2.2.tar.gz
-  cd pqchecker-1.2.2/
+  tar xzvf ~/download/pqchecker-2.0.0.tar.gz
+  cd pqchecker-2.0.0/
 
       | Note pour les utilisateurs de Git: 
       |-----------------------------------
@@ -69,8 +69,8 @@ Décompresser l'archive de pqchecker,
 
 Ensuite executer
  
-  ./configure LDAPSRC=/tmp/openldap-2.4.30 \
-              JAVAHOME=/usr/lib/jvm/java-7-oracle \
+  ./configure LDAPSRC=/tmp/openldap-2.4.42 \
+              JAVAHOME=/usr/lib/jvm/default-java \
               libdir=/usr/lib/ldap \
               PARAMDIR=/etc/ldap/pqchecker
 

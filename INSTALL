@@ -1,7 +1,7 @@
 ---------------------------
 pqchecker.so shared library  for OpneLDAP/pPolicy overlay
 Allows checks of passwords content quality
-version 1.2.2
+version 2.0.0
 ---------------------------
 
 To build and install pqChecker from sources code:
@@ -31,11 +31,11 @@ failing that, the nearest version.
 Then unpack the archive file in a location of your choice,
 
   cd /tmp
-  tar xzvf ~/download/openldap-2.4.30.tgz
+  tar xzvf ~/download/openldap-2.4.42.tgz
 
 You obtain a root directory for OpenLDAP server source files 
 
-  /tmp/openldap-2.4.30/
+  /tmp/openldap-2.4.42/
 
 --------------------------------
 2/ Prepare required header files
@@ -45,7 +45,7 @@ The required header files portable.h and slap.h are not included, initially,
 in downloaded OpenLDAP's source files. It must be created by executing "configure"
 script who's provided  in archive of source files.
 
-  cd /tmp/openldap-2.4.30
+  cd /tmp/openldap-2.4.42
   ./configure && make depend
 
 ------------------------------------------------------
@@ -55,8 +55,8 @@ script who's provided  in archive of source files.
 Unpack pqchecker archive,
 
   cd /tmp
-  tar xzvf ~/download/pqchecker-1.2.2.tar.gz
-  cd pqchecker-1.2.2/
+  tar xzvf ~/download/pqchecker-2.0.0.tar.gz
+  cd pqchecker-2.0.0/
 
       | Note Git users:
       |----------------
@@ -69,8 +69,8 @@ Unpack pqchecker archive,
 
 Then execute
  
-  ./configure LDAPSRC=/tmp/openldap-2.4.30 \
-              JAVAHOME=/usr/lib/jvm/java-7-oracle \
+  ./configure LDAPSRC=/tmp/openldap-2.4.42 \
+              JAVAHOME=/usr/lib/jvm/default-java \
               libdir=/usr/lib/ldap \
               PARAMDIR=/etc/ldap/pqchecker
 
