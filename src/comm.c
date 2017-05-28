@@ -159,30 +159,29 @@ bool doSend(const char *data) {
   return rslt;
 }
 
-bool sendData(const char *pwd, const char *user) {
-  syslog(LOG_DEBUG, _("Sending data.."));
-  char cdata[SHMFIELDSIZE];
+void formatData(char *cdata, const char *pwd, const char *user) {
   unsigned int size = strlen(user);
-  memset(&cdata, 0, SHMFIELDSIZE);
   memcpy(cdata, (char*)&size, sizeof(unsigned int));
   int offset = sizeof(unsigned int);
   memcpy(cdata + offset, user, size);
   offset += size;
   size = strlen(pwd);
   memcpy(cdata + offset, pwd, size);
+}
+
+bool sendData(const char *pwd, const char *user) {
+  syslog(LOG_DEBUG, _("Sending data.."));
+  char cdata[SHMFIELDSIZE];
+  memset(&cdata, 0, SHMFIELDSIZE);
+  formatData(cdata, pwd, user);
   return doSend(cdata);
 }
 
 void doCacheData(char *pwd, char *user) {
   syslog(LOG_DEBUG, _("Caching data.."));
   char cdata[SHMFIELDSIZE];
-  unsigned int size = strlen(user);
-  memcpy(cdata, (char*)&size, sizeof(unsigned int));
-  int offset = sizeof(unsigned int);
-  memcpy(cdata + offset, user, size);
-  offset += size;
-  size = strlen(pwd);
-  memcpy(cdata, pwd, size);
+  memset(&cdata, 0, SHMFIELDSIZE);
+  formatData(cdata, pwd, user);
   shmPush(cdata);
   syslog(LOG_INFO, _("Can't broadcast, data cached locally"));
 }

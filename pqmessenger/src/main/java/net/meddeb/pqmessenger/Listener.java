@@ -20,13 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 public class Listener implements Runnable {
 
-  //private MsgEngine msgEngine = null;
-  /*
-  public Listener(MsgEngine msgEngine) {
-    this.msgEngine = msgEngine;
-  }
-  */
-
 	public native boolean doListen();
 
 	@Override

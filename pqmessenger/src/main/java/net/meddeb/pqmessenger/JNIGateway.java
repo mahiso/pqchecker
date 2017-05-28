@@ -20,8 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import org.apache.log4j.Logger;
+
+import net.meddeb.md.common.PQChannelMsg;
 
 public class JNIGateway {
 	static {
@@ -33,10 +36,15 @@ public class JNIGateway {
 	}
 
   private Logger logger =  Logger.getLogger(this.getClass());
+  private Messenger messenger = null;
   
   public static JNIGateway getInstance() {
     if (instance == null) instance = new JNIGateway();
     return instance;
+  }
+  
+  public void setMessenger(Messenger messenger) {
+  	this.messenger = messenger;
   }
 
 	public native String getParams(String fmt);
@@ -49,47 +57,45 @@ public class JNIGateway {
 
   public void sendData(byte[] data) {
     if (logger == null) logger =  Logger.getLogger(this.getClass());
-    logger.info("Data received from native");
     boolean dataCorrupted = false;
     if (data != null && data.length > 4) {
-    	/*
-    	byte[] length = new byte[4];
-    	for (int i=0; i<4; i++) length[i] = data[i];
-    	ByteBuffer buffer = ByteBuffer.wrap(length);
-    	*/
-      int dataLength = data[0];
-      logger.info("Login length: " + dataLength);
+    	
+    	byte[] lengthByte = new byte[4];
+    	for (int i=0; i<4; i++) {
+    		lengthByte[i] = data[i];
+    	}
+    	ByteBuffer buffer = ByteBuffer.wrap(lengthByte);
+    	buffer.order(ByteOrder.LITTLE_ENDIAN);
+      int dataLength = buffer.getShort();
       byte[] login = new byte[dataLength];
-      for (int i=0; i <= dataLength; i++) {
+      for (int i=0; i < dataLength; i++) {
       	if ((i+4)<data.length) login[i] = data[i+4];
       	else dataCorrupted = true;
       }
       if (!dataCorrupted) {
         String strLogin = "";
         String strPwd = "";
-        /*
       	int offset = 4 + dataLength;
       	dataLength = 0;
-      	while ((data.length>offset+dataLength) && (data[offset+dataLength] != '0')) {
+      	while ((data.length>offset+dataLength) && ((data[offset+dataLength] & 0xFF) != 0x00)) {
       		dataLength++;
       	}
         byte[] pwd = new byte[dataLength];
-        for (int i=offset; i <= (offset+dataLength); i++) {
+        for (int i=0; i < dataLength; i++) {
         	pwd[i] = data[i+offset];
         }
-        */
         try {
     			strLogin = new String(login, "UTF-8");
-    			//strPwd = new String(pwd, "UTF-8");
+    			strPwd = new String(pwd, "UTF-8");
     		} catch (UnsupportedEncodingException e) {
     			logger.error("Conversion error: " + e.getMessage());
     		}
-        //logger.info("Login: " + strLogin + " - Pwd: " + strPwd);
-        logger.info("Login: " + strLogin);
+        logger.info("Password modification notification received, user: " + strLogin);
+        String msg = "{user:" + strLogin + ";pwd:" + strPwd + "}";
+        if (messenger != null) messenger.doSend(msg, PQChannelMsg.WRITE_REQUEST.toString());
       }
     } else dataCorrupted = true;
-    if (dataCorrupted) logger.info("Data corrupted");
-    //System.out.println("Sent from native: " + user + " - " + pwd);
+    if (dataCorrupted) logger.error("Receiving corrupted data");
   }
 	
 }

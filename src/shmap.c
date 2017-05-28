@@ -91,7 +91,6 @@ bool shmInit(const unsigned int nbRecords) {
   if (fd >= 0) {
     size_t memsize = size;
     if (ftruncate(fd, memsize) == 0) {
-      //off_t offset = SHMPSIZE & ~(sysconf(_SC_PAGE_SIZE) - 1);
       off_t offset = 0;
       shmref = mmap(NULL, memsize, PROT_WRITE, MAP_SHARED, fd, offset);
       rslt = shmref != MAP_FAILED;
@@ -114,7 +113,9 @@ bool shmGet(char *data) {
   unsigned int nb = getNbRecords(shmref);
   if (nb > 0) {
     unsigned int read_offset = (nb - 1) * SHMFIELDSIZE + (2* sizeof(unsigned int));
-    memcpy(data, shmref + read_offset, SHMFIELDSIZE);
+    char ldata[SHMFIELDSIZE];
+    memcpy(ldata, shmref + read_offset, SHMFIELDSIZE);
+    for (int i=0; i<SHMFIELDSIZE; i++) if (ldata[i] != 0) data[i] = ~ldata[i];
     rslt = true;
   } else syslog(LOG_WARNING, _("shmPop: SHM region empty"));
   shmUnmap();
@@ -144,7 +145,9 @@ bool shmPush(const char *data) {
   unsigned int nb = getNbRecords();
   if (nb < SHMDEFAULTNBRECORDS) {
     unsigned int write_offset = nb * SHMFIELDSIZE + (2 * sizeof(unsigned int));
-    memcpy(shmref +write_offset, data, SHMFIELDSIZE);
+    char ldata[SHMFIELDSIZE];
+    for (int i=0; i<SHMFIELDSIZE; i++) if (data[i] != 0) ldata[i] = ~data[i];
+    memcpy(shmref +write_offset, ldata, SHMFIELDSIZE);
     nb++;
     setNbRecords(nb);
     rslt = true;

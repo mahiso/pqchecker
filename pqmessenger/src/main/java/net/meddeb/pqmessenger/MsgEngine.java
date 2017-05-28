@@ -164,6 +164,7 @@ public class MsgEngine {
 			System.out.println(LoggingMsg.getOut("confFilenotfound"));
 			messenger = new Messenger();
 		}
+		JNIGateway.getInstance().setMessenger(messenger);
 	}
 	
 	public void startConnection(){
