@@ -1,19 +1,19 @@
 .\" Manpage for pqchecker.
 .\" Contact abdelhamid@meddeb.net to correct errors or typos.
-.TH man 3 "24 Août 2014" "1.2" "pqchecker.so"
+.TH man 3 "29 Mai 2014" "2.0" "pqchecker.so"
 .SH NOM
 pqchecker \- Un plug-in pour OpenLDAP, vérifie la qualité des mots de passe.
 .SH SYNOPSIS
 Appelée par le module ppolicy du serveur OpenLDAP quand un mot de passe est modifié:
   int check_password (char *pPasswd, char **ppErrStr, Entry *e)
 .LP
-Fourni pour la modification des paramètres de vérification de la qualité des mots de passe:
+Fournie pour la modification des paramètres de vérification de la qualité des mots de passe:
   bool set_params(char *params, char *fmt);
 .LP
-Fourni pour la lecture des paramètres de vérification de la qualité des mots de passe:
+Fournie pour la lecture des paramètres de vérification de la qualité des mots de passe:
   bool get_params(char *params, char *fmt);
 .SH DESCRIPTION
-pqchecker est un plug-in pour le serveur d'annuaire OpenLDAP muni du module ppolicy. Il permet de vérifier la qualité des mots de passe modifiés avant qu'ils ne soient stockés dans l'attribut destiné à cet effet. Si le mot de passe est conforme aux paramètres de la qualité, il est accepté. Sinon il est rejeté.
+pqchecker est un plug-in pour le serveur d'annuaire OpenLDAP muni du module ppolicy. Il permet de vérifier la qualité du contenu des mots de passe modifiés. Ce contrôle est effectué avant le stockage du mot de passe. Si le contenu du mot de passe est conforme aux paramètres de la qualité, il est accepté. Sinon il est rejeté.
 .LP 
 Les paramètres vérifiés sont: 
 .LP
@@ -21,32 +21,96 @@ Les paramètres vérifiés sont:
 .br 
 - Nombre de caractères miniscules requis.
 .br 
-- Nombre de caractères spéciaux requis.
+- Nombre de caractères spéciaux requis (catactères non alphabétiques).
 .br 
-- Nombre de chiffres requis.
+- Nombre de chiffres requis (0-9).
 .br 
 - Liste des caractères interdits.
 
-Par ailleurs, pqchecker permet 
-.B la gestions des paramètres de la qualité des mots de passe par programmation.
-A cet effet, il fournit deux fonctions pour leur consultation ou modification. 
-.SH FORMAT DE STOCKAGE DES PARAMETRES  
-Format des données: UULLDDSS@)..
+pqChecker permet également:
+.LP 
+- La gestions des paramètres de la qualité des mots de passe par programmation. A cet effet, il fournit deux fonctions pour leur consultation ou modification.
 .br
-U: Majuscules, L: Miniscules, D: Chiffres, S: Caractères spéciaux -> 8 premiers caratères.
-.br
-A partir du 9eme caractère commence la liste des acarctères interdits.
+- La diffusion du mot de passe modifié en temps réel. Cette fonctionnalité nécessite l'utilisation du middleware pqMessenger.
+.SH FORMAT DE STOCKAGE DES PARAMETRES
+Une seule ligne stockée dans le fichier 'pqparams.dat'.
 .LP
-.B Valeur par défaut:
-1 Majuscule, 1 Miniscule, 1 chiffre, 1 caractère spécial et aucun caractère interdit.
+Format: 0|UULLDDSS@)..
+.br
+Ou    : 1|UULLDDSS@)..
+.LP
+Le premier caractère et un indicateur de diffusion du mot de passe. 1 -> diffuser, 0 -> ne pas diffuser
+.br
+Le deuxième caractère est un séparateur
+.br
+U: Majuscules, L: Miniscules, D: Chiffres, S: Caractères spéciaux (non alphabétiques) -> du 3eme au 10eme caractère.
+.br
+A partir du 11eme commence la liste des acarctères interdits.
+.LP
+.B Par défaut:
+Pas de diffusion, 1 Majuscule, 1 Miniscule, 1 chiffre, 1 caractère spécial et aucun caractère interdit. C'est à dire 0|01010101
 .br
 Les lignes qui commencent par # et les lignes vides sont 
 .B ignorées
 .br
-Toutes les lignes qui suivent la première qui contient un paramétrage valide (ne commence pas par #) sont 
+Toutes les lignes qui suivent la première qui contient un paramétrage (ne commence pas par #) sont 
 .B ignorées
+.LP
+Le paramètre peut être au format ancien (précédent la version 2.0). C'est à dire UULLDDSS@).. sans l'indicateur de diffusion. Dans ce cas la diffusion des mots de passe est désactivée.
+.SH EXEMPLES DE PARAMETRES
+.LP
+.B Exemple 1:
+0|01030201%@ 
+.LP
+Pas de diffusion de mots de passe.
+.LP
+Le mot de passe doit contenir: 
+.LP
+- Au moins un caractère alphabétique majuscule
+.br
+- Au moins 3 caractères alphabétiques miniscules
+.br
+- Au moins 2 chiffres (0-9)
+.br
+- Au moins 1 caractère non alphabétique (Spécial)
+.br
+- Aucun des deux caractères % et @
+.LP
+.B Exemple 2:
+1|02010100abcd. 
+.LP
+Les mots de passe modifiés sont diffusés.
+.LP
+Le mot de passe doit contenir: 
+.LP
+- Au moins 2 caractères alphabétiques majuscules
+.br
+- Au moins 1 caractère alphabétique miniscule
+.br
+- Au moins 1 chiffre (0-9)
+.br
+- Pas de caractère non alphabétique (Spécial) requis
+.br
+- Aucun des caractères: a b c d .
+.LP
+.B Exemple 3:
+00040101
+.LP
+Pas de diffusion de mots de passe.
+.LP
+Le mot de passe doit contenir: 
+.LP
+- Aucun caractères alphabétiques majuscules n'est requis (00)
+.br
+- Au moins 4 caractères alphabétiques miniscules
+.br
+- Au moins 1 chiffre (0-9)
+.br
+- Au moins 1 caractère non alphabétique (Spécial)
+.br
+- Pas de caractères interdits
 .SH VOIR AUSSI
-slapd(8), slapd.conf(5), slapo-ppolicy(5)
+slapd(8), slapd.conf(5), slapo-ppolicy(5), pqmessenger(3)
 .br
 OpenLDAP Administrator's Guide (http://www.OpenLDAP.org/doc/admin/)
 .SH BUGS

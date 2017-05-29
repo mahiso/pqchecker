@@ -13,7 +13,7 @@ Exposed for modifying passwords policy parameters
 Exposed for reading passwords policy parameters  
   bool get_params(char *params, char *fmt);
 .SH DESCRIPTION
-pqchecker is a plug-in for OpenLDAP directory server with ppolicy overlay. It allows to control the quality of the password before storing it in the dedicated directory attribute. If the password mets configured parameters, it is accepted. It is rejected otherwise.
+pqchecker is a plug-in for OpenLDAP directory server with ppolicy overlay. It allows to control the content quality of the new password. This control is performed before the password storage. If the password match configured parameters, it is accepted. It is rejected otherwise.
 .LP 
 The controlled parameters are: 
 .LP
@@ -27,25 +27,91 @@ The controlled parameters are:
 .br 
 - List of forbidden characters.
 
-Also, pqchecker allows easy parameters management, by providing two functions 
-for consultation and modification.
+Also, pqchecker allows:
+.LP
+- Easy parameters management, by providing two functions for programmatically reading and modifying.
+.br
+- Broadcast modified passwords in real time using pqMessenger middleware.
 .SH PARAMETERS STORAGE FORMAT  
-Data format: UULLDDSS@)..
+.LP
+A single line of parameters stored in the 'pqparams.dat' file.
+.LP
+Format: 0|UULLDDSS@)..
 .br
-U: Uppercase, L: Lowercase, D: Digit, S: Special, characters -> 8 first charaters
+Or    : 1|UULLDDSS@)..
+.LP
+1st character is the modified passwords broadcast flag. 1 -> Broadcast, 0 -> Don't broadcast
 .br
-From 9th character begins the list of ones who are forbidden
+2nd character is a separator
+.br
+U: Uppercase, L: Lowercase, D: Digit, S: Special characters (non alphabetic) -> from 3rd to 10th charater
+.br
+From 11th begins the list of forbidden characters
 .LP
 .B Default:
-1 Uppercase, 1 Lowercase, 1 digit, 1 Special and no forbidden characters
+No broadcast, 1 Uppercase, 1 Lowercase, 1 Digit, 1 Special and no forbidden characters. i.e: 0|01010101
 .br
 Lines beginning with # and blank lines are 
 .B ignored
 .br
 All lines after one that contains the parameters (not beginning with #) are 
 .B ignored
+.LP
+Parameters may be, also, in old format (before version 2). i.e UULLDDSS@).. without broadcast flag. In this case no broadcast of modified passwords is done.
+.SH PARAMETERS EXAMPLES
+.LP
+.B Example 1:
+0|01030201%@ 
+.LP
+No broadcast of modified passwords is done.
+.LP
+Passwords must contain: 
+.LP
+- At least 1 Uppercase alphabetic character
+.br
+- At least 3 Lowercase alphabetic charaters 
+.br
+- At least 2 Digits (0-9)
+.br
+- At least 1 non alphabetic character (Special)
+.br
+- None of the two characters % or @
+.LP
+.B Example 2:
+1|02010100abcd. 
+.LP
+Broadcast of modified passwords is done.
+.LP
+Passwords must contain: 
+.LP
+- At least 2 Uppercase alphabetic characters
+.br
+- At least 1 Lowercase alphabetic charater 
+.br
+- At least 1 digit (0-9)
+.br
+- No non alphabetic characters required (00)
+.br
+- None of those characters: a b c d .
+.LP
+.B Example 3:
+00040101
+.LP
+No broadcast of modified passwords is done.
+.LP
+Passwords must contain: 
+.LP
+- No uppercase alphabetic characters required (00)
+.br
+- At least 4 Lowercase alphabetic charaters 
+.br
+- At least 1 Digit (0-9)
+.br
+- At least 1 non alphabetic character (Special)
+.br
+- No forbidden character
 .SH SEE ALSO
-slapd(8), slapd.conf(5), slapo-ppolicy(5)
+slapd(8), slapd.conf(5), slapo-ppolicy(5), pqmessenger(3)
 .br
 OpenLDAP Administrator's Guide (http://www.OpenLDAP.org/doc/admin/)
 .SH BUGS

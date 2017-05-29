@@ -1,5 +1,9 @@
-# Data format UULLDDSS@)..
-# U: Uppercase, L: Lowercase, D: Digit, S: Special, characters -> 8 first charaters
-# From the 9th character begins the list of forbidden characters
-# Default 1 Uppercase, 1 Lowercase, 1 digit, 1 Special and no forbidden characters
-01010101
+# Data format: 0|UULLDDSS@)..
+# Or         : 1|UULLDDSS@)..
+#
+# 1st character is the modified passwords broadcast flag. 1 -> Broadcast, 0 -> Don't broadcast
+# 2nd character is a separator
+# U: Uppercase, L: Lowercase, D: Digit, S: Special characters -> from 3rd to 10th charater.
+# From the 11th character begins the list of forbidden characters
+# Defaulti: No broadcast, 1 Uppercase, 1 Lowercase, 1 digit, 1 Special and no forbidden characters
+0|01010101
