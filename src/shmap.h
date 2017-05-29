@@ -19,8 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdbool.h>
 #include <jni.h>
 
-#define SHMDEFAULTNBRECORDS 10000
-#define SHMFIELDSIZE 144
+#define SHMDEFAULTNBRECORDS 50000
+#define SHMFIELDSIZE 196
 #define SHMNAME "000h01e02d04i15l21.shm"
 
 bool shmInit(const unsigned int nbRecords);

@@ -32,22 +32,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 static char * shmref = NULL;
 
+// set records number in the shared memory region
 void setNbRecords(unsigned int nb) {
   memcpy(shmref, (char*)&nb, sizeof(unsigned int));
 }
 
+// get records number in the shared memory region
 unsigned int getNbRecords() {
   unsigned int nb;
   memcpy(&nb, shmref, sizeof(unsigned int));
   return nb;
 }
     
+// unmap shared memory region
 void shmUnmap() {
   unsigned int size = SHMDEFAULTNBRECORDS * SHMFIELDSIZE + sizeof(unsigned int);
   size_t memsize = size;
   if (munmap(shmref, memsize) != 0) syslog(LOG_ERR, _("SHM region unmap failed, error: %d"), errno);
 }
     
+// map shared memory region
 bool shmMap() {
   bool rslt = false;
   unsigned int size = SHMDEFAULTNBRECORDS * SHMFIELDSIZE + sizeof(unsigned int);
@@ -55,7 +59,6 @@ bool shmMap() {
   int fd = shm_open(SHMNAME, O_RDWR, accessmode);
   if (fd >= 0) {
     size_t memsize = size;
-    //off_t offset = SHMPSIZE & ~(sysconf(_SC_PAGE_SIZE) - 1);
     off_t offset = 0;
     shmref = mmap(NULL, memsize, PROT_WRITE, MAP_SHARED, fd, offset);
     rslt = shmref != MAP_FAILED;
@@ -65,6 +68,7 @@ bool shmMap() {
   return rslt;
 }
 
+//store cacheData flag value in the shared memory 
 void setCacheData(bool cacheData) {
   unsigned int icacheData = 1;
   if (cacheData) icacheData = 0;
@@ -73,6 +77,7 @@ void setCacheData(bool cacheData) {
   shmUnmap();
 }
 
+//get cacheData flag value from the shared memory 
 bool isCacheData() {
   unsigned int icacheData;
   shmMap();
@@ -81,6 +86,7 @@ bool isCacheData() {
   return icacheData == 0;
 }
 
+// initialize shared memory region
 bool shmInit(const unsigned int nbRecords) {
   bool rslt = false;
   if (access(SHMNAME, F_OK) == 0 ) return true; // already initialized
@@ -107,6 +113,7 @@ bool shmInit(const unsigned int nbRecords) {
   return rslt;
 }
 
+// get last field from the shared memory region
 bool shmGet(char *data) {
   bool rslt = false;
   if (!shmMap()) return rslt;
@@ -117,11 +124,12 @@ bool shmGet(char *data) {
     memcpy(ldata, shmref + read_offset, SHMFIELDSIZE);
     for (int i=0; i<SHMFIELDSIZE; i++) if (ldata[i] != 0) data[i] = ~ldata[i];
     rslt = true;
-  } else syslog(LOG_WARNING, _("shmPop: SHM region empty"));
+  }
   shmUnmap();
   return rslt;
 }
 
+// erase last field from the shared memory region
 bool shmPop() {
   bool rslt = false;
   if (!shmMap()) return rslt;
@@ -134,11 +142,12 @@ bool shmPop() {
     nb--;
     setNbRecords(nb);
     rslt = true;
-  } else syslog(LOG_WARNING, _("shmPop: SHM region empty"));
+  }
   shmUnmap();
   return rslt;
 }
 
+// add a field to the shared memory region
 bool shmPush(const char *data) {
   bool rslt = false;
   if (!shmMap()) return rslt;
@@ -151,7 +160,7 @@ bool shmPush(const char *data) {
     nb++;
     setNbRecords(nb);
     rslt = true;
-  } else syslog(LOG_ERR, _("shmPush: SHM region full"));
+  } else syslog(LOG_ERR, _("shmPush: shared memory full"));
   shmUnmap();
   return rslt;
 }

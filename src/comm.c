@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 static char readbuffer[SHMFIELDSIZE];
 
+// send data field to pqMessenger middleware
 void broadcastData(const char *data) {
   syslog(LOG_DEBUG, _("Broadcast data, javaVM: %p"), javaVM);
   JNIEnv * env;
@@ -51,7 +52,7 @@ void broadcastData(const char *data) {
       return;
       break;
     case JNI_OK:
-      syslog(LOG_DEBUG, _("Env OK: %d"), callstatus);
+      syslog(LOG_DEBUG, _("Communication with pqMessenger established"));
       break;
     default :
       syslog(LOG_ERR, _("Broadcast data error: %d"), callstatus);
@@ -80,6 +81,7 @@ void broadcastData(const char *data) {
   }
 }
 
+// extract incoming data to listener
 bool processrequest(int client_socketfd, char *readbuffer) {
   bool rslt = false;
   int readcount = read(client_socketfd, readbuffer, SHMFIELDSIZE);
@@ -90,6 +92,7 @@ bool processrequest(int client_socketfd, char *readbuffer) {
   return rslt;
 }
 
+// start listener
 bool doListen() {
   struct sockaddr_un addr;
   int socketfd;
@@ -129,11 +132,13 @@ bool doListen() {
   unlink(SCKPATH);
 }
 
+// stop listener
 bool stopListen() {
   bool rslt = doSend("quit");
   return rslt;
 }
 
+// do sending data field to listener
 bool doSend(const char *data) {
   struct sockaddr_un addr;
   bool rslt = false;
@@ -158,7 +163,7 @@ bool doSend(const char *data) {
   } else syslog(LOG_ERR, _("Write error"));
   return rslt;
 }
-
+// format data
 void formatData(char *cdata, const char *pwd, const char *user) {
   unsigned int size = strlen(user);
   memcpy(cdata, (char*)&size, sizeof(unsigned int));
@@ -169,6 +174,7 @@ void formatData(char *cdata, const char *pwd, const char *user) {
   memcpy(cdata + offset, pwd, size);
 }
 
+// send user and pawd to listener
 bool sendData(const char *pwd, const char *user) {
   syslog(LOG_DEBUG, _("Sending data.."));
   char cdata[SHMFIELDSIZE];
@@ -177,6 +183,7 @@ bool sendData(const char *pwd, const char *user) {
   return doSend(cdata);
 }
 
+// do store user and pwd in the shared memoery region
 void doCacheData(char *pwd, char *user) {
   syslog(LOG_DEBUG, _("Caching data.."));
   char cdata[SHMFIELDSIZE];
@@ -186,6 +193,7 @@ void doCacheData(char *pwd, char *user) {
   syslog(LOG_INFO, _("Can't broadcast, data cached locally"));
 }
 
+// broadcast all cached data
 void doBroadcastCacheData() {
   syslog(LOG_DEBUG, _("Broadcasting cached data.."));
   char cdata[SHMFIELDSIZE];
@@ -194,12 +202,14 @@ void doBroadcastCacheData() {
     sendSuccess = doSend(cdata);
     if (sendSuccess)  {
       shmPop();
-      syslog(LOG_DEBUG, _("Broadcast data."));
     } else syslog(LOG_DEBUG, _("Broadcast fail."));
   }
   syslog(LOG_INFO, _("Done"));
 }
 
+// send user and pwd to listener / store them in shared memory
+// if send is not possible.
+// main function called from pqchecker to send pwd.
 void sendPassword(char *pwd, char *user)
 {
   syslog(LOG_DEBUG, _("Sending modified password"));
