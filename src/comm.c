@@ -59,7 +59,7 @@ void broadcastData(const char *data) {
       return;
       break;
   }
-  jclass cls = (*env)->FindClass(env,"net/meddeb/pqmessenger/JNIGateway");
+  jclass cls = (*env)->FindClass(env,"net/meddeb/pqmessenger/Listener");
   if (cls == NULL) {
    syslog(LOG_ERR, _("Cannot find class"));
    return;

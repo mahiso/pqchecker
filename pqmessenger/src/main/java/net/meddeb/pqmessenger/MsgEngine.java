@@ -52,8 +52,10 @@ public class MsgEngine {
 	private final static String DEFAULT_LOGFILE = "log4j.xml";
 	private final static String DEFAULT_MSGSERVER_ID = "PQMsgServer";
 	private final static int DEFAULT_RETRY_TIME = 1800; //30mn
-	private Messenger messenger = null;
-  private Thread listener = null;
+	
+	private JMSConfigDto msgServerConf = null;
+
+	private Thread listener = null;
 	private Logger logger = null;
 	// Time to retry connection in seconds
 	private int retryTime = -1; 
@@ -134,7 +136,7 @@ public class MsgEngine {
 		printWelcomeMessage();
 		boolean confInitialized = false;		
 		Hashtable<String, String> paramList = null;
-		JMSConfigDto msgServerConf = null;
+		
 		JApptoolsPin toolsPin = JApptoolsPin.getInstance();
 		String configPath = getArgValue(args, CONFPATH_ARG_KEY);
 		if (configPath.isEmpty()) configPath = DEFAULT_CONFPATH;
@@ -156,37 +158,29 @@ public class MsgEngine {
 			if (serverID.isEmpty()) serverID = DEFAULT_MSGSERVER_ID;
 			msgServerConf = toolsPin.getJMSConfig(serverID);
 			if ((msgServerConf == null)&&(logger != null)) logger.warn(LoggingMsg.getLog("confnotFound"));
-		  if (msgServerConf == null) {
-			  messenger = new Messenger();
-		  } else	messenger = new Messenger(msgServerConf);
 		} else {
 			System.out.println(LoggingMsg.getOut("cantConfLog")); 
 			System.out.println(LoggingMsg.getOut("confFilenotfound"));
-			messenger = new Messenger();
 		}
-		JNIGateway.getInstance().setMessenger(messenger);
 	}
 	
 	public void startConnection(){
-		if (!messenger.isConnectionInitialized()) messenger.initConnection();
-		if ((messenger.isConnectionInitialized()) && (!messenger.isConnected())) {
-			messenger.startConnection();
-      if (messenger.isConnected()) JNIGateway.getInstance().setCacheData(false);
-			if ((logger != null)&&(messenger.isConnected())) logger.info(LoggingMsg.getLog("pqMsgcnx"));
+		Messenger.getInstance().initConnection(msgServerConf);
+		Messenger.getInstance().startConnection();
+   	JNIGateway.getInstance().setCacheData(!Messenger.getInstance().isConnected());
+		if ((logger != null)&&(Messenger.getInstance().isConnected())) {
+			logger.info(LoggingMsg.getLog("pqMsgcnx"));
 		}
 	}
 	
 	public void stopConnection(){
-		if (messenger.isConnected()) {
-			messenger.stopConnection();
-      if (!messenger.isConnected()) JNIGateway.getInstance().setCacheData(true);
-			if ((logger != null)&&(!messenger.isConnected()))	logger.info(LoggingMsg.getLog("pqMsgdcnx"));
+		Messenger.getInstance().stopConnection();
+   	JNIGateway.getInstance().setCacheData(!Messenger.getInstance().isConnected());
+		if ((logger != null)&&(!Messenger.getInstance().isConnected()))	{
+			logger.info(LoggingMsg.getLog("pqMsgdcnx"));
 		}
 	}
 	
-	public boolean isConnectionStarted(){
-		return messenger.isConnected();
-	}
 	/**
 	 * Connection retry time in milliseconds
 	 * @return time to retry cnx 

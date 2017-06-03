@@ -46,6 +46,7 @@ import org.apache.log4j.Logger;
 
 
 public class Messenger {
+	private static Messenger instance = null;
 	private final static String DEFAULT_HOST = "localhost";
 	private final static String DEFAULT_PORT = "61616";
 	private String senderID = "";
@@ -63,7 +64,6 @@ public class Messenger {
 	private Session session = null;
 	private MessageConsumer consumer = null;
 	
-	@SuppressWarnings("finally")
 	private String getHostname(){
 		String rslt = "";
 		try {
@@ -72,8 +72,8 @@ public class Messenger {
 			rslt="";
 		} finally{
 			if (rslt == null) rslt = "";
-			return rslt;
 		}
+		return rslt;
 	}
 	
 	private class ParamsListener implements MessageListener{
@@ -120,29 +120,10 @@ public class Messenger {
 		}
 	}
 	
-	public Messenger(JMSConfigDto serverConf) {
-		senderID = getHostname();
-		connected = false;
-		topicName = ChannelID.PQPARAMS.toString();
-		listenUrl = "tcp://";
-		if (serverConf.getHost().isEmpty()) listenUrl = listenUrl + DEFAULT_HOST;
-		else listenUrl = listenUrl + serverConf.getHost();
-		listenUrl = listenUrl + ":";
-		if (serverConf.getPort().isEmpty()) listenUrl = listenUrl + DEFAULT_PORT;
-		else listenUrl = listenUrl + serverConf.getPort();
-		user = serverConf.getUser();
-		password = serverConf.getPassword();
+	private Messenger() {
 	}
 	
-	public Messenger() {
-		senderID = getHostname();
-		connected = false;
-		topicName = ChannelID.PQPARAMS.toString();
-		listenUrl = "tcp://" + DEFAULT_HOST + ":" + DEFAULT_PORT;
-	}
-	
-	@SuppressWarnings("finally")
-	public boolean initConnection(){
+	private boolean doInitConnection(){
 		connectionInitialized = false;
 		logger.debug(LoggingMsg.getLog("initCnx"));
 		try {
@@ -165,12 +146,43 @@ public class Messenger {
 			if (connectionInitialized) logger.debug("cnxSuccess");
 		} catch (Exception e) {
 			logger.error(LoggingMsg.getLog("cnxUnable" + " - " + e.getMessage()));
-		} finally{
-			return connectionInitialized;
 		}
+		return connectionInitialized;
 	}
 	
-	@SuppressWarnings("finally")
+	public static Messenger getInstance() {
+		if (instance == null) instance = new Messenger();
+		return instance;
+	}
+	
+	public boolean initConnection() {
+		if (connectionInitialized) return true;
+		senderID = getHostname();
+		connected = false;
+		topicName = ChannelID.PQPARAMS.toString();
+		listenUrl = "tcp://" + DEFAULT_HOST + ":" + DEFAULT_PORT;
+		return doInitConnection();
+	}
+
+	public boolean initConnection(JMSConfigDto serverConf) {
+		if (connectionInitialized) return true;
+		if (serverConf == null) {
+			return initConnection();
+		}
+		senderID = getHostname();
+		connected = false;
+		topicName = ChannelID.PQPARAMS.toString();
+		listenUrl = "tcp://";
+		if (serverConf.getHost().isEmpty()) listenUrl = listenUrl + DEFAULT_HOST;
+		else listenUrl = listenUrl + serverConf.getHost();
+		listenUrl = listenUrl + ":";
+		if (serverConf.getPort().isEmpty()) listenUrl = listenUrl + DEFAULT_PORT;
+		else listenUrl = listenUrl + serverConf.getPort();
+		user = serverConf.getUser();
+		password = serverConf.getPassword();
+		return doInitConnection();
+	}
+	
 	public boolean startConnection(){
 		logger.debug(LoggingMsg.getLog("cnxStart"));
 		connected = false;
@@ -191,10 +203,8 @@ public class Messenger {
 			logger.debug(LoggingMsg.getLog("cnxStartSucc"));
 		} catch (JMSException e) {
 			logger.error(LoggingMsg.getLog("cnxStartErr") + e.getMessage());
-		} finally {
-			return connected;
 		}
-		
+		return connected;
 	}
 	
 	public void stopConnection(){
@@ -223,7 +233,7 @@ public class Messenger {
 			msg.setStringProperty(MsgProperties.TYPE.toString(), msgType);
 			msg.setStringProperty(MsgProperties.SENDERID.toString(), senderID);
 			msg.setText(message);
-			logger.info(LoggingMsg.getLog("sendMsg") + msgType + "] " + msg.getText());
+			logger.info(LoggingMsg.getLog("sendMsg") + msgType + "]");
 			producer.send(msg);
 			logger.debug(LoggingMsg.getLog("msgSent"));
 		} catch (JMSException e){

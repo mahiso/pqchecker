@@ -61,14 +61,14 @@ public class MsgDaemon implements Daemon {
         while(!stopped){
   				logger.info(LoggingMsg.getLog("pqMsgTrycnx"));
   				msgEngine.startConnection();
-  				if (msgEngine.isConnectionStarted()){
+  				if (Messenger.getInstance().isConnected()){
   					connected = true;
   				} else {
   					String msg = LoggingMsg.getLog("pqMsgCnxFail");
   					msg = MessageFormat.format(msg, msgEngine.getStrTimeretry());
   					logger.info(msg);
   				}
-  				while ((true)&&(msgEngine.isConnectionStarted())){
+  				while ((true)&&(Messenger.getInstance().isConnected())){
   					try{
   						Thread.sleep(1000);
   					} catch (InterruptedException e) {
