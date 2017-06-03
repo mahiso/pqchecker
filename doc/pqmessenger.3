@@ -1,15 +1,19 @@
 .\" Manpage for pqmessenger.
 .\" Contact abdelhamid@meddeb.net to correct errors or typos.
-.TH man 3 "24 Feb. 2015" "1.2" "pqMessenger"
+.TH man 3 "3 Jun 2017" "2.0" "pqMessenger"
 .SH NAME
 pqMessenger \- A messaging middleware for pqChecker plug-in and a JMS server.
 .SH SYNOPSIS
 Allows two-way communication between pqchecker.so plug-in for OpenLDAP and a Java JMS compliant application.
 .SH DESCRIPTION
-pqChecker plug-in for OpenLDAP directory server use a text file: 
+"pqChecker" plugin for the OpenLDAP directory server allows to control the passwords contents quality. It also allows to broadcast these passwords as soon as they are modified. To set up its operation, it uses a text file subject to system access restrictions: 
 .B
-pqparams.dat
-to store the passwords quality parameters. pqMessenger allows to read and modify this file content by a Java JMS compliant application.
+pqparams.dat.
+pqMessenger allows to JMS compliant application:
+.LP
+- Read and modify operating parameters.
+.br
+- Deliver modified passwords to other systems in real time.
 
  --------------        -------------    JNI    -------------         JMS           ----------------------------
 .br
@@ -56,6 +60,10 @@ In addition to this setting at startup, an XML configuration file contains other
 
 .SH SEE ALSO
 pqchecker(3), jsvc(1)
+.br
+Further details about pqChecker/pqMessenger: http://www.meddeb.net/pqchecker
+.br
+JMS: http://www.oracle.com/technetwork/java/jms
 .SH BUGS
 abdelhamid@meddeb.net
 .br

@@ -1,15 +1,22 @@
 .\" Manpage for pqmessenger.
 .\" Contact abdelhamid@meddeb.net to correct errors or typos.
-.TH man 3 "24 Fév. 2015" "1.2" "pqMessenger"
+.TH man 3 "3 Juin 2017" "2.0" "pqMessenger"
 .SH NOM
 pqMessenger \- Un module intermédiaire de transport de messages applicatifs entre pqChecker et un serveur JMS.
 .SH SYNOPSIS
 Permet la communication dans les deux sens entre le plug-in natif pqchecker.so pour OpenLDAP et une application compatible Java JMS.
 .SH DESCRIPTION
-Le plug-in pour le serveur d'annuaire OpenLDAP "pqchecker" utilise le contenu d'un fichier texte pour stocker les paramètres de la qualité des mots de passe: 
+Le plug-in pour le serveur d'annuaire OpenLDAP "pqChecker" permet de contrôler la qualité du contenu des mots de passes stockés dans cet annuaire. Il permet également de diffuser ces mots de passe dès leur modification. Pour son paramétrage il utilise un fichier texte soumis à des restrictions d'accés système: 
 .B
 pqparams.dat.
-pqMessenger permet à une application compatible avec Java JMS de lire et de modifier ces paramètres.
+pqMessenger permet à une application compatible avec Java JMS de:
+.LP 
+- Lire et modifier les paramètres de fonctionnement.
+.br
+- Diffuser 
+.B
+en temps réel 
+les mots de passe modifiés vers d'autres systèmes qui l'utilisent.
 
  --------------        -------------    JNI    -------------         JMS           ----------------------------
 .br
@@ -34,13 +41,13 @@ Chemin pour les fichiers de configuration.
 .LP
 .B
 CONFIG_FILE: 
-Nom du fichier configuration (config.xml par défaut).
+Nom du fichier de configuration (config.xml par défaut).
 .LP
 .B
 CONFIGLOG_FILE: 
-Nom du fichier configuration des fichiers journaux ou Log (log4j.xml par défaut).
+Nom du fichier de configuration de la journalisation ou Log (log4j.xml par défaut).
 .LP
-L'exécution de pqMessenger est prise en charge par Apache JSVC, donc tout paramètre de lancement de cet utilitaire peut être utilisé pour lancer pqMessenger, notamment:
+Le lancement et l'exécution de pqMessenger sont pris en charge par l'utilitaire 'Apache JSVC'. Tout paramètre de cet utilitaire peut être utilisé pour lancer pqMessenger, notamment:
 .LP
 .B
 JAVA_HOME: 
@@ -52,9 +59,13 @@ Utilisateur système qui exécute pqMessenger
 .LP
 Consulter la documentation de JSVC pour plus de détails à ce sujet.
 .LP
-En plus de ce paramétrage au démarrage, un fichier de configuration au format XML contient d'autres paramètres. Principalement, les paramètres du serveur JMS: adresse, port, identifiants de connexion. Ce fichier peut contenir aussi une valeur qui surcharge et remplace celle du paramètre de démarrage NATIVE_LIB_HOME. 
+En plus de ce paramétrage au démarrage, un fichier de configuration permet d'affiner certains paramètres. Principalement, les paramètres du serveur JMS: adresse, port, identifiants de connexion. Ce fichier peut contenir aussi une valeur qui surcharge et remplace celle du paramètre de démarrage NATIVE_LIB_HOME. 
 .SH VOIR AUSSI
 pqchecker(3), jsvc(1)
+.br
+Plus de détail sur pqChecker/pqMessenger: http://www.meddeb.net/pqchecker
+.br
+JMS: http://www.oracle.com/technetwork/java/jms
 .SH BUGS
 abdelhamid@meddeb.net
 .br
