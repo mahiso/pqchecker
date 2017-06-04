@@ -21,6 +21,6 @@ Cross platform Java daemon:
 + Allows reading and modifying passwords quality settings programmatically.
 + Allows broadcasting the modified passwords in real time.
 
-![alt tag](http://www.meddeb.net/pqchecker/res/pqchecker-overview-evolution.png)
+![alt tag](http://www.meddeb.net/pqchecker/res/pqchecker-overview.png)
 
 For further details visit http://www.meddeb.net/pqchecker
