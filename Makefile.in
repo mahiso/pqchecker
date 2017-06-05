@@ -161,8 +161,8 @@ CTAGS = ctags
 CSCOPE = cscope
 DIST_SUBDIRS = $(SUBDIRS)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in INSTALL \
-	ar-lib compile config.guess config.sub install-sh ltmain.sh \
-	missing
+	ar-lib compile config.guess config.sub depcomp install-sh \
+	ltmain.sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -326,6 +326,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = src doc doc/fr
 vardatdir = $(PARAMDIR)
+varrundir = /var/run/pqmessenger
 ACLOCAL_AMFLAGS = -I m4
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
@@ -812,13 +813,22 @@ uninstall-am:
 
 .PRECIOUS: Makefile
 
-showwarning: ; @echo "-------------------------------------- WARNING !!  WARNING !! ---------------------------------------" \
-             ; echo " To complete the installation.." \
-             ; echo " The folder $(vardatdir) and its content owner must be modified to the user executing slapd" \
-             ; echo "------------------------------------------------------------------------------------------------------" \
-             ; mkdir -p $(vardatdir) \
-             ; cp pqparams.dat $(vardatdir) 
-install-exec-hook: showwarning
+makedirs:    ; @mkdir -p $(vardatdir) \
+             ; USR=`id -un ldap 2>/dev/null` \
+             ; if [ -z $$USR ]; then \
+                 USR=`id -un openldap 2>/dev/null` \
+             ;   if [ -z $$USR ]; then \
+                     echo "-------------------------------------- WARNING !!  WARNING !! ---------------------------------------" \
+                   ; echo " To complete the installation.." \
+                   ; echo " The folder $(vardatdir) and its content owner must be modified to the user executing slapd" \
+                   ; echo "------------------------------------------------------------------------------------------------------" \
+             ;   fi \
+               fi \
+             ; cp pqparams.dat $(vardatdir) \
+             ; if [ ! -z $$USR ]; then \
+                chown $$USR:$$USR -R $(vardatdir) \
+             ; fi   
+install-exec-hook: makedirs
 uninstall-hook: ; rm -rf $(vardatdir)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

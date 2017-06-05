@@ -16,8 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ---------------------------------------------------------------------*/
 
+#define _POSIX_SOURCE 1
+
 #include <stdbool.h>
-#include <jni.h>
 
 #define SHMDEFAULTNBRECORDS 50000
 #define SHMFIELDSIZE 196
