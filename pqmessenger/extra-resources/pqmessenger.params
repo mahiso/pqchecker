@@ -17,9 +17,9 @@ CONFIG_HOME=/etc/ldap/pqchecker
 # --  log files location -------------------------------
 LOG_HOME=/var/log/pqmessenger
 # --  PID file location --------------------------------
-RUN_HOME=/var/run
+RUN_HOME=/var/run/pqmessenger
 # --  Java JRE location --------------------------------
-JAVA_HOME=/usr/lib/jvm/java-7-oracle
+JAVA_HOME=/usr/lib/jvm/default-java
 # --  Configuration files names ------------------------
 CONFIG_FILE=config.xml
 CONFIGLOG_FILE=log4j.xml
