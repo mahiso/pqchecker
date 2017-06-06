@@ -1,8 +1,12 @@
----------------------------
+This document describes how to install the pqChecker and pqMessenger modules from source files.
+It's necessary to have previously installed the software construction tools: gcc, make, JDK, maven.
+The installation must be done in order: first pqChecker, optionally then pqMessenger.
+
+-------------------------(I)-----------------------------
 pqchecker.so shared library  for OpneLDAP/pPolicy overlay
 Allows checks of passwords content quality
 version 2.0.0
----------------------------
+---------------------------------------------------------
 
 To build and install pqChecker from sources code:
 
@@ -101,3 +105,51 @@ After that, you can see the man page of pqchecker by:
 Execute: 
 
   sudo make uninstall
+
+----------------------------(II)-----------------------------------------
+pqmessenger-2.0.0.jar executable Java jar
+Allows communication between pqChecker and a JMS-compliant application
+version 2.0.0
+-------------------------------------------------------------------------
+
+Prerequisites: Active Internet connection.
+
+---------------------
+1/ pqMessenger build
+---------------------
+
+From the pqchecker folder:
+
+Execute:
+
+  cd pqmessenger/
+  mvn clean package
+
+----------------------
+2/ Install pqMessenger
+----------------------
+
+Execute:
+
+  sudo ./pqmessenger-install.sh
+
+------------------------
+3/ Configure pqMessenger
+------------------------
+
+Fill in the configuration of the JMS server to use in the file $PARAMDIR.config.xml
+PARAMDIR is the parameter used to build pqChecker (cf. supra).
+The 2 parameters to modify:
+
+   <Host>127.0.0.1</Host>
+   <Port>61616</Port>
+      
+---------------------------
+4/ Uninstall pqMessenger
+---------------------------
+      
+Execute:
+      
+   sudo /etc/init.d/pqmessenger stop
+   sudo ./pqmessenger-install.sh --uninstall
+            
