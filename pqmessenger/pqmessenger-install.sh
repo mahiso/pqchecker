@@ -4,12 +4,16 @@
 # (C) Abdelhamid MEDDEB <abdelhamid@meddeb.net>
 #
 VERSION=2.0.0
+JARFILE=pqmessenger-$VERSION.jar
+BOOTFILE=pqmessenger
+PARAMFILE=pqmessenger.params
+CONFFILE=pqmessenger.conf
 
 showHeader() {
   echo ""
-  echo "-----------------------------------------------------------------"
+  echo "---------------------------------------------------------------"
   echo "pqMessenger Middleware for pqChecker version $VERSION installation"
-  echo "-----------------------------------------------------------------"
+  echo "---------------------------------------------------------------"
   echo ""
 }
 
@@ -20,6 +24,9 @@ checkUser() {
     echo ""
     exit 1
   fi
+}
+
+checkFiles() {
 }
 
 ## main
