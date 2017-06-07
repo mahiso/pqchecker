@@ -11,7 +11,7 @@ TMPCONFFILE=pqmessenger.conf.tmp
 LOGCONFFILE=pqmessenger.conf.rsyslog
 LOG4JFILE=log4j.xml
 CONFFILE=config.xml
-CONFFILESDIR=extra-resources
+CONFFILESDIR=sys-resources
 PARAMDIR=
 UNINSTALL=1
 
@@ -119,7 +119,7 @@ checkFiles() {
 
 checkOSInstall() {
   local RSLT=1
-  PARAMDIR=($find /etc -name "pqparams.dat")
+  PARAMDIR=$(find /etc -name "pqparams.dat")
   if [ ! -z $PARAMDIR ]; then
     RSLT=0
     PARAMDIR=$(dirname $PARAMDIR)
@@ -224,6 +224,7 @@ install() {
   RSLT=$?
   if [ $RSLT -ne 0 ]; then
     echo "Error, required installation not found."
+    echo ""
     exit 1
   fi
   chmod +x $BOOTFILE
