@@ -201,12 +201,11 @@ customizeParams() {
   local TAG=
   if [ ! -z $DIRNAME ]; then
     DIRNAME=$(dirname $DIRNAME)
-    DIRNAME=/etc/openldap/pqchecker
     TAG=$(egrep "#CONFIG_HOME" /etc/default/pqmessenger | egrep "$DIRNAME")
     if [ ! -z $TAG ]; then
       sed -i 's/^CONFIG_HOME/# CONFIG_HOME/g' /etc/default/pqmessenger
-      sed -i 's/^#CONFIG_HOME/CONFIG_HOME/g' /etc/default/pqmessenger
-      sed -i 's/^# CONFIG_HOME/#CONFIG_HOME/g' /etc/default/pqmessenger
+      sed -i 's/#CONFIG_HOME/CONFIG_HOME/g' /etc/default/pqmessenger
+      sed -i 's/# CONFIG_HOME/#CONFIG_HOME/g' /etc/default/pqmessenger
     fi
   fi
 }
