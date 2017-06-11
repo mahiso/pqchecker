@@ -38,16 +38,14 @@ class LoggingMsg {
 		return outMessages;
 	}
 	
-	@SuppressWarnings("finally")
 	private static String formatEncoding(String msg){
 		String rslt = "";
 		try {
 			rslt = new String(msg.getBytes("ISO-8859-1"), "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			logger.error(e.getMessage());
-		} finally {
-			return rslt;
 		}
+		return rslt;
 	}
 	
 	public static String getLog(String key){

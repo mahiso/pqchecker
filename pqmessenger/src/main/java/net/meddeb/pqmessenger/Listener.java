@@ -21,15 +21,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.text.MessageFormat;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import net.meddeb.md.common.PQChannelMsg;
-import net.meddeb.md.common.TestChannelsMsg;
 
 public class Listener implements Runnable {
 	
-	Logger logger =  Logger.getLogger(this.getClass());
+	Logger logger =  LogManager.getLogger(this.getClass());
 	
 	public native boolean doListen();
 
@@ -40,10 +41,10 @@ public class Listener implements Runnable {
 	
 
   public void sendData(byte[] data) {
-    if (logger == null) logger =  Logger.getLogger(this.getClass());
+    if (logger == null) logger =  LogManager.getLogger(this.getClass());
     boolean dataCorrupted = false;
     if (data != null && data.length > 4) {
-    	
+      logger.debug(LoggingMsg.getLog("pwdModNotif"));
     	byte[] lengthByte = new byte[4];
     	for (int i=0; i<4; i++) {
     		lengthByte[i] = data[i];
@@ -57,7 +58,7 @@ public class Listener implements Runnable {
       	else dataCorrupted = true;
       }
       if (!dataCorrupted) {
-        String strLogin = "";
+        String strUsr = "";
         String strPwd = "";
       	int offset = 4 + dataLength;
       	dataLength = 0;
@@ -69,18 +70,16 @@ public class Listener implements Runnable {
         	pwd[i] = data[i+offset];
         }
         try {
-    			strLogin = new String(login, "UTF-8");
+    			strUsr = new String(login, "UTF-8");
+          logger.info(MessageFormat.format(LoggingMsg.getLog("pwdNotifRec"), strUsr));
     			strPwd = new String(pwd, "UTF-8");
+          String msg = "{ \"user\": \"" + strUsr + "\", \"pwd\": \"" + strPwd + "\" }";
+          Messenger.getInstance().doSend(msg, PQChannelMsg.BROADCAST_PWD.toString());
     		} catch (UnsupportedEncodingException e) {
-    			logger.error("Conversion error: " + e.getMessage());
+    			logger.error(LoggingMsg.getLog("dataConvErr") + e.getMessage());
     		}
-        logger.info("Password modification notification received, user: " + strLogin);
-        String msg = "{user:" + strLogin + ";pwd:" + strPwd + "}";
-        logger.info("Send data, connection: " + Messenger.getInstance().isConnected());
-        Messenger.getInstance().doSend(msg, PQChannelMsg.BROADCAST_PWD.toString());
       }
-    } else dataCorrupted = true;
-    if (dataCorrupted) logger.error("Receiving corrupted data");
+    } else logger.error(LoggingMsg.getLog("corrDataRec"));
   }
 	
 }

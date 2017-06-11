@@ -22,10 +22,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import java.lang.reflect.Field;
 import java.util.Hashtable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.meddeb.japptools.JApptoolsPin;
 import net.meddeb.japptools.common.JMSConfigDto;
-
-import org.apache.log4j.Logger;
 
 /**
  * Valid arguments:
@@ -36,7 +37,7 @@ import org.apache.log4j.Logger;
  * 5/ --connection-retry-time	: time, in seconds, to retry when connection to messaging server fail or lost.
  */
 public class MsgEngine {
-	private final static String VERSION = "2.0.0-SNAPSHOT";
+	private final static String VERSION = "2.0.0";
 
 	private final static String CONFPATH_ARG_KEY = "--config-path";
 	private final static String CONFFILE_ARG_KEY = "--config-file";
@@ -49,7 +50,7 @@ public class MsgEngine {
 	
 	private final static String DEFAULT_CONFPATH = "/etc/ldap/pqchecker";
 	private final static String DEFAULT_CONFFILE = "config.xml";
-	private final static String DEFAULT_LOGFILE = "log4j.xml";
+	private final static String DEFAULT_LOGFILE = "log4j2.xml";
 	private final static String DEFAULT_MSGSERVER_ID = "PQMsgServer";
 	private final static int DEFAULT_RETRY_TIME = 1800; //30mn
 	
@@ -146,7 +147,7 @@ public class MsgEngine {
 		if (configLogfile.isEmpty()) configLogfile = DEFAULT_LOGFILE;
 		confInitialized = toolsPin.initConfig(configPath, configFilename, configLogfile);
 		if (confInitialized) {
-			logger =  Logger.getLogger(this.getClass());
+			logger =  LogManager.getLogger(this.getClass());
 			paramList = toolsPin.getParams();
 			if (paramList == null) {
 				if (logger != null) logger.warn(LoggingMsg.getLog("paramnotFound"));
@@ -225,6 +226,10 @@ public class MsgEngine {
 
   public void stopListen() {
     JNIGateway.getInstance().stopListen();
+  }
+  
+  public String getVersion() {
+  	return VERSION;
   }
 
 }

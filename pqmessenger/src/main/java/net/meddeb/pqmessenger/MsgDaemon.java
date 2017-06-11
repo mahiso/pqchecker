@@ -23,7 +23,8 @@ import java.text.MessageFormat;
 import org.apache.commons.daemon.Daemon;
 import org.apache.commons.daemon.DaemonContext;
 import org.apache.commons.daemon.DaemonInitException;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class MsgDaemon implements Daemon {
 	private Thread mainThread; 
@@ -44,7 +45,7 @@ public class MsgDaemon implements Daemon {
 		String[] args = daemonContext.getArguments(); 
 		connected = false;
 		msgEngine = new MsgEngine(args);
-		logger =  Logger.getLogger(this.getClass());
+		logger = LogManager.getLogger(this.getClass());
     mainThread = new Thread(){
       @Override
       public synchronized void start() {
@@ -56,8 +57,9 @@ public class MsgDaemon implements Daemon {
         logger.info("");
         logger.info("-------------------------");
         logger.info(LoggingMsg.getLog("pqMsgStart"));
+        logger.info("Version: " + msgEngine.getVersion());
         logger.info("-------------------------");
-        if (!msgEngine.doListen()) logger.error("Problème de communication de données.");
+        if (!msgEngine.doListen()) logger.error(LoggingMsg.getLog("dataCommPb"));
         while(!stopped){
   				logger.info(LoggingMsg.getLog("pqMsgTrycnx"));
   				msgEngine.startConnection();
@@ -72,7 +74,7 @@ public class MsgDaemon implements Daemon {
   					try{
   						Thread.sleep(1000);
   					} catch (InterruptedException e) {
-  						logger.error("e: " + e.getMessage());
+  						logger.error("Error: " + e.getMessage());
   					}
   				}
   				if (connected){
@@ -83,7 +85,7 @@ public class MsgDaemon implements Daemon {
   				try {
 						Thread.sleep(msgEngine.getTimeRetry());
 					} catch (InterruptedException e) {
-						logger.error("e: " + e.getMessage());
+						logger.error("Error: " + e.getMessage());
 					} //wait 
   			}
       }

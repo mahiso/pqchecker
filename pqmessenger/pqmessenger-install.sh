@@ -9,7 +9,7 @@ BOOTFILE=pqmessenger.boot
 PARAMFILE=pqmessenger.params
 TMPCONFFILE=pqmessenger.conf.tmp
 LOGCONFFILE=pqmessenger.conf.rsyslog
-LOG4JFILE=log4j.xml
+LOG4JFILE=log4j2.xml
 CONFFILE=config.xml
 CONFFILESDIR=sys-resources
 PARAMDIR=
@@ -137,8 +137,16 @@ checkOSInstall() {
   return $RSLT
 }
 
+stopMessenger() {
+  local RUNNING=$(ps -ef | grep -i pqmessenger | grep -v grep)
+  if [ ! -z "RUNNING" ]; then
+    /etc/init.d/pqmessenger stop
+  fi
+}
+
 uninstall() {
   echo "Uninstallation.."
+  stopMessenger
   local CMD=$(command -v update-rc.d)
   if [ ! -z $CMD ]; then
     $CMD pqmessenger disable

@@ -22,7 +22,7 @@ RUN_HOME=/var/run/pqmessenger
 JAVA_HOME=/usr/lib/jvm/default-java
 # --  Configuration files names ------------------------
 CONFIG_FILE=config.xml
-CONFIGLOG_FILE=log4j.xml
+CONFIGLOG_FILE=log4j2.xml
 # --  User who pqMessenger run as ----------------------
 # Must be same than slapd one
 # Default for Debian system & compliants

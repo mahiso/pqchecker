@@ -42,7 +42,9 @@ import net.meddeb.md.common.TestChannelsMsg;
 import net.meddeb.md.common.data.PQParamsDto;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 
 public class Messenger {
@@ -50,7 +52,7 @@ public class Messenger {
 	private final static String DEFAULT_HOST = "localhost";
 	private final static String DEFAULT_PORT = "61616";
 	private String senderID = "";
-	private Logger logger = Logger.getLogger(this.getClass());
+	private Logger logger = LogManager.getLogger(this.getClass());
 	private String topicName = "";
 	private String listenUrl = "";
 	private String user = "";
@@ -143,9 +145,10 @@ public class Messenger {
 				}
 			});
 			connectionInitialized = (connection != null);
-			if (connectionInitialized) logger.debug("cnxSuccess");
+			if (connectionInitialized) logger.debug(LoggingMsg.getLog("cnxSuccess"));
 		} catch (Exception e) {
-			logger.error(LoggingMsg.getLog("cnxUnable" + " - " + e.getMessage()));
+			logger.error(LoggingMsg.getLog("cnxUnable") + " - " + e.getMessage());
+			logger.trace(LoggingMsg.getLog("cnxUnable") + " - " + e.getMessage());
 		}
 		return connectionInitialized;
 	}

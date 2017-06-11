@@ -20,7 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import java.text.MessageFormat;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class Entrypoint {
@@ -44,7 +45,7 @@ public class Entrypoint {
         logger.info("------------------");
 	    }
 		}));
-		logger =  Logger.getLogger(Entrypoint.class);
+		logger =  LogManager.getLogger(Entrypoint.class);
     logger.info("");
     logger.info("-------------------");
     logger.info(LoggingMsg.getLog("pqMsgStart"));
