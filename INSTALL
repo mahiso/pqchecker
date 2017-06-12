@@ -137,19 +137,18 @@ Execute:
 3/ Configure pqMessenger
 ------------------------
 
-Fill in the configuration of the JMS server to use in the file $PARAMDIR.config.xml
+Fill in the configuration of the JMS server to use, in the file $PARAMDIR/config.xml
 PARAMDIR is the parameter used to build pqChecker (cf. supra).
 The 2 parameters to modify:
 
    <Host>127.0.0.1</Host>
    <Port>61616</Port>
       
----------------------------
+------------------------
 4/ Uninstall pqMessenger
----------------------------
+------------------------
       
 Execute:
       
-   sudo /etc/init.d/pqmessenger stop
    sudo ./pqmessenger-install.sh --uninstall
             
