@@ -18,11 +18,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ---------------------------------------------------------------------*/
 
+import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
 import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -42,6 +42,7 @@ import net.meddeb.md.common.TestChannelsMsg;
 import net.meddeb.md.common.data.PQParamsDto;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.ActiveMQSslConnectionFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -57,7 +58,7 @@ public class Messenger {
 	private String listenUrl = "";
 	private String user = "";
 	private String password = "";
-	private ConnectionFactory connectionFactory = null;	
+	private String keystore = "";
 	private Connection connection = null;
 	private Topic topic = null;
 	private boolean connected = false;
@@ -129,11 +130,24 @@ public class Messenger {
 		connectionInitialized = false;
 		logger.debug(LoggingMsg.getLog("initCnx"));
 		try {
-			connectionFactory = new ActiveMQConnectionFactory(listenUrl);
-			logger.debug(LoggingMsg.getLog("factoryInit"));
-			if ((!user.isEmpty()) && (!password.isEmpty())){
-				connection = connectionFactory.createConnection(user, password);
-			} else connection = connectionFactory.createConnection();
+			if (keystore.isEmpty()) {
+				ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(listenUrl); 
+				connectionFactory = new ActiveMQConnectionFactory(listenUrl);
+				logger.debug(LoggingMsg.getLog("factoryInit"));
+				if ((!user.isEmpty()) && (!password.isEmpty())){
+					connection = connectionFactory.createConnection(user, password);
+				} else connection = connectionFactory.createConnection();
+			} else {
+				ActiveMQSslConnectionFactory connectionFactory = new ActiveMQSslConnectionFactory(listenUrl);
+				connectionFactory.setKeyStore(new File(keystore).toURI().toString());
+				connectionFactory.setKeyStorePassword(password);
+				connectionFactory.setTrustStore(new File(keystore).toURI().toString());
+				connectionFactory.setTrustStorePassword(password);
+				logger.debug(LoggingMsg.getLog("factoryInit"));
+				if ((!user.isEmpty()) && (!password.isEmpty())){
+					connection = connectionFactory.createConnection(user, password);
+				} else connection = connectionFactory.createConnection();
+			}
 			logger.debug(LoggingMsg.getLog("cnxCreate") + connection);
 			connection.setExceptionListener(new ExceptionListener() {
 				@Override
@@ -175,7 +189,8 @@ public class Messenger {
 		senderID = getHostname();
 		connected = false;
 		topicName = ChannelID.PQPARAMS.toString();
-		listenUrl = "tcp://";
+		if (keystore.isEmpty()) listenUrl = "tcp://";
+		else listenUrl = "ssl://";
 		if (serverConf.getHost().isEmpty()) listenUrl = listenUrl + DEFAULT_HOST;
 		else listenUrl = listenUrl + serverConf.getHost();
 		listenUrl = listenUrl + ":";
@@ -251,5 +266,12 @@ public class Messenger {
 	public boolean isConnectionInitialized() {
 		return connectionInitialized;
 	}
+
+	public void setKeystore(String keystore) {
+		this.keystore = keystore;
+		if (this.keystore == null) this.keystore = "";
+	}
+	
+	
 
 }

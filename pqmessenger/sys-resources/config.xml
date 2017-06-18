@@ -2,6 +2,8 @@
 <!DOCTYPE JApptools:Config PUBLIC "japptools//MEDDEB//DTD JAPPTOOLS//EN" 
 "http://meddeb.net/japptools/xml/japptools.dtd">
 <JApptools:Config>
+  <!-- keystore location -->
+  <param name="keystore" value="/etc/ldap/pqchecker/keystore.jks"/>  
 	<!-- JMS Channels Configuration example -->
 	<Server id="PQMsgServer" type="JMS">
 		<Host>127.0.0.1</Host>

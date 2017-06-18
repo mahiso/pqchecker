@@ -47,6 +47,7 @@ public class MsgEngine {
 	
 	private final static String CONFPARAM_NATIVELIBPATH = "nativelibpath";
 	private final static String CONFPARAM_CNXRETRYTIME = "cnxretrytime";
+	private final static String CONFPARAM_KEYSTORE = "keystore";
 	
 	private final static String DEFAULT_CONFPATH = "/etc/ldap/pqchecker";
 	private final static String DEFAULT_CONFFILE = "config.xml";
@@ -155,6 +156,7 @@ public class MsgEngine {
 			}
 			setRetryTime(args, paramList);
 			setNativelibraryPath(paramList);
+			if (paramList != null) Messenger.getInstance().setKeystore(paramList.get(CONFPARAM_KEYSTORE));
 			String serverID = getArgValue(args, MSGSERVER_ARG_KEY);
 			if (serverID.isEmpty()) serverID = DEFAULT_MSGSERVER_ID;
 			msgServerConf = toolsPin.getJMSConfig(serverID);
