@@ -11,7 +11,7 @@ echo ""
 echo "Keystore generation tool for pqMessenger"
 echo ""
 echo "keystore creation.."
-$CMD -genkey -alias pqmessenger -keyalg RSA -keystore keystore.jks -dname "CN=pqMessenger, OU=pqChecker, O=PPolicy, L=LDAPPPolicy, S=IDF, C=FR" -storepass mdmanager -keypass mdmanager
+$CMD -genkey -alias pqmessenger -keyalg RSA -keystore keystore.jks -dname "CN=pqMessenger, OU=pqChecker, O=PPolicy, L=LDAPPPolicy, S=IDF, C=FR" -keysize 1024 -validity 365 -storepass mdmanager -keypass mdmanager
 if [ $? -eq 0 ]; then 
   echo "done."
   echo "File created keystore.jks"
