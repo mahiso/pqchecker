@@ -162,7 +162,6 @@ public class Messenger {
 			if (connectionInitialized) logger.debug(LoggingMsg.getLog("cnxSuccess"));
 		} catch (Exception e) {
 			logger.error(LoggingMsg.getLog("cnxUnable") + " - " + e.getMessage());
-			logger.trace(LoggingMsg.getLog("cnxUnable") + " - " + e.getMessage());
 		}
 		return connectionInitialized;
 	}
