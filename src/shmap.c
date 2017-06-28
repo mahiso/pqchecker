@@ -122,7 +122,8 @@ bool shmGet(char *data) {
     unsigned int read_offset = (nb - 1) * SHMFIELDSIZE + (2* sizeof(unsigned int));
     char ldata[SHMFIELDSIZE];
     memcpy(ldata, shmref + read_offset, SHMFIELDSIZE);
-    for (int i=0; i<SHMFIELDSIZE; i++) if (ldata[i] != 0) data[i] = ~ldata[i];
+    int i = 0;
+    for (i=0; i<SHMFIELDSIZE; i++) if (ldata[i] != 0) data[i] = ~ldata[i];
     rslt = true;
   }
   shmUnmap();
@@ -155,7 +156,8 @@ bool shmPush(const char *data) {
   if (nb < SHMDEFAULTNBRECORDS) {
     unsigned int write_offset = nb * SHMFIELDSIZE + (2 * sizeof(unsigned int));
     char ldata[SHMFIELDSIZE];
-    for (int i=0; i<SHMFIELDSIZE; i++) if (data[i] != 0) ldata[i] = ~data[i];
+    int i = 0;
+    for (i=0; i<SHMFIELDSIZE; i++) if (data[i] != 0) ldata[i] = ~data[i];
     memcpy(shmref +write_offset, ldata, SHMFIELDSIZE);
     nb++;
     setNbRecords(nb);

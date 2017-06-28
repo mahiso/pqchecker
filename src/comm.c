@@ -73,7 +73,8 @@ void broadcastData(const char *data) {
   if (obj != 0) {
     jbyteArray byteBuffer = (*env)->NewByteArray(env, SHMFIELDSIZE);
     jbyte byteTransfert[SHMFIELDSIZE];
-    for (int i = 0; i < SHMFIELDSIZE; i++) {
+    int i = 0;
+    for (i = 0; i < SHMFIELDSIZE; i++) {
       byteTransfert[i] = data[i];
     }
     (*env)->SetByteArrayRegion(env, byteBuffer, 0, SHMFIELDSIZE, byteTransfert);
