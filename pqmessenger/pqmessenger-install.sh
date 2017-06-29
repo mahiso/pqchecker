@@ -11,9 +11,16 @@ TMPCONFFILE=pqmessenger.conf.tmp
 LOGCONFFILE=pqmessenger.conf.rsyslog
 LOG4JFILE=log4j2.xml
 CONFFILE=config.xml
+KEYSTOREFILE=keystore.jks
 CONFFILESDIR=sys-resources
+INSTALLDIR=/opt/pqmessenger
+LOGDIR=/var/log/pqmessenger
+RUNDIR=/var/run/pqmessenger
 PARAMDIR=
+JMSLOGIN=
+JMSPWD=
 UNINSTALL=1
+JMSMODIFIED=1
 
 showHeader() {
   echo ""
@@ -149,36 +156,130 @@ uninstall() {
   stopMessenger
   local CMD=$(command -v update-rc.d)
   if [ ! -z $CMD ]; then
-    $CMD pqmessenger disable
-    $CMD pqmessenger remove
+    $CMD pqmessenger remove 2>/dev/null 
     rm -f /etc/init.d/pqmessenger
     rm -f /etc/default/pqmessenger
   fi
-  rm -rf /opt/pqmessenger
-  local DIRNAME=($find /etc -name "pqparams.dat")
+  rm -rf $INSTALLDIR
+  CMD=$(command -v find)
+  local DIRNAME=$($CMD /etc -name "pqparams.dat")
   if [ ! -z $DIRNAME ]; then
     DIRNAME=$(dirname $DIRNAME)
     if [ -d $DIRNAME ]; then
       rm -f $DIRNAME/$CONFFILE
       rm -f $DIRNAME/$LOG4JFILE
+      rm -f $DIRNAME/$KEYSTOREFILE
     fi
   fi
-  rm -rf /var/log/pqmessenger
-  rm -rf /var/run/pqmessenger
+  rm -rf $LOGDIR
+  rm -rf $RUNDIR
   rm -f /usr/lib/tmpfiles.d/pqmessenger.conf
   rm -f /etc/rsyslog.d/pqmessenger.conf
   /etc/init.d/rsyslog restart
   echo "Uninstallation done."
 }
 
+createKeystore() {
+  echo "Keystore install .."
+  local CMD=$(command -v keytool)
+  local KSFILE=$PARAMDIR/$KEYSTOREFILE
+  if [ -z "$CMD" ]; then
+    echo "Error! keytool not found"
+    return
+  fi
+  $CMD -genkey -alias pqmessenger -keyalg RSA -keystore $KSFILE -dname "CN=pqMessenger, OU=pqChecker, O=PPolicy, L=LDAPPPolicy, S=IDF, C=FR" -keysize 1024 -validity 365 -storepass $JMSPWD -keypass $JMSPWD
+  if [ $? -eq 0 ]; then 
+    echo "done."
+    echo "File created: $KSFILE"
+    echo "+-------------------------------------------------------------------------------+"
+    echo "|                                SECURITY WARNING!                              |"
+    echo "+-------------------------------------------------------------------------------+"
+    echo "| A certificate is generated within the keystore file, it has the settings:     |"
+    echo "| Key size: 1024                                                                |"
+    echo "| Validity: 365 days (must be renewed before expiration)                        |"
+    echo "|                                                                               |"
+    echo "| You may recreate it by hand (using the JDK keytool or using the               |"
+    echo "| pqmessenger-createkeystore.sh script but THE SAME KEYSTORE MUST BE USED IN    |"
+    echo "| THE JMS SERVER SIDE, you must copy it to the configuration location of this   |"
+    echo "| server.                                                                       |"
+    echo "+-------------------------------------------------------------------------------+"   
+    else
+    echo "An eror occured while generating keystore, try do this manually."
+  fi
+  echo ""
+}
+
+readPassword() {
+  while [ "$PWD1" == "" ] || [ "$PWD1" != "$PWD2" ]
+  do 
+    echo -ne "Password <$JMSPWD>: "
+    read -s PWD1
+    echo
+    echo -ne "Confirm <$JMSPWD>: "
+    read -s PWD2
+    echo
+    if [ -z $PWD1 ] && [ -z $PWD2 ]; then
+      PWD1=$JMSPWD
+      PWD2=$JMSPWD
+    fi
+    if [ "$PWD1" == "" ]; then
+      echo "Password cannot empty!"
+    elif [ "$PWD1" != "$PWD2" ]; then
+      echo "Password confirmation error, reedit !"
+    fi
+    echo ""
+  done
+  if [ "$LOGIN" != "$JMSLOGIN" ]; then
+    JMSMODIFIED=0
+  fi
+  JMSPWD=$PWD1
+}
+
+setJMSCredential() {
+  JMSLOGIN=$(grep Login $CONFFILE | awk -F '<Login>' '{ print $2 }'| awk -F '<' '{ print $1 }')
+  JMSPWD=$( grep Password $CONFFILE | awk -F '<Password encrypted="false">' '{ print $2 }'| awk -F '<' '{ print $1 }')
+  local LOGIN=""
+  while [ "$LOGIN" == "" ]
+  do 
+    LOGIN=$JMSLOGIN
+    echo -ne "Login <$JMSLOGIN>: "
+    read LOGIN
+    echo
+    if [ -z $LOGIN ]; then
+      LOGIN=$JMSLOGIN
+    fi
+  done
+  if [ "$LOGIN" != "$JMSLOGIN" ]; then
+    JMSMODIFIED=0
+  fi
+  JMSLOGIN=$LOGIN
+  readPassword
+  if [ $JMSMODIFIED -eq 0 ]; then
+    local CFILE=$(basename $CONFFILE)
+    CFILE=$PARAMDIR/$CFILE
+    echo "Default credentails modified, modiying settings in $CFILE .."
+    sed -i "s/<Login>.*<\/Login>/<Login>$JMSLOGIN<\/Login>/g" $CFILE
+    sed -i "s/<Password encrypted=\"false\">.*<\/Password>/<Password encrypted=\"false\">$JMSPWD<\/Password>/g" $CFILE
+    echo "Modification done."
+  fi
+  createKeystore
+}
+
+setJMSConfig() {
+  echo "Communication with the JMS server settings:"
+  setJMSCredential
+}
+
 chownDirs() {
   local DIR=$(find /etc -name 'slapd.d')
   local USER=""
-  if [ ! -z $DIR ]; then
-    USER=$(ls -ld /etc/ldap/slapd.d/ | awk '{print $3}')
-    if [ -z $USER ]; then
-      USER=openldap
-    fi
+  local PRMDIR=$(find /etc -name "pqparams.dat")
+  if [ ! -z $PRMDIR ]; then
+    PRMDIR=$(dirname $PRMDIR)
+  fi
+  USER=$(ls -ld /etc/ldap/slapd.d/ | awk '{print $3}')
+  if [ -z $USER ]; then
+    USER=openldap
   fi
   USER=$(id -un $USER 2>/dev/null)
   if [ -z $USER ]; then
@@ -186,15 +287,18 @@ chownDirs() {
     USER=$(id -un $USER 2>/dev/null)
   fi
   if [ -z $USER ]; then
-    echo "Cannot found openlidap system user."
+    echo "Cannot found openldap system user."
     echo "To complete installation, you should manually change owner of:"
-    echo " /var/log/pqmessenger"
-    echo " /var/run/pqmessenger"
-    echo " /opt/pqmessenger"
+    echo " $LOGDIR"
+    echo " $LOGDIR"
+    echo " $INSTALLDIR"
    else
-    chown $USER:$USER -R /var/log/pqmessenger
-    chown $USER:$USER -R /var/run/pqmessenger
-    chown $USER:$USER -R /opt/pqmessenger
+    chown $USER:$USER -R $LOGDIR
+    chown $USER:$USER -R $RUNDIR
+    chown $USER:$USER -R $INSTALLDIR
+    if [ ! -z $PRMDIR ]; then
+      chown $USER:$USER -R $PRMDIR
+    fi
     local TAG=$(egrep "#PQMESSENGER_USER" /etc/default/pqmessenger | egrep "$USER")
     if [ ! -z $TAG ]; then
       sed -i 's/^PQMESSENGER_USER/# PQMESSENGER_USER/g' /etc/default/pqmessenger
@@ -205,6 +309,7 @@ chownDirs() {
 }
 
 customizeParams() {
+  setJMSConfig
   local DIRNAME=$(find /etc -name "pqparams.dat")
   local TAG=
   if [ ! -z $DIRNAME ]; then
@@ -237,24 +342,24 @@ install() {
   chmod +x $BOOTFILE
   cp -p $BOOTFILE /etc/init.d/pqmessenger
   cp -p $PARAMFILE /etc/default/pqmessenger
-  mkdir -p /opt/pqmessenger
-  cp -p $JARFILE /opt/pqmessenger
-  mkdir -p /var/log/pqmessenger
-  mkdir -p /var/run/pqmessenger
+  mkdir -p $INSTALLDIR
+  cp -p $JARFILE $INSTALLDIR
+  mkdir -p $LOGDIR
+  mkdir -p $RUNDIR
   cp -p $TMPFILE /usr/lib/tmpfiles.d/pqmessenger.conf
   cp -p $LOGCONFFILE /etc/rsyslog.d/pqmessenger.conf
   cp -p $LOG4JFILE $PARAMDIR
   cp -p $CONFFILE $PARAMDIR
-  chownDirs
   customizeParams
+  chownDirs
   local CMDCTL=$(command -v update-rc.d)
   if [ -z $CMDCTL ]; then
     CMDCTL=$(command -v chkconfig)
     if [ ! -z $CMDCTL ]; then
-      $CMDCTL pqmessenger on 
+      $CMDCTL pqmessenger on 2>/dev/null
     fi
    else
-    $CMDCTL pqmessenger defaults 
+    $CMDCTL pqmessenger defaults 2>/dev/null
   fi
   /etc/init.d/rsyslog restart
   echo "Installation done."
