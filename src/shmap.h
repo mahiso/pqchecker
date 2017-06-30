@@ -31,3 +31,4 @@ bool shmPop();
 bool shmGet(char *data);
 void setCacheData(bool cacheData);
 bool isCacheData();
+bool isShmInitialized();

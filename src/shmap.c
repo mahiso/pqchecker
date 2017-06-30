@@ -64,7 +64,7 @@ bool shmMap() {
     rslt = shmref != MAP_FAILED;
     if (!rslt) syslog(LOG_ERR, _("SHM region map failed, error: %d"), errno);
     close(fd);
-  } else syslog(LOG_ERR, _("SHM region open failed, error: %d"), errno);
+  } else syslog(LOG_WARNING, _("SHM region open failed, error: %d"), errno);
   return rslt;
 }
 
@@ -75,6 +75,13 @@ void setCacheData(bool cacheData) {
   shmMap();
   memcpy(shmref + sizeof(unsigned int), (char*)&icacheData, sizeof(unsigned int));
   shmUnmap();
+}
+
+//get shared memory region initialized flag 
+bool isShmInitialized() {
+  bool rslt = shmMap();
+  if (rslt) shmUnmap();
+  return rslt;
 }
 
 //get cacheData flag value from the shared memory 

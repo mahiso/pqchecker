@@ -214,8 +214,10 @@ void doBroadcastCacheData() {
 void sendPassword(char *pwd, char *user)
 {
   syslog(LOG_DEBUG, _("Sending modified password"));
-  bool cacheData = isCacheData();
-  if (cacheData) doCacheData(pwd, user); 
-  else if (sendData(pwd, user)) syslog(LOG_DEBUG, _("Modified password successfully sent.."));
-      else doCacheData(pwd, user);
+  if (isShmInitialized()) {
+    bool cacheData = isCacheData();
+    if (cacheData) doCacheData(pwd, user); 
+    else if (sendData(pwd, user)) syslog(LOG_DEBUG, _("Modified password successfully sent.."));
+        else doCacheData(pwd, user);
+  } else LOG_WARNING, _("Cannot send/cache password, missed messenger middleware");
 }
