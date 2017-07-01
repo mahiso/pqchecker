@@ -72,6 +72,16 @@ public class MsgEngine {
 		System.out.println("");
 	}
 	
+	private String addTrailingSeparator(String path){
+		String rslt = path;
+		String pathSeparator = System.getProperty("file.separator");
+		if (pathSeparator.isEmpty()) pathSeparator = "/";
+		if (path.charAt(path.length()-1) != pathSeparator.charAt(0)){
+			rslt = rslt + pathSeparator;
+		}
+		return rslt;
+	}
+	
 	/**
 	 * @param String[] args: of initialization arguments
 	 * @param String argKey: argument key
@@ -156,7 +166,11 @@ public class MsgEngine {
 			}
 			setRetryTime(args, paramList);
 			setNativelibraryPath(paramList);
-			if (paramList != null) Messenger.getInstance().setKeystore(paramList.get(CONFPARAM_KEYSTORE));
+			if (paramList != null) {
+				String ks = paramList.get(CONFPARAM_KEYSTORE);
+				ks = addTrailingSeparator(configPath) + ks;
+				Messenger.getInstance().setKeystore(ks);
+			}
 			String serverID = getArgValue(args, MSGSERVER_ARG_KEY);
 			if (serverID.isEmpty()) serverID = DEFAULT_MSGSERVER_ID;
 			msgServerConf = toolsPin.getJMSConfig(serverID);
