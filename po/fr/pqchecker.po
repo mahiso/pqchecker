@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-24 10:51+0200\n"
+"POT-Creation-Date: 2017-07-01 12:48+0200\n"
 "PO-Revision-Date: 2014-08-24 14:43+0200\n"
 "Last-Translator: Abdelhamid MEDDEB <abdelhamid@meddeb.net>\n"
 "Language-Team: French language <abdelhamid@meddeb.net>\n"
@@ -17,78 +17,248 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: pqchecker.c:41
+#: src/comm.c:111
 #, c-format
-msgid "Checking password quality for %s."
-msgstr "Vérification du mot de passe pour %s."
+msgid "Bind error %s"
+msgstr "Erreur de connexion"
 
-#: pqchecker.c:46
+#: src/comm.c:58
 #, c-format
-msgid "The quality parameters used: %s."
-msgstr "Les aparmètres de qualité utilisés: %s."
+msgid "Broadcast data error: %d"
+msgstr "Erreur de diffusion de données"
 
-#: pqchecker.c:58
-msgid "The password does not pass quality check."
-msgstr "Le mot de passe ne passe pas le contrôle de qualité."
-
-#: pqchecker.c:59
-msgid "Password rejected."
-msgstr "Le mot de passe est rejeté."
-
-#: pqchecker.c:62
-msgid "Password accepted."
-msgstr "Le mot de passe est accepté."
-
-#: pqchecker.c:65 pqchecker.c:71
-msgid "Unable to verify the quality of the password. Problem in parameters."
-msgstr "Impossible de vérifier la qualité du mot de passe. Problème de paramétrage."
-
-#: pqchecker.c:67
-msgid "The passwords quality parameter is not operable."
-msgstr "Le paramètre de la qualité des mots de passe n'est pas utilisable."
-
-#: pqchecker.c:73
-msgid "The passwords quality parameter is not found."
-msgstr "Paramètre de la qualité des mots de passe non trouvé."
-
-#: pqcheck.c:138
+#: src/comm.c:38
 #, c-format
-msgid "The parameter [%s] does not operable."
-msgstr "Le paramètre [%s] n'est pas utilisable."
+msgid "Broadcast data, javaVM: %p"
+msgstr "Diffusion de données, javaJVM: %p"
 
-#: pqcheck.c:171
-#, c-format
-msgid "The format [%s] does not operable."
-msgstr "Le format [%s] n'est pas utilisable."
+#: src/comm.c:206
+msgid "Broadcast fail."
+msgstr "La diffusion a échoué"
 
-#: pparamio.c:40
-msgid "Parameters data or format string not found."
-msgstr "Les données des paramètres ou le format introuvables."
+#: src/comm.c:199
+msgid "Broadcasting cached data.."
+msgstr "Diffusion des données en cache.."
 
-#: pparamio.c:75
+#: src/comm.c:189
+msgid "Caching data.."
+msgstr "Mise en cache des données.."
+
+#: src/comm.c:194
+msgid "Can't broadcast, data cached locally"
+msgstr "Impossible de diffuser, données mises en cache"
+
+#: src/pparamio.c:75
 #, c-format
 msgid "Can't open parameters file storage: %s, %s."
 msgstr "Impossible d'ouvrir le fichier de stockage des paramètres: %s, %s."
 
-#: pparamio.c:123
-msgid "Parameters container or format string not found."
-msgstr "Le conteneur des paramètres ou le format introuvable."
-
-#: pparamio.c:159
-msgid "Can't read parameters from file."
-msgstr "Impossible de lire les paramètres à partir du fichier."
-
-#: pparamio.c:160
-#, c-format
-msgid "The format string [%s] supplied isn't operable."
-msgstr "Le format [%s] fourni n'est pas utilisable."
-
-#: pparamio.c:176
+#: src/pparamio.c:176
 #, c-format
 msgid "Can't open parameters storage file: %s, %s."
 msgstr "Impossible d'ouvrir le fichier de stockage des paramètres: %s, %s."
 
-#: pparamio.c:209
+#: src/pparamio.c:159
+msgid "Can't read parameters from file."
+msgstr "Impossible de lire les paramètres à partir du fichier."
+
+#: src/comm.c:64
+msgid "Cannot find class"
+msgstr "Impossible de trouver la classe"
+
+#: src/comm.c:69
+msgid "Cannot find method"
+msgstr "Impossible de trouver la méthode"
+
+#: src/shmap.c:117
+#, c-format
+msgid "Cannot make SHM region, error: %d"
+msgstr "Impossible de créer la zone de mémoire partagée"
+
+#: src/comm.c:222
+msgid "Cannot send/cache modified password, missing pqMessenger middleware"
+msgstr "Impossible d'envoyer/mettre en cache le mot de passe modifié, le middleware pqMessenger est absent"
+
+#: src/pqchecker.c:43
+#, c-format
+msgid "Checking password quality for %s."
+msgstr "Vérification du mot de passe pour %s."
+
+#: src/comm.c:55
+msgid "Communication with pqMessenger established"
+msgstr "La communication avec pqMessenger est établie"
+
+#: src/comm.c:157
+#, c-format
+msgid "Connection error %d"
+msgstr "Erreur de connexion %d"
+
+#: src/comm.c:208
+msgid "Done"
+msgstr "Fait"
+
+#: src/comm.c:46
+#, c-format
+msgid "Error: %d"
+msgstr "Erreur: %d"
+
+#: src/comm.c:132
+msgid "Listen stopped"
+msgstr "Ecoute arrêtée"
+
+#: src/comm.c:123
+msgid "Listening.."
+msgstr "Ecoute.."
+
+#: src/comm.c:220
+msgid "Modified password successfully sent.."
+msgstr "Succès de l'envoi du mot de passe modifié"
+
+#: src/pparamio.c:209
 #, c-format
 msgid "No data found in parameters file storage: %s."
 msgstr "Pas de données dans le fichier de stockage des paramètres: %s."
+
+#: src/JNIGateway.c:57
+#, c-format
+msgid "OnLoad called, javaVM: %p"
+msgstr "Appel de OnLOad, javaJVM: %p"
+
+#: src/JNIGateway.c:68
+#, c-format
+msgid "OnUnLoad called, javaVM: %p"
+msgstr "Appel de OnLoad, javaJVM: %p"
+
+#: src/JNIGateway.c:61
+#, c-format
+msgid "Open shared memory region: %d"
+msgstr "Zone de mémoire partagée ouverte: %d"
+
+#: src/pparamio.c:123
+msgid "Parameters container or format string not found."
+msgstr "Le conteneur des paramètres ou le format introuvable."
+
+#: src/pparamio.c:40
+msgid "Parameters data or format string not found."
+msgstr "Les données des paramètres ou le format introuvables."
+
+#: src/comm.c:162
+msgid "Partial data write"
+msgstr "Ecriture partielle de données"
+
+#: src/pqchecker.c:64
+msgid "Password accepted."
+msgstr "Le mot de passe est accepté."
+
+#: src/pqchecker.c:61
+msgid "Password rejected."
+msgstr "Le mot de passe est rejeté."
+
+#: src/shmap.c:65 src/shmap.c:114
+#, c-format
+msgid "SHM region map failed, error: %d"
+msgstr "Echec du lien avec la zone de mémoire partagée: %d"
+
+#: src/shmap.c:67
+#, c-format
+msgid "SHM region open failed, error: %d"
+msgstr "Echec de l'ouverture de la zone de mémoire partagée: %d"
+
+#: src/shmap.c:51
+#, c-format
+msgid "SHM region unmap failed, error: %d"
+msgstr "Echec de la rupture du lien avec la zone de mémoire partagée: %d"
+
+#: src/shmap.c:115
+#, c-format
+msgid "SHM truncate error: %d"
+msgstr "Erreur d'effacement de la mémoire partagée"
+
+#: src/comm.c:180
+msgid "Sending data.."
+msgstr "Envoi des données.."
+
+#: src/comm.c:216
+msgid "Sending modified password"
+msgstr "Envoi du mot de passe modifié"
+
+#: src/pqchecker.c:66
+msgid "Sending password to pqMessenger"
+msgstr "Envoi du mot de passe vers pqMessenger"
+
+#: src/JNIGateway.c:100
+#, c-format
+msgid "Set cache data to %d"
+msgstr "Affectation des données de cache à %d"
+
+#: src/comm.c:102 src/comm.c:150
+#, c-format
+msgid "Socket error %d"
+msgstr "Erreur de socket %d"
+
+#: src/comm.c:115 src/comm.c:127
+#, c-format
+msgid "Socket listen error %d"
+msgstr "Erreur d'écoute de socket %d"
+
+#: src/JNIGateway.c:106
+msgid "Start listen request"
+msgstr "Demande de démarrage d'écoute"
+
+#: src/JNIGateway.c:112
+msgid "Stop listen request"
+msgstr "Demande d'arrêt d'écoute"
+
+#: src/pqcheck.c:192
+#, c-format
+msgid "The format [%s] does not operable."
+msgstr "Le format [%s] n'est pas utilisable."
+
+#: src/pparamio.c:160
+#, c-format
+msgid "The format string [%s] supplied isn't operable."
+msgstr "Le format [%s] fourni n'est pas utilisable."
+
+#: src/pqcheck.c:159
+#, c-format
+msgid "The parameter [%s] does not operable."
+msgstr "Le paramètre [%s] n'est pas utilisable."
+
+#: src/pqchecker.c:60
+msgid "The password does not pass quality check."
+msgstr "Le mot de passe ne passe pas le contrôle de qualité."
+
+#: src/pqchecker.c:79
+msgid "The passwords quality parameter is not found."
+msgstr "Paramètre de la qualité des mots de passe non trouvé."
+
+#: src/pqchecker.c:73
+msgid "The passwords quality parameter is not operable."
+msgstr "Le paramètre de la qualité des mots de passe n'est pas utilisable."
+
+#: src/pqchecker.c:48
+#, fuzzy, c-format
+msgid "The quality parameters used: %s"
+msgstr "Les aparmètres de qualité utilisés: %s."
+
+#: src/pqchecker.c:71
+#, fuzzy
+msgid "Unable to verify the password quality. Problem with parameters."
+msgstr "Impossible de vérifier la qualité du mot de passe. Problème de paramétrage."
+
+#: src/pqchecker.c:77
+msgid "Unable to verify the quality of the password. Problem in parameters."
+msgstr "Impossible de vérifier la qualité du mot de passe. Problème de paramétrage."
+
+#: src/comm.c:51
+#, c-format
+msgid "Version error: %d"
+msgstr "Erreur de version"
+
+#: src/comm.c:164
+msgid "Write error"
+msgstr "Erreur d'écriture"
+
+#: src/shmap.c:172
+msgid "shmPush: shared memory full"
+msgstr "shmPush: Mémoire partagée pleine"

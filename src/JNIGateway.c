@@ -65,7 +65,7 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved)
 
 void JNI_OnUnload(JavaVM *vm, void *reserved)
 {
-  syslog(LOG_DEBUG, _("!!!OnUnLoad called, javaVM: %p"), javaVM);
+  syslog(LOG_DEBUG, _("OnUnLoad called, javaVM: %p"), javaVM);
 }
 
 JNIEXPORT jstring JNICALL 
