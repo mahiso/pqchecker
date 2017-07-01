@@ -64,7 +64,7 @@ bool shmMap() {
     rslt = shmref != MAP_FAILED;
     if (!rslt) syslog(LOG_ERR, _("SHM region map failed, error: %d"), errno);
     close(fd);
-  } else syslog(LOG_WARNING, _("SHM region open failed, error: %d"), errno);
+  } else syslog(LOG_ERR, _("SHM region open failed, error: %d"), errno);
   return rslt;
 }
 

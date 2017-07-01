@@ -219,5 +219,5 @@ void sendPassword(char *pwd, char *user)
     if (cacheData) doCacheData(pwd, user); 
     else if (sendData(pwd, user)) syslog(LOG_DEBUG, _("Modified password successfully sent.."));
         else doCacheData(pwd, user);
-  } else LOG_WARNING, _("Cannot send/cache password, missed messenger middleware");
+  } else syslog(LOG_WARNING, _("Cannot send/cache modified password, missing pqMessenger middleware"));
 }
