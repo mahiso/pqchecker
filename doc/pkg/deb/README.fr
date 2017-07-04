@@ -19,7 +19,7 @@ Dépend du paquet slapd
   sudo dpkg -r pqchecker
 
 3) Emplacement du fichier binaire
-------------------------
+
   /usr/lib/ldap/pqchecker.so.2.0.0
 
 ----------------------------------------------------------------
@@ -56,7 +56,7 @@ Dépend des paquets pqchecker, jsvc et openjdk-X-jre (X est le numéro de versio
 
 5) Démarrage et arrêt
 
-  Au démarrage et à l'arrête du système
+  Au démarrage et à l'arrêt du système
 
   ou manuellement:
 

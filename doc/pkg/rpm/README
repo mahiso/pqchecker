@@ -1,56 +1,67 @@
-# pqchecker RPM package installation instruction
-# (c) 2015, Abdelhamid MEDDEB <abdelhamid@meddeb.net>
+# pqchecker/pqmessenger redhat packages installation instruction
+# (C) 2015-2017, Abdelhamid MEDDEB <abdelhamid@meddeb.net>
 
-This package is only for Redhat/CentOS Linux and compliants systems.
-Tested on CentOS v6.5
+Those packages are only for GNU/Linux CentOS and compliants systems.
+Tested on CentOS 6.5 and 7.
 
-1) Install
-----------
-Require root privileges:
+-----------------------------------------------------
+I - pqChecker module: Passwords content checking only
+-----------------------------------------------------
 
-pqChecker:    sudo rpm -iv pqchecker-1.2-2.i686.rpm
+Depend on slapd package
 
-pqMessenger:  sudo rpm -iv pqchecker-pqmessenger-1.2-2.i686.rpm
+1) Install, require root privileges
+
+  sudo rpm -iv pqchecker-2.0-0.x86_64.rpm
+
+2) Remove, require root privileges
+
+  sudo rpm -r pqchecker
+
+3) Binary file location
+------------------------
+  /usr/lib/openldap/pqchecker.so.2.0.0
+
+-----------------------------------------------------
+II - pqMessenger module: Broadcast modified passwords 
+-----------------------------------------------------
+
+Depend on pqchecker, jsvc and openjdk-X-jre packages (X is the JRE release)
+
+1) Install, require root privileges
+
+  sudo rpm -iv pqmessenger-2.0-0.x86_64.rpm
+
+2) Remove, require root privileges
+
+  sudo rpm -r pqmessenger
+
+3) Startup settings
+
+  in /etc/default/pqmessenger
+
+  especially
+    . JAVA_HOME: Java JRE location.
+    . LOG_HOME: log files location. set write privileges.
+    . CONFIG_HOME: settings files location.
+
+4) JMS application server configuration
+
+  Default: 
+    IP address: 127.0.0.1 (local machine)
+    Port: 61616
+
+  May be modified in /etc/openldap/pqchecker/config.xml file
 
 
-2) pqMessenger starts parameters
---------------------------------
-In file:
-/etc/default/pqmessenger
+5) Start and stop
 
-especially
-. JAVA_HOME: Java JRE location.
-. LOG_HOME: log files location. set write privileges.
-. CONFIG_HOME: settings files location. set read privileges.
+  At system boot/shutdown time
 
-3) JMS application server configuration
----------------------------------------
-Default: 
-IP address: 127.0.0.1 (local machine)
-Port: 61616
+  or manually:
 
-May be modified in /etc/openldap/pqchecker/config.xml file
-
-4) Remove
-----------
-Require root privileges:
-
-sudo rpm -r pqchecker
-sudo rpm -r pqchecker-pqmessenger
-
-5) Start and stop pqMessenger
------------------------------
-At system boot/shutdown
-or manually:
-
-sudo service pqmessenger start|stop
+  sudo service pqmessenger start|stop
 
 6) Binary files location
-------------------------
-pqchecker: /usr/lib/openldap/pqchecker.so.1.2.2
-pqmessenger: /opt/pqmessenger-1.2.2.jar
 
-7) Dependency
--------------
-pqChecker: openldap-servers 
-pqMessenger: jakarta-commons-daemon-jsvc
+  /opt/pqmessenger-2.0.0.jar

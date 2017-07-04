@@ -9,6 +9,8 @@ BOOTFILE=pqmessenger.boot
 PARAMFILE=pqmessenger.params
 TMPCONFFILE=pqmessenger.conf.tmp
 LOGCONFFILE=pqmessenger.conf.rsyslog
+MANFILE=pqmessenger.3
+MANDIR="/usr/local/share/man/man3"
 LOG4JFILE=log4j2.xml
 CONFFILE=config.xml
 KEYSTOREFILE=keystore.jks
@@ -173,6 +175,7 @@ uninstall() {
   fi
   rm -rf $LOGDIR
   rm -rf $RUNDIR
+  rm -f $MANDIR/$MANFILE
   rm -f /usr/lib/tmpfiles.d/pqmessenger.conf
   rm -f /etc/rsyslog.d/pqmessenger.conf
   /etc/init.d/rsyslog restart
@@ -199,7 +202,7 @@ createKeystore() {
     echo "| - Validity: 365 days (must be renewed before expiration)                      |"
     echo "| You may recreate it by hand (using the Java 'keytool' tool or using the       |"
     echo "| 'pqmessenger-createkeystore.sh' script but THE SAME KEYSTORE MUST BE USED IN  |"
-    echo "| THE JMS SERVER SIDEr. So, you must copy it to the configuration location of   |"
+    echo "| THE JMS SERVER SIDE. So, you must copy it to the configuration location of    |"
     echo "| this server.                                                                  |"
     echo "+-------------------------------------------------------------------------------+"   
     else
@@ -322,6 +325,18 @@ customizeParams() {
   fi
 }
 
+installMan() {
+  local PWD=$(pwd)
+  local FULLMAN=$(find $PWD -name $MANFILE 2>/dev/null | head -1)
+  if [ -z "$FULLMAN" ]; then
+    PWD="$PWD/.."
+    FULLMAN=$(find $PWD -name $MANFILE 2>/dev/null | head -1)
+  fi
+  if [ ! -z "$FULLMAN" ]; then
+    cp -p $FULLMAN $MANDIR
+  fi
+}
+
 install() {
   echo "Installation.."
   checkFiles
@@ -349,6 +364,7 @@ install() {
   cp -p $LOGCONFFILE /etc/rsyslog.d/pqmessenger.conf
   cp -p $LOG4JFILE $PARAMDIR
   cp -p $CONFFILE $PARAMDIR
+  installMan
   customizeParams
   chownDirs
   local CMDCTL=$(command -v update-rc.d)

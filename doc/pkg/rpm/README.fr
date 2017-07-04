@@ -1,55 +1,67 @@
-# pqchecker, instructions d'installation du paquet RPM
-# (c) 2015, Abdelhamid MEDDEB <abdelhamid@meddeb.net>
+# pqchecker/pqmessenger instructions d'installation des paquets CentOS
+# (C) 2015-2017, Abdelhamid MEDDEB <abdelhamid@meddeb.net>
 
-Ce paquet est destiné seulement pour un système Linux Redhat/CentOS ou compatibles.
-Testé sur un systèmes CentOS 6.5
+Ces paquets sont destinés uniquement pour le systèmes GNU/Linux CentOS et compatibles.
+Testés sur les systèmes CentOS 6.5 et 7.
 
-1) Installation
----------------
-Nécessite les privilèges root:
+--------------------------------------------------------------
+I - Le module pqChecker: Contrôle du contenu des mots de passe
+--------------------------------------------------------------
 
-pqChecker:    sudo rpm -iv pqchecker-1.2-2.i686.rpm
+Dépend du paquet slapd 
 
-pqMessenger:  sudo rpm -iv pqchecker-pqmessenger-1.2-2.i686.rpm
+1) Installation, les privilèges root sont nécessaires
 
-2) Configuration du démarrage de pqMessenger
---------------------------------------------
-Dans le fichier:
-/etc/default/pqmessenger
+  sudo rpm -iv pqchecker-2.0-0.x86_64.rpm
 
-Notamment: 
-. JAVA_HOME: emplacement de Java JRE.
-. LOG_HOME: emplacement des fichiers journaux (log). Attribuer les droits nécessaires pour l'écriture.
-. CONFIG_HOME: emplacement des fichiers de configuration. Attribuer les droits nécessaires pour la lecture.
+2) Désinstallation, les privileges root sont nécessaires
 
-3) Configuration du serveur d'application JMS
----------------------------------------------
-Par défaut:
-Adresse IP: 127.0.0.1 (machine locale)
-Port d'écoute: 61616
+  sudo rpm -r pqchecker
 
-Peut être modifié dans le fichier /etc/openldap/pqchecker/config.xml
+3) Emplacement du fichier binaire
 
-4) Désinstallation
-------------------
-Nécessite les privilèges root:
+  /usr/lib/openldap/pqchecker.so.2.0.0
 
-sudo rpm -r pqchecker
-sudo rpm -r pqchecker-pqmessenger
+----------------------------------------------------------------
+II - Le module pqMessenger: diffusion des mots de passe modifiés 
+----------------------------------------------------------------
 
-5) Démarrage et arrêt de pqMessenger
-------------------------------------
-Au démarrage et à l'arrêt du système
-ou manuellement:
+Dépend des paquets pqchecker, jsvc et openjdk-X-jre (X est le numéro de version de JRE)
 
-sudo service pqmessenger start|stop
+1) Installation, les privilèges root sont nécessaires
 
-6) Emplacement des binaires
----------------------------
-pqChecker: /usr/lib/openldap/pqchecker.so.1.2.2
-pqMessenger: /opt/pqmessenger-1.2.2.jar
+  sudo rpm -iv pqmessenger-2.0-0.x86_64.rpm
 
-7) Dépendance
--------------
-pqChecker: openldap-servers 
-pqMessenger: jakarta-commons-daemon-jsvc
+2) Désinstallation, les privileges root sont nécessaires
+
+  sudo dpkg -r pqmessenger
+
+3) Paramètres de démarrage
+
+  Dans /etc/default/pqmessenger
+
+  Particulièrement:
+    . JAVA_HOME: emplacement de Java JRE.
+    . LOG_HOME: emplacement des fichiers de log. Nécessite les privileges d'écriture.
+    . CONFIG_HOME: emplacement des fichiers de configuration.
+
+4) Configuration de l'application serveur JMS cible de la diffusion
+
+  Par défaut: 
+    Adresse IP: 127.0.0.1 (machine locale)
+    Port: 61616
+
+  Peut être modifié dans /etc/openldap/pqchecker/config.xml file
+
+
+5) Démarrage et arrêt
+
+  Au démarrage et à l'arrêt du système
+
+  ou manuellement:
+
+  sudo service pqmessenger start|stop
+
+6) Emplacement du fichier binaire
+
+  /opt/pqmessenger-2.0.0.jar
