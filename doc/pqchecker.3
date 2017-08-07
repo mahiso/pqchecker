@@ -36,9 +36,9 @@ Also, pqchecker allows:
 .LP
 A single line of parameters stored in the 'pqparams.dat' file.
 .LP
-Format: 0|UULLDDSS@)..
+Format: 0|UULLDDSS@%..
 .br
-Or    : 1|UULLDDSS@)..
+Or    : 1|UULLDDSS@%..
 .LP
 1st character is the modified passwords broadcast flag. 1 -> Broadcast, 0 -> Don't broadcast
 .br
@@ -54,10 +54,10 @@ No broadcast, 1 Uppercase, 1 Lowercase, 1 Digit, 1 Special and no forbidden char
 Lines beginning with # and blank lines are 
 .B ignored
 .br
-All lines after one that contains the parameters (not beginning with #) are 
+All lines after one that contains valid parameters (not beginning with #) are 
 .B ignored
 .LP
-Parameters may be, also, in old format (before version 2). i.e UULLDDSS@).. without broadcast flag. In this case no broadcast of modified passwords is done.
+Parameters may be, in old format (before version 2). i.e without broadcast flag. In this case no broadcast of modified passwords is done.
 .SH PARAMETERS EXAMPLES
 .LP
 .B Example 1:

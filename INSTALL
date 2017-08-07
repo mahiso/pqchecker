@@ -2,6 +2,9 @@ This document describes how to install the pqChecker and pqMessenger modules fro
 It's necessary to have previously installed the software construction tools: gcc, make, JDK, maven.
 The installation must be done in order: first pqChecker, optionally then pqMessenger.
 
+Note: The success of this procedure requires a minimum of knowledge about the software construction
+      on the GNU Linux system (pqchecker) and Java with Maven (pqmessenger).
+
 -------------------------(I)-----------------------------
 pqchecker.so shared library  for OpneLDAP/pPolicy overlay
 Allows checks of passwords content quality
@@ -24,15 +27,18 @@ http://www.openldap.org/software/download/OpenLDAP/openldap-stable
 
 for old stable version.
 
-You can also install the source package of OpenLDAP server if exists. On the Debian 
-system you can do it by executing: 
+You can also install the source package of OpenLDAP server if exists. On the Debian for example:
 
-  apt-get source openldap (without sudo)
+Execute: 
+
+  apt-get source openldap (without root privileges)
 
 Download source files of server version installed on your target system or, 
 failing that, the nearest version.
 
 Then unpack the archive file in a location of your choice,
+
+Execute: 
 
   cd /tmp
   tar xzvf ~/download/openldap-2.4.42.tgz
@@ -49,14 +55,21 @@ The required header files portable.h and slap.h are not included, initially,
 in downloaded OpenLDAP's source files. It must be created by executing "configure"
 script who's provided  in archive of source files.
 
+Execute: 
+
   cd /tmp/openldap-2.4.42
   ./configure && make depend
+
+Note: At least until version 2.4.42 of OpenLDAP, a dependency with the 'Berkeley BDB' header files 
+      was found to complete this step  
 
 ------------------------------------------------------
 3/ Recover and configure the source files of pqChecker
 ------------------------------------------------------
 
 Unpack pqchecker archive,
+
+Execute: 
 
   cd /tmp
   tar xzvf ~/download/pqchecker-2.0.0.tar.gz
@@ -69,7 +82,7 @@ Unpack pqchecker archive,
       | You must launch 
       | ./adjustdate.bash 
       | before building pqchecker library because of the non-retention 
-      | of files last modify timestampby Git.
+      | of files last modify timestamp by Git.
 
 Then execute
  
@@ -81,7 +94,8 @@ Then execute
   LDAPSRC:   OpenLDAP server source files root directory.
   JAVAHOME:  Java JDK root location.
   libdir:    location of pqchecker.so installation, must be the module load directory setting 
-             of OpenLDAP server /usr/lib/ldap is used for debian-compliants systems.
+             of OpenLDAP server. /usr/lib/ldap is used for Debian compliants systems.
+            /usr/lib/openldap is used for Redhat compliants systems.
   PARAMDIR:  location of pqchecker data storage, this location must be writable by system user 
              who execute OpenLDAP server and, if pqMessenger used, system user who execute it.   
 
@@ -91,11 +105,15 @@ Then execute
 4/ Build and install pqchecker
 ------------------------------  
 
+Execute: 
+
   make
   sudo make install  
   
-After that, you can see the man page of pqchecker by:
+After that, you can see the man page:
  
+Execute: 
+
   man pqchecker
 
 ----------------------

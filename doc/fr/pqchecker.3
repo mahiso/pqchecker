@@ -35,9 +35,9 @@ pqChecker permet également:
 .SH FORMAT DE STOCKAGE DES PARAMETRES
 Une seule ligne stockée dans le fichier 'pqparams.dat'.
 .LP
-Format: 0|UULLDDSS@)..
+Format: 0|UULLDDSS@%..
 .br
-Ou    : 1|UULLDDSS@)..
+Ou    : 1|UULLDDSS@%..
 .LP
 Le premier caractère et un indicateur de diffusion du mot de passe. 1 -> diffuser, 0 -> ne pas diffuser
 .br
@@ -53,10 +53,11 @@ Pas de diffusion, 1 Majuscule, 1 Miniscule, 1 chiffre, 1 caractère spécial et 
 Les lignes qui commencent par # et les lignes vides sont 
 .B ignorées
 .br
-Toutes les lignes qui suivent la première qui contient un paramétrage (ne commence pas par #) sont 
+Toutes les lignes qui suivent la première qui contient un paramétrage valide (ne commence pas par #) sont 
 .B ignorées
 .LP
-Le paramètre peut être au format ancien (précédent la version 2.0). C'est à dire UULLDDSS@).. sans l'indicateur de diffusion. Dans ce cas la diffusion des mots de passe est désactivée.
+Le paramètre peut être au format ancien (version précédente de la 2.0), c'est à dire sans l'indicateur de diffusion. Dans ce cas la diffusion des mots de passe est
+.B désactivée
 .SH EXEMPLES DE PARAMETRES
 .LP
 .B Exemple 1:

@@ -4,6 +4,9 @@ Il est nécessaire d'avoir au préalable installé les outils de construction de
 cible de l'installation, c'est à dire: gcc, make, JDK, maven.
 L'installation doit se faire dans l'ordre: d'abord pqChecker, optionnellement ensuite pqMessenger.
 
+Note: La réussite de cette procédure nécessité un minimum de connaissances à propos de la construction 
+      des logiciels sur les systèmes GNU Linux (pqchecker) et Java moyennant l'utilitaire Maven (pqmessenger).
+
 ----------------------------(I) -----------------------------------------
 pqchecker.so bibliothèque dynamique partagée pour OpenLDAP/pPolicy
 Permet le contrôle de la qualité du contenu des mots de passe
@@ -28,19 +31,23 @@ http://www.openldap.org/software/download/OpenLDAP/openldap-stable
 pour une version précédente.
 
 Vous pouvez également installer le paquet des sources du serveur OpenLDAP s'il existe.
-Sur un système Debian vous pouvez faire cela en executant:
+Sur un système Debian par exemple:
 
-  apt-get source openldap (sans sudo)
+Exécuter:
+
+  apt-get source openldap (sans les privilèges root)
 
 Télécharger les fichiers source de la version identique à celle du serveur
 installé sur votre système cible. A défaut, opter pour la version la plus proche. 
 
 Décompresser l'archive téléchargée dans un endroit de votre choix,
 
+Exécuter:
+
   cd /tmp
   tar xzvf ~/download/openldap-2.4.42.tgz
 
-Vous abtenez, ainsi, la racine du chemin vers les fichiers source du serveur OpenLDAP:
+Vous obtenez, ainsi, la racine du chemin vers les fichiers source du serveur OpenLDAP:
 
   /tmp/openldap-2.4.42/
 
@@ -51,14 +58,21 @@ Vous abtenez, ainsi, la racine du chemin vers les fichiers source du serveur Ope
 Les fichiers d'en-tête nécessaires portable.h et slap.h ne sont pas inclus dans l'archive téléchargée. 
 Il faudra les construire en executant le script "configure" qui est fourni dans l'archive.
 
+Exécuter:
+
   cd /tmp/openldap-2.4.42
   ./configure && make depend
+
+Note: Au moins jusqu'à la version 2.4.42 d'OpenLDAP une dépendance avec les fichiers en-tête de 'Berkeley BDB'
+      a été constatée pour achever cette étape.  
 
 -----------------------------------------------------------
 3/ Récupérer et configurer les fichiers source de pqChecker
 -----------------------------------------------------------
 
 Décompresser l'archive de pqchecker,
+
+Exécuter:
 
   cd /tmp
   tar xzvf ~/download/pqchecker-2.0.0.tar.gz
@@ -73,8 +87,8 @@ Décompresser l'archive de pqchecker,
       | Avant de construire le binaire, pour cause de non conservation des dates 
       | de moficiation système des fichiers par Git.  
 
-Ensuite executer
- 
+Exécuter:
+
   ./configure LDAPSRC=/tmp/openldap-2.4.42 \
               JAVAHOME=/usr/lib/jvm/default-java \
               libdir=/usr/lib/ldap \
@@ -95,10 +109,14 @@ Ensuite executer
 4/ Construire et installer pqChecker
 ------------------------------------
 
+Exécuter:
+
   make
   sudo make install
     
-Après cette installation, la page de manuel de pqchecker peut être consultée en tapant:
+Après cette installation, la page de manuel de pqchecker peut être consultée:
+
+Exécuter:
 
   man pqchecker (en français si le système est configuré pour la langue française)
 
@@ -123,7 +141,7 @@ Pré-requis: Connexion Internet active.
 1/ Construire pqMessenger
 --------------------------
 
-Depuis le dossier de pqchecker exécuter:
+Depuis le dossier de pqchecker:
  
 Exécuter:
   
