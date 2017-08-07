@@ -1,5 +1,5 @@
 #!/bin/bash
-# pqMessenger Middleware for pqChecker installation utility
+# pqMessenger Middleware for pqChecker installation tool
 # v2.0
 # (C) Abdelhamid MEDDEB <abdelhamid@meddeb.net>
 #
@@ -17,7 +17,6 @@ KEYSTOREFILE=keystore.jks
 CONFFILESDIR=sys-resources
 INSTALLDIR=/opt/pqmessenger
 LOGDIR=/var/log/pqmessenger
-RUNDIR=/var/run/pqmessenger
 PARAMDIR=
 JMSLOGIN=
 JMSPWD=
@@ -174,7 +173,6 @@ uninstall() {
     fi
   fi
   rm -rf $LOGDIR
-  rm -rf $RUNDIR
   rm -f $MANDIR/$MANFILE
   rm -f /usr/lib/tmpfiles.d/pqmessenger.conf
   rm -f /etc/rsyslog.d/pqmessenger.conf
@@ -292,11 +290,9 @@ chownDirs() {
     echo "Cannot found openldap system user."
     echo "To complete installation, you should manually change owner of:"
     echo " $LOGDIR"
-    echo " $LOGDIR"
     echo " $INSTALLDIR"
    else
     chown $USER:$USER -R $LOGDIR
-    chown $USER:$USER -R $RUNDIR
     chown $USER:$USER -R $INSTALLDIR
     if [ ! -z $PRMDIR ]; then
       chown $USER:$USER -R $PRMDIR
@@ -359,7 +355,6 @@ install() {
   mkdir -p $INSTALLDIR
   cp -p $JARFILE $INSTALLDIR
   mkdir -p $LOGDIR
-  mkdir -p $RUNDIR
   cp -p $TMPFILE /usr/lib/tmpfiles.d/pqmessenger.conf
   cp -p $LOGCONFFILE /etc/rsyslog.d/pqmessenger.conf
   cp -p $LOG4JFILE $PARAMDIR

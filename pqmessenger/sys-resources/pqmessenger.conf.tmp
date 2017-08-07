@@ -1,3 +1,2 @@
-d /var/run/pqmessenger  0750  openldap  openldap  -
 d /var/log/pqmessenger  0755  openldap  openldap  -
 x /var/log/pqmessenger/*
