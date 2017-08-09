@@ -128,15 +128,14 @@ checkFiles() {
 checkOSInstall() {
   local RSLT=1
   PARAMDIR=$(find /etc -name "pqparams.dat")
-  if [ ! -z $PARAMDIR ]; then
-    RSLT=0
+  if [ -n "$PARAMDIR" ]; then
     PARAMDIR=$(dirname $PARAMDIR)
     else
     echo "Look like pqChecker not installed yet."  
     return $RSLT  
   fi  
   local JSVC=$(command -v jsvc)
-  if [ -z $JSVC ]; then
+  if [ -z "$JSVC" ]; then
     echo "The 'jsvc' utility is not installed."
     echo "Please install it before"
    else
@@ -146,8 +145,8 @@ checkOSInstall() {
 }
 
 stopMessenger() {
-  local RUNNING=$(ps -ef | grep -i pqmessenger | grep -v grep)
-  if [ ! -z "RUNNING" ]; then
+  local RUNNING=$(ps -ef | grep -i java | grep -i pqmessenger | grep -v grep)
+  if [ -n "$RUNNING" ]; then
     /etc/init.d/pqmessenger stop
   fi
 }
