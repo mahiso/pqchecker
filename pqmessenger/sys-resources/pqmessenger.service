@@ -1,0 +1,11 @@
+[Unit]
+Description=pqMessenger
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/pqmessenger start
+ExecStop=/usr/bin/pqmessenger stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

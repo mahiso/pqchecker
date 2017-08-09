@@ -144,8 +144,12 @@ checkOSInstall() {
   return $RSLT
 }
 
-stopMessenger() {
+disableBoot() {
   local RUNNING=$(ps -ef | grep -i java | grep -i pqmessenger | grep -v grep)
+  if [ -f /etc/debian_version ]; then
+    else
+  fi 
+  local OSVER=$(head -1 /etc/debian_version 2>/dev/null | cut -c 1)
   if [ -n "$RUNNING" ]; then
     /etc/init.d/pqmessenger stop
   fi
