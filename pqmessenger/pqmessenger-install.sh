@@ -9,6 +9,7 @@ BOOTFILE=pqmessenger.boot
 PARAMFILE=pqmessenger.params
 TMPCONFFILE=pqmessenger.conf.tmp
 LOGCONFFILE=pqmessenger.conf.rsyslog
+SRVCCONFFILE=pqmessenger.service
 MANFILE=pqmessenger.3
 MANDIR="/usr/local/share/man/man3"
 LOG4JFILE=log4j2.xml
@@ -22,6 +23,7 @@ JMSLOGIN=
 JMSPWD=
 UNINSTALL=1
 JMSMODIFIED=1
+INITYPE="SYSD"
 
 showHeader() {
   echo ""
@@ -72,7 +74,7 @@ checkArg() {
 checkFiles() {
   local PWD=$(pwd)
   local RSLT=0
-  local FILENAME=$(find $PWD -name "$JARFILE" | grep -v tmp | head -1)
+  local FILENAME=$(find $PWD -name "$JARFILE" 2>/dev/null | grep -v tmp | head -1)
   if [ -z $FILENAME ]; then
     echo "$JARFILE not found."
     RSLT=1
@@ -80,47 +82,54 @@ checkFiles() {
     JARFILE=$FILENAME
   fi
   PWD=$PWD/$CONFFILESDIR
-  FILENAME=$(find $PWD -name "$BOOTFILE" | head -1)
+  FILENAME=$(find $PWD -name "$BOOTFILE" 2>/dev/null | head -1)
   if [ -z $FILENAME ]; then
     echo "$BOOTFILE not found."
     RSLT=1
     else
     BOOTFILE=$FILENAME
   fi
-  FILENAME=$(find $PWD -name "$PARAMFILE" | head -1)
+  FILENAME=$(find $PWD -name "$PARAMFILE" 2>/dev/null | head -1)
   if [ -z $FILENAME ]; then
     echo "$PARAMFILE not found."
     RSLT=1
     else
     PARAMFILE=$FILENAME
   fi
-  FILENAME=$(find $PWD -name "$LOGCONFFILE" | head -1)
+  FILENAME=$(find $PWD -name "$LOGCONFFILE" 2>/dev/null | head -1)
   if [ -z $FILENAME ]; then
     echo "$LOGCONFFILE not found."
     RSLT=1
     else
     LOGCONFFILE=$FILENAME
   fi
-  FILENAME=$(find $PWD -name "$TMPCONFFILE" | head -1)
+  FILENAME=$(find $PWD -name "$TMPCONFFILE" 2>/dev/null | head -1)
   if [ -z $FILENAME ]; then
     echo "$TMPCONFFILE not found."
     RSLT=1
     else
     TMPFILE=$FILENAME
   fi
-  FILENAME=$(find $PWD -name "$LOG4JFILE" | head -1)
+  FILENAME=$(find $PWD -name "$LOG4JFILE" 2>/dev/null | head -1)
   if [ -z $FILENAME ]; then
     echo "$LOG4JFILE not found."
     RSLT=1
     else
     LOG4JFILE=$FILENAME
   fi
-  FILENAME=$(find $PWD -name "$CONFFILE" | head -1)
+  FILENAME=$(find $PWD -name "$CONFFILE" 2>/dev/null | head -1)
   if [ -z $FILENAME ]; then
     echo "$CONFFILE not found."
     RSLT=1
     else
     CONFFILE=$FILENAME
+  fi
+  FILENAME=$(find $PWD -name "$SRVCCONFFILE" 2>/dev/null | head -1)
+  if [ -z $FILENAME ]; then
+    echo "$SRVCCONFFILE not found."
+    RSLT=1
+    else
+    SRVCCONFFILE=$FILENAME
   fi
   return $RSLT
 }
@@ -144,26 +153,75 @@ checkOSInstall() {
   return $RSLT
 }
 
+setIniType() {
+  local OSVER=0
+  INITYPE="DEBIAN"
+  if [ -e /etc/debian_version ]; then
+      OSVER=$(head -1 /etc/debian_version 2>/dev/null | tr -d -c 0-9 | cut -c 1)
+      if [ $OSVER -gt 7 ]; then
+        INITYPE="SYSD"
+      fi
+  elif [ -e /etc/redhat-release ]; then
+      OSVER=$(head -1 /etc/redhat-release 2>/dev/null | tr -d -c 0-9 | cut -c 1)
+      if [ $OSVER -gt 6 ]; then
+        INITYPE="SYSD"
+        else
+        INITYPE="RHEL"
+      fi
+  fi
+}
+
 disableBoot() {
   local RUNNING=$(ps -ef | grep -i java | grep -i pqmessenger | grep -v grep)
-  if [ -f /etc/debian_version ]; then
-    else
-  fi 
-  local OSVER=$(head -1 /etc/debian_version 2>/dev/null | cut -c 1)
-  if [ -n "$RUNNING" ]; then
-    /etc/init.d/pqmessenger stop
-  fi
+  case "$INITYPE" in
+  SYSD):
+    CMD=$(command -v systemctl)
+    if [ -n "$RUNNING" ]; then
+      $CMD stop pqmessenger
+    fi
+    $CMD disable pqmessenger
+    rm -f /usr/bin/pqmessenger
+    rm -f /etc/rsyslog.d/pqmessenger.conf
+    rm -f /etc/systemd/system/pqmessenger.service
+    $CMD restart rsyslog
+    ;;
+  DEBIAN):
+    CMD=$(command -v service)
+    if [ -n "$RUNNING" ]; then
+      if [ -n "$CMD" ]; then
+        $CMD pqmessenger stop
+      else
+        /etc/init.d/pqmessenger stop
+      fi
+    fi
+    rm -f /etc/rsyslog.d/pqmessenger.conf
+    $CMD rsyslog restart
+    CMD=$(command -v update-rc.d)
+    $CMD pqmessenger remove 2>/dev/null 
+    rm -f /etc/init.d/pqmessenger
+    ;;
+  RHEL):
+    CMD=$(command -v service)
+    if [ -n "$RUNNING" ]; then
+      if [ -n "$CMD" ]; then
+        $CMD pqmessenger stop
+      else
+        /etc/init.d/pqmessenger stop
+      fi
+    fi
+    rm -f /etc/rsyslog.d/pqmessenger.conf
+    $CMD rsyslog restart
+    CMD=$(command -v chkconfig)
+    $CMD --del pqmessenger 2>/dev/null 
+    rm -f /etc/init.d/pqmessenger
+    ;;
+  esac
 }
 
 uninstall() {
   echo "Uninstallation.."
-  stopMessenger
-  local CMD=$(command -v update-rc.d)
-  if [ ! -z $CMD ]; then
-    $CMD pqmessenger remove 2>/dev/null 
-    rm -f /etc/init.d/pqmessenger
-    rm -f /etc/default/pqmessenger
-  fi
+  disableBoot
+  rm -f /etc/default/pqmessenger
   rm -rf $INSTALLDIR
   CMD=$(command -v find)
   local DIRNAME=$($CMD /etc -name "pqparams.dat")
@@ -178,8 +236,6 @@ uninstall() {
   rm -rf $LOGDIR
   rm -f $MANDIR/$MANFILE
   rm -f /usr/lib/tmpfiles.d/pqmessenger.conf
-  rm -f /etc/rsyslog.d/pqmessenger.conf
-  /etc/init.d/rsyslog restart
   echo "Uninstallation done."
 }
 
@@ -213,7 +269,8 @@ createKeystore() {
 }
 
 readPassword() {
-  while [ "$PWD1" == "" ] || [ "$PWD1" != "$PWD2" ]
+  local PWDLEN=0
+  while [ "$PWD1" == "" ] || [ "$PWD1" != "$PWD2" ] || [ $PWDLEN -lt 6 ]
   do 
     echo -ne "Password <$JMSPWD>: "
     read -s PWD1
@@ -225,10 +282,13 @@ readPassword() {
       PWD1=$JMSPWD
       PWD2=$JMSPWD
     fi
+    PWDLEN=${#PWD2}
     if [ "$PWD1" == "" ]; then
       echo "Password cannot empty!"
     elif [ "$PWD1" != "$PWD2" ]; then
       echo "Password confirmation error, reedit !"
+    elif [ $PWDLEN -lt 6 ]; then
+      echo "Password size must be greater than 6 chars"  
     fi
     echo ""
   done
@@ -280,7 +340,7 @@ chownDirs() {
   if [ ! -z $PRMDIR ]; then
     PRMDIR=$(dirname $PRMDIR)
   fi
-  USER=$(ls -ld /etc/ldap/slapd.d/ | awk '{print $3}')
+  USER=$(ls -ld /etc/ldap/slapd.d/ 2>/dev/null | awk '{print $3}')
   if [ -z $USER ]; then
     USER=openldap
   fi
@@ -341,7 +401,7 @@ install() {
   checkFiles
   local RSLT=$?
   if [ $RSLT -ne 0 ]; then
-    echo "Error configuration file(s) not found."
+    echo "Error, configuration file(s) not found."
     echo ""
     exit 1
   fi
@@ -353,7 +413,6 @@ install() {
     exit 1
   fi
   chmod +x $BOOTFILE
-  cp -p $BOOTFILE /etc/init.d/pqmessenger
   cp -p $PARAMFILE /etc/default/pqmessenger
   mkdir -p $INSTALLDIR
   cp -p $JARFILE $INSTALLDIR
@@ -365,16 +424,50 @@ install() {
   installMan
   customizeParams
   chownDirs
-  local CMDCTL=$(command -v update-rc.d)
-  if [ -z $CMDCTL ]; then
-    CMDCTL=$(command -v chkconfig)
-    if [ ! -z $CMDCTL ]; then
-      $CMDCTL pqmessenger on 2>/dev/null
+  case "$INITYPE" in
+  SYSD):
+    CMD=$(command -v systemctl)
+    cp -p $BOOTFILE /usr/bin/pqmessenger
+    cp -p $SRVCCONFFILE /etc/systemd/system/pqmessenger.service
+    $CMD enable pqmessenger
+    $CMD restart rsyslog
+    $CMD start pqmessenger
+    ;;
+  DEBIAN):
+    cp -p $BOOTFILE /etc/init.d/pqmessenger
+    CMD=$(command -v update-rc.d)
+    if [ -n "$CMD" ]; then
+      $CMD pqmessenger defaults 2>/dev/null 
     fi
-   else
-    $CMDCTL pqmessenger defaults 2>/dev/null
-  fi
-  /etc/init.d/rsyslog restart
+    CMD=$(command -v service)
+    if [ -n "$CMD" ]; then
+      $CMD pqmessenger start
+      $CMD rsyslog restart
+    else
+      /etc/init.d/pqmessenger start
+      if [ -x /etc/init.d/rsyslog ]; then
+        /etc/init.d/rsyslog restart
+      fi
+    fi
+    ;;
+  RHEL):
+    cp -p $BOOTFILE /etc/init.d/pqmessenger
+    CMD=$(command -v chkconfig)
+    if [ -n "$CMD" ]; then
+      $CMD pqmessenger on 2>/dev/null 
+    fi
+    CMD=$(command -v service)
+    if [ -n "$CMD" ]; then
+      $CMD pqmessenger start
+      $CMD rsyslog restart
+    else
+      /etc/init.d/pqmessenger start
+      if [ -x /etc/init.d/rsyslog ]; then
+        /etc/init.d/rsyslog restart
+      fi
+    fi
+    ;;
+  esac
   echo "Installation done."
 }
 
@@ -382,6 +475,7 @@ install() {
 showHeader
 checkUser
 checkArg $0 $# $1
+setIniType
 if [ $UNINSTALL -eq 0 ]; then
   uninstall
   else
