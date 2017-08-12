@@ -366,6 +366,18 @@ chownDirs() {
       sed -i 's/#PQMESSENGER_USER/PQMESSENGER_USER/g' /etc/default/pqmessenger
       sed -i 's/# PQMESSENGER_USER/#PQMESSENGER_USER/g' /etc/default/pqmessenger
     fi
+    TAG=$(egrep "NATIVE_LIB_HOME" /etc/default/pqmessenger | egrep "$USER")
+    if [ -n "$TAG" ]; then
+      sed -i 's/^NATIVE_LIB_HOME/# NATIVE_LIB_HOME/g' /etc/default/pqmessenger
+      sed -i 's/#NATIVE_LIB_HOME/NATIVE_LIB_HOME/g' /etc/default/pqmessenger
+      sed -i 's/# NATIVE_LIB_HOME/#NATIVE_LIB_HOME/g' /etc/default/pqmessenger
+    fi
+    if [ "$USER" == "openldap" ]; then
+      local JHOME=$(readlink /etc/alternatives/java | sed "s/\/jre\/bin\/java//g")
+      if [ -n "$JHOME" ]; then
+        sed -i "s/JAVA_HOME=\/usr\/lib\/jvm\/java/JAVA_HOME=\/usr\/lib\/jvm\/$JHOME/g" /etc/default/pqmessenger
+      fi
+    fi
   fi
 }
 
