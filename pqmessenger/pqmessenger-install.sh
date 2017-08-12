@@ -27,7 +27,7 @@ INITYPE="SYSD"
 
 showHeader() {
   echo ""
-  echo "pqMessenger Middleware for pqChecker version $VERSION"
+  echo "pqMessenger version $VERSION installation tool"
   echo ""
 }
 showUsage() {
@@ -158,8 +158,13 @@ setIniType() {
   INITYPE="DEBIAN"
   if [ -e /etc/debian_version ]; then
       OSVER=$(head -1 /etc/debian_version 2>/dev/null | tr -d -c 0-9 | cut -c 1)
-      if [ $OSVER -gt 7 ]; then
+      if [ -n "$OSVER" ] && [ $OSVER -gt 7 ]; then
         INITYPE="SYSD"
+        else
+        OSVER=$(grep DISTRIB_RELEASE /etc/lsb-release | tr -d -c 0-9 | cut -c 1-2)
+        if [ -n "$OSVER" ] && [ $OSVER -gt 14 ]; then
+          INITYPE="SYSD"
+        fi
       fi
   elif [ -e /etc/redhat-release ]; then
       OSVER=$(head -1 /etc/redhat-release 2>/dev/null | tr -d -c 0-9 | cut -c 1)
@@ -366,15 +371,16 @@ chownDirs() {
       sed -i 's/#PQMESSENGER_USER/PQMESSENGER_USER/g' /etc/default/pqmessenger
       sed -i 's/# PQMESSENGER_USER/#PQMESSENGER_USER/g' /etc/default/pqmessenger
     fi
-    TAG=$(egrep "NATIVE_LIB_HOME" /etc/default/pqmessenger | egrep "$USER")
+    TAG=$(egrep "^NATIVE_LIB_HOME" /etc/default/pqmessenger | egrep "$USER")
     if [ -n "$TAG" ]; then
-      sed -i 's/^NATIVE_LIB_HOME/# NATIVE_LIB_HOME/g' /etc/default/pqmessenger
-      sed -i 's/#NATIVE_LIB_HOME/NATIVE_LIB_HOME/g' /etc/default/pqmessenger
-      sed -i 's/# NATIVE_LIB_HOME/#NATIVE_LIB_HOME/g' /etc/default/pqmessenger
+      sed -i "s/^NATIVE_LIB_HOME/# NATIVE_LIB_HOME/g" /etc/default/pqmessenger
+      sed -i "s/#NATIVE_LIB_HOME/NATIVE_LIB_HOME/g" /etc/default/pqmessenger
+      sed -i "s/# NATIVE_LIB_HOME/#NATIVE_LIB_HOME/g" /etc/default/pqmessenger
     fi
     if [ "$USER" == "openldap" ]; then
       local JHOME=$(readlink /etc/alternatives/java | sed "s/\/jre\/bin\/java//g")
       if [ -n "$JHOME" ]; then
+        JHOME=$(basename "$JHOME")
         sed -i "s/JAVA_HOME=\/usr\/lib\/jvm\/java/JAVA_HOME=\/usr\/lib\/jvm\/$JHOME/g" /etc/default/pqmessenger
       fi
     fi
@@ -429,7 +435,9 @@ install() {
   mkdir -p $INSTALLDIR
   cp -p $JARFILE $INSTALLDIR
   mkdir -p $LOGDIR
-  cp -p $TMPFILE /usr/lib/tmpfiles.d/pqmessenger.conf
+  if [ -d /usr/lib/tmpfiles.d ]; then
+    cp -p $TMPFILE /usr/lib/tmpfiles.d/pqmessenger.conf
+  fi
   cp -p $LOGCONFFILE /etc/rsyslog.d/pqmessenger.conf
   cp -p $LOG4JFILE $PARAMDIR
   cp -p $CONFFILE $PARAMDIR

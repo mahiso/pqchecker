@@ -16,7 +16,9 @@
 # pqMessenger starting shell script
 # (c) 2015 Abdelhamid MEDDEB <abdelhamid@meddeb.net>
 
-. /lib/lsb/init-functions
+if [ -e /lib/lsb/init-functions ]; then
+  . /lib/lsb/init-functions
+fi
 
 if [ -r /etc/default/pqmessenger ]; then
 	. /etc/default/pqmessenger
