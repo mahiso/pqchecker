@@ -1,7 +1,7 @@
 /*--------------------------------------------------------------------
 pqChecker, shared library plug-in for OpenLDAP server / ppolicy overlay
 Checking of passwords quality.
-Copyright (C) 2014, Abdelhamid MEDDEB (abdelhamid@meddeb.net)  
+Copyright (C) 2014, Abdelhamid MEDDEB (abdelhamid@meddeb.net)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,12 +30,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <pparamio.h>
 
-#define DEFAULT_DATA_FILE "/etc/pqparams.dat"
+#define DEFAULT_DATA_FILE "/etc/ldap/pqparams.dat"
 #define DEFAULT_PARAMS "01010101"
 #define PARAMS_STORAGE_FORMAT "ULDS"
 #ifndef PARAMS_DATA_FILE
  #define PARAMS_DATA_FILE DEFAULT_DATA_FILE
-#endif 
+#endif
 
 extern char sendPwdTag;
 
@@ -43,7 +43,7 @@ extern char sendPwdTag;
 typedef struct {
   bool sendPwd;
   int upperMin;      //min uppercase characters
-  int lowerMin;      //min lowercase characters 
+  int lowerMin;      //min lowercase characters
   int digitMin;      //min digits
   int specialMin;    //min special characters: not alphanumeric
   char forbiddens[PARAMS_DATA_MAXLEN - 8];  //forbidden characters list
@@ -58,10 +58,10 @@ typedef struct {
   int forbiddenNbr;  //Number of forbidden characters in checked password
 } pp_status_t;
 
-pp_params_t 
+pp_params_t
 getParams(char *params, char *fmt);
 
-pp_status_t 
+pp_status_t
 getStatus(char *pwd, char *forbiddens);
 
 // check if params is operable

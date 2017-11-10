@@ -1,6 +1,5 @@
 SUBDIRS = src doc doc/fr
 vardatdir = $(PARAMDIR)
-varrundir = /var/run/pqmessenger
 ACLOCAL_AMFLAGS = -I m4
 makedirs:    ; @mkdir -p $(vardatdir) \
              ; USR=`id -un ldap 2>/dev/null` \
@@ -16,6 +15,6 @@ makedirs:    ; @mkdir -p $(vardatdir) \
              ; cp pqparams.dat $(vardatdir) \
              ; if [ ! -z $$USR ]; then \
                 chown $$USR:$$USR -R $(vardatdir) \
-             ; fi   
+             ; fi
 install-exec-hook: makedirs
 uninstall-hook: ; rm -rf $(vardatdir)

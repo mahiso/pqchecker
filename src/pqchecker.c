@@ -1,7 +1,7 @@
 /*--------------------------------------------------------------------
 pqChecker, shared library plug-in for OpenLDAP server / ppolicy overlay
 Checking of password quality.
-Copyright (C) 2014, Abdelhamid MEDDEB (abdelhamid@meddeb.net)  
+Copyright (C) 2014, Abdelhamid MEDDEB (abdelhamid@meddeb.net)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,14 +25,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <locale.h>
 
 #include <pparamio.h>
-#include <comm.h>
 #include <pqcheck.h>
 #include <pqchecker.h>
 
-int 
+int
 check_password(char *pPasswd, char **ppErrStr, Entry *e);
 
-int 
+int
 check_password(char *pPasswd, char **ppErrStr, Entry *e)
 {
   setlocale (LC_ALL, "");
@@ -42,14 +41,14 @@ check_password(char *pPasswd, char **ppErrStr, Entry *e)
   char *user = e->e_name.bv_val;
   syslog(LOG_INFO, _("Checking password quality for %s."), user);
   int rslt = LDAP_OPERATIONS_ERROR;
-  char strParams[PARAMS_DATA_MAXLEN+1]; 
-  if (readParams(strParams)) 
+  char strParams[PARAMS_DATA_MAXLEN+1];
+  if (readParams(strParams))
   {
     syslog(LOG_DEBUG, _("The quality parameters used: %s"),strParams);
     pp_params_t params = getParams(strParams, PARAMS_STORAGE_FORMAT);
     if ((params.upperMin > -1) && (params.lowerMin > -1) &&
         (params.digitMin > -1) && (params.specialMin > -1))
-    {  
+    {
       pp_status_t pwdStatus = getStatus(pPasswd, params.forbiddens);
       if ((pwdStatus.upperNbr < params.upperMin) ||
           (pwdStatus.lowerNbr < params.lowerMin) ||
@@ -62,10 +61,6 @@ check_password(char *pPasswd, char **ppErrStr, Entry *e)
       } else {
         rslt = LDAP_SUCCESS;
         syslog(LOG_INFO, _("Password accepted."));
-        if (params.sendPwd == true) {
-          syslog(LOG_DEBUG, _("Sending password to pqMessenger"));
-          sendPassword(pPasswd, user);
-        }
       }
     } else {
       *ppErrStr = strdup(_("Unable to verify the password quality. Problem with parameters."));
