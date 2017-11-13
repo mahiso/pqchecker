@@ -710,7 +710,6 @@ am__isrc
 INSTALL_DATA
 INSTALL_SCRIPT
 INSTALL_PROGRAM
-PARAMDIR
 target_alias
 host_alias
 build_alias
@@ -766,7 +765,6 @@ enable_libtool_lock
       ac_precious_vars='build_alias
 host_alias
 target_alias
-PARAMDIR
 CC
 CFLAGS
 LDFLAGS
@@ -1417,7 +1415,6 @@ Optional Packages:
                           compiler's sysroot if not specified).
 
 Some influential environment variables:
-  PARAMDIR    path to password quality parameters file location
   CC          C compiler command
   CFLAGS      C compiler flags
   LDFLAGS     linker flags, e.g. -L<lib dir> if you have libraries in a
@@ -2122,7 +2119,6 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 ac_config_headers="$ac_config_headers config.h"
-
 
 am__api_version='1.13'
 
@@ -12582,11 +12578,6 @@ else
   am__fastdepCC_FALSE=
 fi
 
-
-
-cat >>confdefs.h <<_ACEOF
-#define PARAMS_DATA_FILE "$PARAMDIR/pqparams.dat"
-_ACEOF
 
 ac_config_files="$ac_config_files Makefile src/Makefile doc/Makefile doc/fr/Makefile"
 
